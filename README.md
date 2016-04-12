@@ -11,6 +11,7 @@ Esta é a versão HTML e o conteúdo do site parcialmente traduzido do livro aci
 Correções / Edições / Contribuições são bem-vindas
 
 Mantenedor dessa tradução: Elias Dorneles `eliasdorneles@gmail.com`
+
 Autor do texto original em inglês: Daniel Holden `contact@theorangeduck.com`
 
 Licensiado via [Creative Commons Attribution-NonCommercial-ShareAlike 3.0](http://creativecommons.org/licenses/by-nc-sa/3.0/deed.pt_BR)
