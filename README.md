@@ -1,26 +1,27 @@
-Build your own Lisp
-===================
+Construa seu próprio Lisp
+=========================
 
-http://buildyourownlisp.com
+Tradução do livro em inglês Build your own Lisp (http://buildyourownlisp.com).
 
-About
+Sobre
 -----
 
-This is the HTML and website code for the book of the above title.
+Esta é a versão HTML e o conteúdo do site parcialmente traduzido do livro acima.
 
-Corrections / Edits / Contributions Welcome
+Correções / Edições / Contribuições são bem-vindas
 
-`contact@theorangeduck.com`
+Mantenedor dessa tradução: Elias Dorneles `eliasdorneles@gmail.com`
+Autor do texto original em inglês: Daniel Holden `contact@theorangeduck.com`
 
-Licensed under Creative Commons Attribution-NonCommercial-ShareAlike 3.0
-
-http://creativecommons.org/licenses/by-nc-sa/3.0/
+Licensiado via [Creative Commons Attribution-NonCommercial-ShareAlike 3.0](http://creativecommons.org/licenses/by-nc-sa/3.0/deed.pt_BR)
 
 
-Running
--------
 
-You can't just browse the raw HTML files of the site. The links wont work, and it wont have a proper header or footer. If you want to run this website locally, you should install Flask and run the website as follows.
+Como rodar
+----------
+
+
+Não dá para simplesmente navegar pelos arquivos HTML puros do site. Os links não funcionarão, e as páginas não terão cabeçalho e rodapé. Se você quer rodar esse site localmente, instale o Flask e rode o website com os comandos a seguir.
 
 ```
 pip install Flask
@@ -28,7 +29,7 @@ pip install Flask-Mail
 python lispy.py
 ```
 
-You can specify port via `$PORT`.
+Você pode especificar uma porta usando a variável de ambiente `$PORT`.
 
 ```
 env PORT=5000 python lispy.py
