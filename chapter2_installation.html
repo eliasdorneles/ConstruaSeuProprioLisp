@@ -1,52 +1,52 @@
-<h1>Installation <small>&bull; Chapter 2</small></h1>
+<h1>Instalação <small>&bull; Capítulo 2</small></h1>
 
 
-<h2>Setup</h2> <hr/>
+<h2>Configuração</h2> <hr/>
 
 <div class='pull-right alert alert-warning' style="margin: 15px; text-align: center;">
   <img src="/static/img/cattop.png" alt="capttop" class="img-responsive" width="297px" height="461px"/>
-  <p><small>Cat &bull; Install at own risk.</small></p>
+  <p><small>Gato &bull; Instale por sua conta própria e risco.</small></p>
 </div>
 
-<p>Before we can start programming in C we'll need to install a couple of things, and set up our environment so that we have everything we need. Because C is such a universal language this should hopefully be fairly simple. Essentially we need to install two main things. A <em>text editor</em> and a <em>compiler</em>.</p>
+<p>Antes de começar a programar em C precisaremos instalar algumas coisas, e configurar nosso ambiente para que tenhamos tudo que precisamos. Como C é uma linguagem tão universal, com sorte isso será razoavelmente simples. Precisamos instalar duas coisas principais. Um <em>editor de texto</em> e um <em>compilador</em>.</p>
 
 
-<h2>Text Editor</h2> <hr/>
+<h2>Editor de texto</h2> <hr/>
 
-<p>A text editor is a program that allows you to edit text files in a way suitable for programming.</p>
+<p>Um editor de texto é um programa que permite você editar arquivos de texto de maneira adequada à programação.</p>
 
-<p>On <strong>Linux</strong> the text editor I recommend is <a href="http://projects.gnome.org/gedit/">gedit</a>. Whatever other basic text editor comes installed with your distribution will also work well. If you are a Vim or Emacs user these are fine to use. Please don't use an IDE. It isn't required for such a small project and won't help in understanding what is going on.</p>
+<p>No <strong>Linux</strong> o editor de texto que recomendo é o <a href="http://projects.gnome.org/gedit/">gedit</a>. Qualquer outro editor de texto básico que vem instalado com sua distribuição também vai funcionar bem. Se você é um usuário de Vim ou Emacs, eles vão funcionar bem também. Por favor não use uma IDE. Não é necessário para um projeto tão pequeno e não vai ajudá-lo a entender o que se passa.</p>
 
-<p>On <strong>Mac</strong> a simple text editor that can be used is <a href="http://www.barebones.com/products/textwrangler/">TextWrangler</a>. If you have a different preference this is fine, but please don't use XCode for text editing. This is a small project and using an IDE won't help you understand what is going on.</p>
+<p>No <strong>Mac</strong> um editor de texto simples que pode ser usado é o <a href="http://www.barebones.com/products/textwrangler/">TextWrangler</a>. Se você tem uma preferência diferente, tudo bem, mas por favor não use XCode para editar texto. Este é um projeto pequeno e usar uma IDE não vai ajudá-lo a entender o que se passa.</p>
 
-<p>On <strong>Windows</strong> my text editor of choice is <a href="http://notepad-plus-plus.org/">Notepad++</a>. If you have another preference this is fine. Please <em>don't</em> use <em>Visual Studio</em> as it does not have proper support for C programming. If you attempt to use it you will run into many problems.</p>
-
-
-<h2>Compiler</h2> <hr/>
-
-<p>The compiler is a program that transforms the C source code into a program your computer can run. The installation process for these is different depending on what operating system you are running.</p>
-
-<p>Compiling and running C programs is also going to require really basic usage of the command line. This I will not cover, so I am going to assume you have at least some familiarity with using the command line. If you are are worried about this then search for <a href="http://cli.learncodethehardway.org/book/">online tutorials</a> on using it, relevant to your operating system.</p>
-
-<p>On <strong>Linux</strong> you can install a compiler by downloading some packages. If you are running Ubuntu or Debian you can install everything you need with the following command <code>sudo apt-get install build-essential</code>. If you are running Fedora or a similar Linux variant you can use this command <code>su -c "yum groupinstall development-tools"</code>.</p>
-
-<p>On <strong>Mac</strong> you can install a compiler by downloading and installing the latest version of XCode from Apple. If you are unsure of how to do this you can search online for "installing xcode" and follow any advice shown. You will then need to install the <em>Command Line Tools</em>. On Mac OS X 10.9 this can be done by running the command <code>xcode-select --install</code> from the command line. On versions of Mac OS X prior to 10.9 this can be done by going to XCode Preferences, Downloads, and selecting <em>Command Line Tools</em> for Installation.</p>
-
-<p>On <strong>Windows</strong> you can install a compiler by downloading and installing <a href="http://www.mingw.org/">MinGW</a>. If you use the installer at some point it may present you with a list of possible packages. Make sure you pick at least <code>mingw32-base</code> and <code>msys-base</code>. Once installed you need to add the compiler and other programs to your system <code>PATH</code> variable. To do this follow <a href="http://www.computerhope.com/issues/ch000549.htm">these instructions</a> appending the value <code>;C:\MinGW\bin</code> to the variable called <code>PATH</code>. You can create this variable if it doesn't exist. You may need to restart <code>cmd.exe</code> for the changes to take effect. This will allow you to run a compiler from the command line <code>cmd.exe</code>. It will also install other programs which make <code>cmd.exe</code> act like a Unix command line.</p>
+<p>No <strong>Windows</strong>, meu editor de texto preferido é o <a href="http://notepad-plus-plus.org/">Notepad++</a>. Se você tem outra preferência, tudo bem. Por favor <em>não</em> use o <em>Visual Studio</em> pois ele não tem suporte adequado para programação em C. Se você tentar usá-lo vai enfrentar muitos problemas.</p>
 
 
-<h3>Testing the Compiler</h3>
+<h2>Compilador</h2> <hr/>
 
-<p>To test if your C compiler is installed correctly type the following into the command line.</p>
+<p>O compilador é um programa que transforma o código fonte C em um programa que seu computador pode rodar. O processo de instalação para ele é diferente dependendo de qual sistema operacional você está usando.</p>
+
+<p>Compilar e rodar programas em C também vai requerer algum conhecimento básico da linha de comando. Isto eu não vou cobrir, então vou assumir que você tem pelo menos alguma familiaridade em usar a linha de comando. Se isto preocupa você um pouco, então busque por <a href="http://cli.learncodethehardway.org/book/">tutoriais online</a> em como usá-la, relevante ao seu sistema operacional.</p>
+
+<p>No <strong>Linux</strong> você pode instalar um compilador baixando alguns pacotes. Se você estiver rodando Ubuntu ou Debian, pode instalar tudo que precisa com o seguinte comando: <code>sudo apt-get install build-essential</code>. Caso esteja rodando Fedora ou alguma variante Linux parecida, pode usar o comando: <code>su -c "yum groupinstall development-tools"</code>.</p>
+
+<p>No <strong>Mac</strong>, você pode instalar um compilador baixando e instalando a última versão do XCode da Apple. Se você não tem certeza sobre como fazer isso você pode buscar online por "instalar xcode" e siga o conselho mostrado. A seguir, você vai precisar instalar as <em>Command Line Tools</em>. No Mac OS X 10.9 isso pode ser feito rodando: <code>xcode-select --install</code> na linha de comando. Em versão anteriores ao 10.9 isso pode ser feito indo em XCode Preferences, Downloads, e selecionando <em>Command Line Tools</em> para instalação.</p>
+
+<p>No <strong>Windows</strong> você pode instalar um compilador baixando e instalando <a href="http://www.mingw.org/">MinGW</a>. Caso use o instalador, em algum momento ele vai apresentar uma lista de possíveis pacotes. Verifique que estejam marcadas pelo menos <code>mingw32-base</code> e <code>msys-base</code>. Uma vez instalado, você precisa adicionar o compilador e outros programas na variável de sistema <code>PATH</code>. Para fazer isso, siga <a href="http://www.computerhope.com/issues/ch000549.htm">as instruções aqui (em inglês)</a> adicionando o valor <code>;C:\MinGW\bin</code> à variável chamada <code>PATH</code>. Você pode criar esta variável caso ela não exista. Você talvez tenha que reiniciar <code>cmd.exe</code> para as mudanças fazerem efeito. Isto vai permitir que você rode um compilador da linha de comando <code>cmd.exe</code>. Vai também instalar outros programas que fazem <code>cmd.exe</code> se comportar como uma linha de comando Unix.
+
+
+<h3>Testando o Compilador</h3>
+
+<p>Para testar se seu compilador C está instalado corretamente, digite o seguinte na linha de comando.</p>
 
 <pre><code>cc --version</code></pre>
 
-<p>If you get some information about the compiler version echoed back then it should be installed correctly. You are ready to go! If you get any sort of error message about an unrecognised or not found command, then it is not ready. You may need to restart the command line or your computer for changes to take effect.</p>
+<p>Se você receber uma informação sobre a versão do compilador, então ele deve estar instalado corretamente. Você está pronto! Se você receber qualquer tipo de mensagem de erro sobre um comando não reconhecido ou não encontrado, então ainda não está pronto. você pode ter que reiniciar a linha de comando ou seu computador para as mudanças fazerem efeito.</p>
 
 
 <h2>Hello World</h2> <hr/>
 
-<p>Now that your environment is set up, start by opening your text editor and inputting the following program. Create a directory where you are going to put your work for this book, and save this file as <code>hello_world.c</code>. This is your first C program!</p>
+<p>Agora que seu ambiente está configurado, comece por abrir o seu editor de texto e digitando o seguinte programa. Crie um diretório onde você vai colocar seu trabalho para este livro e salvar o arquivo como <code>hello_world.c</code>. Este é o seu primeiro programa C!</p>
 
 <pre><code data-language='c'>#include &lt;stdio.h&gt;
 
@@ -62,96 +62,96 @@ int main(int argc, char** argv) {
 </div>
 -->
 
-<p>This may initially make very little sense. I'll try to explain it step by step.</p>
+<p>Inicialmente isso pode não fazer sentido nenhum. Tentarei explicar passo a passo.</p>
 
-<p>In the first line we <em>include</em> what is called a <em>header</em>. This statement allows us to use the functions from <code>stdio.h</code>, the standard input and output library which comes included with C. One of the functions from this library is the <code>puts</code> function you see later on in the program.</p>
+<p>Na primeira linha nós <em>incluímos</em> (<em>include</em>) o que é chamado de um <em>cabeçalho</em> (<em>header</em>). Este comando nos permite usar as função em <code>stdio.h</code>, a biblioteca de entrada e saída padrão (<em>standard input and output</em>) que vem incluída em C. Uma das funções dessa biblioteca é a função <code>puts</code> que você vê a seguir no programa.</p>
 
-<p>Next we <em>declare</em> a function called <code>main</code>. This function is declared to output an <code>int</code>, and take as input an <code>int</code> called <code>argc</code> and a <code>char**</code> called <code>argv</code>. All C programs must contain this function. All programs start running from this function.</p>
+<p>A seguir nós <em>declaramos</em> uma função chamado <code>main</code>. Esta função é declarada como tendo por saída um <code>int</code>, e recebe como entrada um <code>int</code> chamado <code>argc</code> e um <code>char**</code> chamado <code>argv</code>. Todos os programas C precisam conter essa função. Todos os programas começam a rodar a partir dessa função.</p>
 
-<p>Inside <code>main</code> the <code>puts</code> function is <em>called</em> with the argument <code>"Hello, world!"</code>. This outputs the message <code>Hello, world!</code> to the command line. The function <code>puts</code> is short for <em>put string</em>. The second statement inside the function is <code>return 0;</code>. This tells the <code>main</code> function to finish and return <code>0</code>. When a C program returns <code>0</code> this indicates there have been no errors running the program.</p>
+<p>Dentro da <code>main</code> a função <code>puts</code> é <em>chamada</em> com o argumento <code>"Hello, world!"</code>. Isso joga a mensagem <code>Hello, world!</code> na saída da linha de comando. A função <code>puts</code> é abreviação de <em>put string</em>. O segundo comando dentro da função é <code>return 0;</code>. Isto diz a função <code>main</code> para terminar e devolver <code>0</code>. Quando um programa C devolve <code>0</code> isso indica que não houveram erros rodando o programa.</p>
 
 
-<h2>Compilation</h2> <hr/>
+<h2>Compilação</h2> <hr/>
 
-<p>Before we can run this program we need to compile it. This will produce the actual <em>executable</em> we can run on our computer. Open up the command line and browse to the directory that <code>hello_world.c</code> is saved in. You can then compile your program using the following command.</p>
+<p>Antes de rodar este programa precisamos compilá-lo. Isto irá produzir o <em>executável</em> que podemos efetivamente rodar no nosso computador. Abra a linha de comando e navegue até o diretório em que o arquivo <code>hello_world.c</code> está salvo. Você pode compilar o seu programa usando o seguinte comando.</p>
 
 <pre><code>cc -std=c99 -Wall hello_world.c -o hello_world</code></pre>
 
-<p>This compiles the code in <code>hello_world.c</code>, reporting any warnings, and outputs the program to a new file called <code>hello_world</code>. We use the <code>-std=c99</code> flag to tell the compiler which <em>version</em> or <em>standard</em> of C we are programming with. This lets the compiler ensure our code is standardised, so that people with different operating systems or compilers will be able to use our code.</p>
+<p>Isso vai compilar o código em <code>hello_world.c</code>, reportando quaisquer alertas (<em>warnings</em>), e produz o programa em um novo arquivo chamado <code>hello_world</code>. Nós usamos a opção <code>-std=c99</code> para dizer ao compilador qual <em>versão</em> ou <em>padrão</em> (standard) de C nós estamos usando para programar. Isso permite ao compilador garantir que nosso código esteja padronizado, de maneira que pessoas com sistemas operacionais diferentes serão capaz de usar nosso código.</p>
 
-<p>If successful you should see the output file in the current directory. This can be run by typing <code>./hello_world</code> (or just <code>hello_world</code> on Windows). If everything is correct you should see a friendly <code>Hello, world!</code> message appear.</p>
+<p>Caso funcionou, você verá o arquivo produzido no diretório atual. Ele pode ser rodado digitando <code>./hello_world</code> (ou apenas <code>hello_world</code> no windows). Se tudo estiver correto, você deve ser uma mensagem amigável <code>Hello, world!</code> aparecer.</p>
 
-<p><strong>Congratulations!</strong> You've just compiled and run your first C program.</p>
+<p><strong>Parabéns!</strong> Você acabou de compilar e rodar seu primeiro programa C.</p>
 
 
-<h2>Errors</h2> <hr/>
+<h2>Erros</h2> <hr/>
 
-<p>If there are some problems with your C program the compilation process may fail. These issues can range from simple syntax errors, to other complicated problems that are harder to understand.</p>
+<p>Se houver alguns problems com seu programa C o processo de compilação pode falhar. Estas questões podem variar de simples erros de sintaxe até outros problemas complicados que são difíceis de entender.</p>
 
-<p>Sometimes the error message from the compiler will make sense, but if you are having trouble understanding it try searching online for it. You should see if you can find a concise explanation of what it means, and work out how to correct it. Remember this: there are many people before you who have struggled with exactly the same problems.</p>
+<p>Às vezes a mensagem de erro do compilador fará sentido, mas se você está tendo dificuldade de entendê-la tente buscando ela online. Você deverá tentar achar uma explicação concisa para o que ela significa, e descobrir como corrigir. Lembre disso: há muitas pessoas que tiveram o mesmo problema antes de você.</p>
 
 <div class='pull-left alert alert-warning' style="margin: 15px; text-align: center;">
   <img src="/static/img/smash.png" alt="smash" class="img-responsive" width="281px" height="220px"/>
-  <p><small>Rage &bull; A poor debugging technique</small></p>
+  <p><small>Raiva &bull; Uma técnica pobre de depuração</small></p>
 </div>
 
-<p>Sometimes there will be many compiler errors stemming from one source. Always go through compiler errors from first to last.</p>
+<p>Às vezes haverão muitos erros de compilação decorrentes do mesmo código fonte. Sempre passe pelos erros de compilação do primeiro até o último. Isso pode ser uma arte bem além do escopo deste livro.</p>
 
-<p>Sometimes the compiler will compile a program, but when you run it it will crash. Debugging C programs in this situation is hard. It can be an art far beyond the scope of this book.</p>
+<p>Às vezes o compilador compilará um programa, mas quando você roda ele vai falhar. Depurar programas C nesta situação é difícil. Também pode ser uma arte bem além do escopo deste livro.</p>
 
-<p>If you are a beginner, the first port of call for debugging a crashing C program would be to print out lots of information as the program is running. Using this method you should try to isolate exactly what part of the code is incorrect and what, if anything, is going wrong. It is a debugging technique which is <em>active</em>. This is the important thing. As long as you are doing <em>something</em>, and not just staring at the code, the process is less painful and the temptation to give up is lessened.</p>
+<p>Caso seja um iniciante, a primeira parada para depurar um programa C falhando seria imprimir (isto é, jogar na saída) bastante informação à medida que o programa roda. Usando este método você deve tentar isolar exatamente qual parte do código está incorreta e o que, se for o caso, está dando errado. Essa é uma técnica de debug que é <em>ativa</em>. Isso é uma coisa importante. Desde que você esteja fazendo <em>alguma coisa</em>, e não apenas encarando o código, o processo é menos doloroso e a tentação de desistir é reduzida.</p>
 
-<p>For people feeling more confident a program called <code>gdb</code> can be used to debug your C programs. This can be difficult and complicated to use, but it is also very powerful and can give you extremely valuable information and what went wrong and where. Information on how to use <code>gdb</code> can be found <a href="http://web.archive.org/web/20140910051410/http://www.dirac.org/linux/gdb/">online</a>.</p>
+<p>Para pessoas se sentindo mais confiantes um programa chamado <code>gdb</code> pode ser usado para debugar seu programa. Isso pode ser difícil e complicado de usar, mas é também bem poderoso, pode lhe dar informação extremamente valiosa e o que aconteceu errado e onde. Informações em como usar <code>gdb</code> pode ser encontrada <a href="http://web.archive.org/web/20140910051410/http://www.dirac.org/linux/gdb/">online (em inglês)</a>.</p>
 
-<p>On <strong>Mac</strong> the most recent versions of OS X don't come with <code>gdb</code>. Instead you can use <code>lldb</code> which does largely the same job.</p>
+<p>No <strong>Mac</strong>, as versões mais recentes do OS X não vêm com <code>gdb</code>. No lugar, você pode usar o <code>lldb</code> que faz praticamente a mesma tarefa.</p>
 
-<p>On <strong>Linux</strong> or <strong>Mac</strong> <code>valgrind</code> can be used to aid the debugging of memory leaks and other more nasty errors. Valgrind is a tool that can save you hours, or even days, of debugging. It does not take much to get proficient at it, so investigating it is highly recommended. Information on how to use it can be found <a href="http://www.cprogramming.com/debugging/valgrind.html">online</a>.</p>
-
-
-<h2>Documentation</h2> <hr/>
-
-<p>Through this book you may come across a function in some example code that you don't recognise. You might wonder what it does. In this case you will want to look at the <a href="http://en.cppreference.com/w/c">online documentation</a> of the standard library. This will explain all the functions included in the standard library, what they do, and how to use them.</p>
+<p>No <strong>Linux</strong> ou <strong>Mac</strong>, o <code>valgrind</code> pode ser usado para ajudar a depurar vazamento de memória (<em>memory leaks</em>) e outros erros desagradáveis. Valgrind é uma ferramenta que pode salvar horas, ou mesmo dias, de depuração. Não leva muito tempo para ficar proficiente nele, então investigá-lo é altamente recomendado. Informação em como usá-lo pode ser encontrada <a href="http://www.cprogramming.com/debugging/valgrind.html">online (em inglês)</a>.</p>
 
 
-<h2>Reference</h2> <hr/>
+<h2>Documentação</h2> <hr/>
+
+<p>Ao longo deste livro você pode topar com uma função em algum código de exemplo que você não reconheça, e ficar imaginando o que será que ela faz. Neste caso você você pode olhar na <a href="http://en.cppreference.com/w/c">documentação online (em inglês)</a> da biblioteca padrão. A documentação vai explicar todas as funções incluídas na biblioteca padrão, o que elas fazem, e como usá-las.</p>
+
+
+<h2>Referência</h2> <hr/>
 
 <div class="alert alert-warning">
-  <p><strong>What is this section for?</strong></p>
+  <p><strong>Para que serve esta seção?</strong></p>
   
-  <p>In this section I'll link to the code I've written for this particular chapter of the book. When finishing with a chapter your code should probably look similar to mine. This code can be used for reference if the explanation has been unclear.</p>
+  <p>Nesta seção eu vincularei o código que eu escrevi para cada capítulo do livro. Ao terminar um capítulo seu código provavelmente se parecerá com o meu. Este código pode ser usado como referência caso a explicação não tenha sido clara.</p>
 
-  <p>If you encounter a bug please do not copy and paste my code into your project. Try to track down the bug yourself and use my code as a reference to highlight what may be wrong, or where the error may lie.</p>
+  <p>Caso encontre algum bug (erro), por favor não copie e cole meu código no seu projeto. Tente rastrear o problema você mesmo e use o meu código como uma referência para contrastar o que pode estar errado, ou onde o erro pode estar.</p>
 </div>
 
 <references />
 
-<h2>Bonus Marks</h2> <hr/>
+<h2>Metas bônus</h2> <hr/>
 
 <div class="alert alert-warning">
-  <p><strong>What is this section for?</strong></p>
+  <p><strong>Para que serve esta seção?</strong></p>
 
-  <p>In this section I'll list some things to try for fun, and learning.</p>
+  <p>Nesta seção listarei algumas coisas para experimentar por diversão, e aprendizado.</p>
 
-  <p>It is good if you can attempt to do some of these challenges. Some will be difficult and some will be much easier. For this reason don't worry if you can't figure them all out. Some might not even be possible!</p>
+  <p>É legal que você tente fazer alguns desses desafios. Alguns serão difíceis e alguns serão muito mais fáceis. Por isto, não se preocupe se você não consiga descobrir todos. Alguns podem nem mesmo ser possíveis!</p>
 
-  <p>Many will require some research on the internet. This is an integral part of learning a new language so should not be avoided. The ability to teach yourself things is one of the most valuable skills in programming.</p>
+  <p>Muitos vão requerer alguma pesquinsa na internet. Esta é uma parte integral de aprender uma nova linguagem então não deve ser evitada. A habilidade de ensinar você mesmo é uma das competências mais valiosas em programação</p>
 </div>
   
 <div class="alert alert-warning">
   <ul class="list-group">
-    <li class="list-group-item">&rsaquo; Change the <code>Hello World!</code> greeting given by your program to something different.</li>
-    <li class="list-group-item">&rsaquo; What happens when no <code>main</code> function is given?</li>
-    <li class="list-group-item">&rsaquo; Use the online documentation to lookup the <code>puts</code> function.</li>
-    <li class="list-group-item">&rsaquo; Look up how to use <code>gdb</code> and run it with your program.</li>
+    <li class="list-group-item">&rsaquo; Mude a mensagem <code>Hello World!</code> dada pelo seu programa para algo diferente.</li>
+    <li class="list-group-item">&rsaquo; O que acontece quando nenhuma função <code>main</code> é fornecida?</li>
+    <li class="list-group-item">&rsaquo; Use a documentação online para buscar a função <code>puts</code>.</li>
+    <li class="list-group-item">&rsaquo; Pesquise como usar o <code>gdb</code> e rodá-lo com seu programa.</li>
   </ul>
 </div>
 
-<h2>Navigation</h2>
+<h2>Navegação</h2>
 
 <table class="table" style='table-layout: fixed;'>
   <tr>
-    <td class="text-left"><a href="chapter1_introduction"><h4>&lsaquo; Introduction</h4></a></td>
-    <td class="text-center"><a href="contents"><h4>&bull; Contents &bull;</h4></a></td>
-    <td class="text-right"><a href="chapter3_basics"><h4>Basics &rsaquo;</h4></a></td>
+    <td class="text-left"><a href="chapter1_introduction"><h4>&lsaquo; Introdução</h4></a></td>
+    <td class="text-center"><a href="contents"><h4>&bull; Conteúdo &bull;</h4></a></td>
+    <td class="text-right"><a href="chapter3_basics"><h4>O Básico &rsaquo;</h4></a></td>
   </tr>
 </table>
