@@ -1,75 +1,77 @@
-<h1>Languages <small>&bull; Chapter 5</small></h1>
+<h1>Linguagens <small>&bull; Capítulo 5</small></h1>
 
 
-<h2>What is a Programming Language?</h2> <hr/>
+<h2>O que é uma linguagem de programação?</h2> <hr/>
 
-<p>A programming language is very similar to a real language. There is a structure behind it, and some rules which dictate what is, and isn't, a valid thing to say. When we read and write natural language, we are unconsciously learning these rules, and the same is true for programming languages. We can utilise these rules to understand others, and generate our own speech, or code.</p>
+<p>Uma linguagem de programação é bem parecida à uma linguagem real. Existe uma estrutura por trás dela, e algumas regras que ditam o que é e o que não é válido dizer. Quando lemos e escrevemos linguagem natural, estamos subconscientemente aprendendo estas regras, e o mesmo é verdade para linguagens de programação. Nós podemos utilizar essas regras para entender os outros, e gerar nosso próprio discurso, ou código.</p>
 
-<p>In the 1950s the linguist Noam Chomsky formalised a number of <a href="http://en.wikipedia.org/wiki/Chomsky_hierarchy">important observations</a> about languages. Many of these form the basis of our understanding of language today. One of these was the observation that natural languages are built up of recursive and repeated substructures.</p>
+<p>Nos anos 1950, o linguista Noam Chomsky formalizou algumas <a href="http://en.wikipedia.org/wiki/Chomsky_hierarchy">observações importantes</a> sobre linguagens. Muitas delas formam a base do nosso entendimento de linguagem hoje. Uma delas foi a observação que linguagens naturais tendem a ser construídas de subestruturas recursivas e repetidas.</p>
 
 <div class='pull-left alert alert-warning' style="margin: 15px; text-align: center;">
   <img src="/static/img/cat.png" alt="cat" class="img-responsive" width="227px" height="246px"/>
-  <p><small>Cat &bull; cannot speak or program</small></p>
+  <p><small>Gato &bull; não sabe falar ou programar</small></p>
 </div>
 
-<p>As an example of this, we can examine the phrase.</p>
+<p>Como exemplo disto, vamos examinar a frase:</p>
 
-<p>&rsaquo; <code>The cat walked on the carpet.</code></p>
+<p>&rsaquo; <code>Os gatos caminhavam no carpete.</code></p>
 
-<p>Using the rules of English, the noun <code>cat</code> can be replaced by two nouns separated by <code>and</code>.</p>
+<p>Usando as regras do Português, o substantivo <code>gatos</code> pode ser substituído por dois substantivos separados por <code>e</code>.</p>
 
-<p>&rsaquo; <code>The <strong>cat and dog</strong> walked on the carpet.</code></p>
+<p>&rsaquo; <code>Os <strong>gatos e cachorros</strong> caminhavam no carpete.</code></p>
 
-<p>Each of these new nouns could in turn be replaced again. We could use the same rule as before, and replace <code>cat</code> with two new nouns joined with <code>and</code>. Or we could use a different rule and replace each of the nouns with an adjective and a noun, to add description to them.</p>
+<p>Cada um dos dois substantivos podem também ser substituídos novamente. Poderíamos usar a mesma regra anterior, e substituir <code>gatos</code> por dois novos substantivos juntados com <code>e</code>. Ou poderíamos usar uma outra regra e substituir cada substantivo por um substantivo mais um adjetivo, para adicionar descrição à eles.</p>
 
-<p>&rsaquo; <code>The <strong>cat and mouse</strong> and dog walked on the carpet.</code></p>
+<p>&rsaquo; <code>Os <strong>gatos e ratos</strong> e cachorros caminhavam no carpete.</code></p>
 
-<p>&rsaquo; <code>The <strong>white cat</strong> and <strong>black dog</strong> walked on the carpet.</code></p>
+<p>&rsaquo; <code>Os <strong>gatos brancos</strong> e <strong>cachorros pretos</strong> caminhavam no carpete.</code></p>
 
-<p>These are just two examples, but English has many different rules for how types of words can be changed, manipulated and replaced.</p>
+<p>Estes são apenas dois exemplos, mas o Português tem muitas outras regras diferentes para como os tipos de palavras podem ser mudados, manipulados e substituídos.</p>
 
-<p>We notice this exact behaviour in programming languages too. In C, the body of an <code>if</code> statement contains a list of new statements. Each of these new statements, could themselves be another <code>if</code> statement. These repeated structures and replacements are reflected in all parts of the language. These are sometimes called <em>re-write rules</em> because they tell you how one thing can be <em>re-written</em> as something else.</p>
+<p>Nós notamos este exato comportamento em linguagens de programação também. Em C, o corpo de um comando <code>if</code> contém uma lista de novos comandos. Cada um destes novos comandos podem eles mesmos ser um outro comando <code>if</code>. Estas estruturas e substituições repetidas se refletem em todas as partes da linguagem. Elas são às vezes chamadas de regras de reescrita (<em>re-write rules</em>) porque elas dizem como uma coisa pode ser <em>reescrita</em> como alguma outra coisa.</p>
 
 <p>&rsaquo; <code>if (x > 5) { return x; }</code></p>
 
 <p>&rsaquo; <code>if (x > 5) { <strong>if (x > 10) { return x; }</strong> }</code></p>
 
-<p>The consequence of this observation by Chomsky is important. It means that although there are an infinite number of different things that can be said, or written down in a particular language, it is still possible to process and understand all of them with a finite number of re-write rules. The name given to a set of re-write rules is a <em>grammar</em>.</p>
+<p>A consequência desta observação por Chomsky é importante. Ela significa que embora existe um número infinito de coisas diferentes que podem ser ditas, ou escritas em uma linguagem particular, ainda é possível processar e entender todas elas com um número finito de regras de reescrita. Um conjunto de regras de reescrita é chamado de <em>gramática</em>.</p>
 
-<p>We can describe re-write rules in a number of ways. One way is textual. We could say something like, "a <em>sentence</em> must be a <em>verb phrase</em>", or "a <em>verb phrase</em> can be either a <em>verb</em> or, an <em>adverb</em> and a <em>verb</em>". This method is good for humans but it is too imprecise for computers to understand. When programming we need to write down a more formal description of a grammar.</p>
+<p>Nós podemos descrever regras de reescrita de várias maneiras. Uma delas é textual. Nós podemos dizer algo como, "uma <em>sentença</em> deve ser uma <em>frase verbal</em>", ou "uma <em>frase verbal</em> pode ser ou um <em>verbo</em>, ou um <em>advérbio</em> e um <em>verbo</em>". Este método é bom para humanos mas é muito impreciso para os computadores entender. Ao programar, precisamos escrever uma descrição mais formal de uma gramática.</p>
 
-<p>To write a programming language such as our Lisp we are going to need to understand grammars. For reading in the user input we need to write a <em>grammar</em> which describes it. Then we can use it along with our user input, to decide if the input is valid. We can also use it to build a structured internal representation, which will make the job of understanding it, and then evaluating it, performing the computations encoded within, much easier.</p>
+<p>Para escrever uma linguagem de programação como Lisp nós vamos precisar entender gramáticas. Para ler a entrada do usuário nós precisamos escrever uma <em>gramática</em> que a descreva. Então nós podemos usá-la juntamente com a entrada do usuário, para decidir se a entrada é válida. Nós também podemos usá-la para construir uma representação interna estruturada, o que fará bem mais fácil o trabalho de entendê-la, e então avaliá-la, executando a computação codificada nela.</p>
 
-<p>This is where a library called <code>mpc</code> comes in.</p>
+<p>É aí que entra uma biblioteca chamada <code>mpc</code>.</p>
 
 
 <h2>Parser Combinators</h2> <hr/>
 
-<p><code>mpc</code> is a <em>Parser Combinator</em> library I have written. This means it is a library that allows you to build programs that understand and process particular languages. These are known as <em>parsers</em>. There are many different ways of building parsers, but the cool thing about using a <em>Parser Combinator</em> library is that it lets you build <em>parsers</em> easily, just by specifying the <em>grammar</em> ... sort of.</p>
+<p><code>mpc</code> é uma biblioteca combinadora de <em>parsers</em> ou analisadores sintáticos (em inglês, <em>Parser Combinator</em>) que escrevi.  Isto significa que ela é uma biblioteca que permite a você construir programas que entendem e processam linguagens específicas. Eles são conhecidos como <em>parsers</em> ou analisadores sintáticos. Há muitas maneiras diferentes de construir parsers, mas o legal de usar uma biblioteca combinadora de <em>parsers</em> é que ela permite você construir <em>parsers</em> facilmente, simplesmente especificando a <em>gramática</em> ... ou quase isso.</p>
 
-<p>Many Parser Combinator libraries actually work by letting you write normal code that <em>looks a bit like</em> a grammar, not by actually specifying a grammar directly. In many situations this is fine, but sometimes it can get clunky and complicated. Luckily for us <code>mpc</code> allows us to write normal code that just looks like a grammar, <em>or</em> we can use special notation to write a grammar directly!</p>
+<p>Muitas bibliotecas combinadoras de parsers funcionam deixando você escrever código normal que <em>se parece um pouco com</em> uma gramática, não deixando você especificar uma gramática diretamente. Em muitas situações isto não tem problema, mas às vezes pode ficar desajeitado e complicado. Para nossa sorte, <code>mpc</code> nos permite escrever código normal que se parece com uma gramática, <em>OU</em> podemos usar uma notação especial para escrever a gramática diretamente!</p>
 
 
-<h2>Coding Grammars</h2> <hr/>
+<h2>Codificando gramáticas</h2> <hr/>
 
-<p>So what does code that looks like a grammar...<em>look like</em>? Let us take a look at <code>mpc</code> by trying to write code for a grammar that recognizes <a href="http://knowyourmeme.com/memes/doge">the language of Shiba Inu</a>. More colloquially known as <em>Doge</em>. This language we are going to define as follows.</p>
+<p>Então, com o que se parece um código que se parece com uma gramática? Vamos dar uma olhada no <code>mpc</code> tentando escrever código para uma gramática que reconhece <a href="https://en.wikipedia.org/wiki/Doge_(meme)">a linguagem do cachorro Shiba Inu</a>. Mais conhecido coloquialmente como <em>Doge</em>, nos memes da Internet. Esta linguagem nós vamos definir como segue:</p>
+    
+<p><sub>nota do tradutor: mantendo os nomes das em inglês, para simetria com o código e proximidade do meme</sub>):</p>
 
-<p>&rsaquo; An <em>Adjective</em> is either <em>"wow"</em>, <em>"many"</em>, <em>"so"</em> or <em>"such"</em>.</p>
-<p>&rsaquo; A <em>Noun</em> is either <em>"lisp"</em>, <em>"language"</em>, <em>"c"</em>, <em>"book"</em> or <em>"build"</em>.</p>
-<p>&rsaquo; A <em>Phrase</em> is an <em>Adjective</em> followed by a <em>Noun</em>.</p>
-<p>&rsaquo; A <em>Doge</em> is zero or more <em>Phrases</em>.</p>
+<p>&rsaquo; Um <em>Adjective</em> é ou <em>"wow"</em>, <em>"many"</em>, <em>"so"</em> ou <em>"such"</em>.</p>
+<p>&rsaquo; Um <em>Noun</em> (substantivo, em inglês) é ou <em>"lisp"</em>, <em>"language"</em>, <em>"c"</em>, <em>"book"</em> ou <em>"build"</em>.</p>
+<p>&rsaquo; Um <em>Phrase</em> é um <em>Adjective</em> seguido de um <em>Noun</em>.</p>
+<p>&rsaquo; Um <em>Doge</em> é zero ou mais <em>Phrases</em>.</p>
 
-<p>We can start by trying to define <em>Adjective</em> and <em>Noun</em>. To do this we create two new parsers, represented by the type <code>mpc_parser_t*</code>, and we store them in the variables <code>Adjective</code> and <code>Noun</code>. We use the function <code>mpc_or</code> to create a parser where one of several options should be used, and the function <code>mpc_sym</code> to wrap our initial strings.</p>
+<p>Podemos começar tentando definir <em>Adjective</em> e <em>Noun</em>. Para fazer isso, a gente cria dois parsers, representados pelo tipo <code>mpc_parser_t*</code>, e os armazenamos nas variáveis <code>Adjective</code> e <code>Noun</code>. Nós usamos a função <code>mpc_or</code> para criar um parser onde uma de muitas opções podem ser usadas, e a função <code>mpc_sym</code> para envolver nossas strings iniciais.</p>
 
-<p>If you squint you could attempt to read the code as if it were the rules we specified above.</p>
+<p>Se você semicerrar os olhos, pode tentar ler o código como se fosse as regras que especificamos acima.</p>
 
-<pre><code data-language='c'>/* Build a parser 'Adjective' to recognize descriptions */
+<pre><code data-language='c'>/* Constroi um parser 'Adjective' para reconhecer descricoes */
 mpc_parser_t* Adjective = mpc_or(4, 
   mpc_sym("wow"), mpc_sym("many"),
   mpc_sym("so"),  mpc_sym("such")
 );
 
-/* Build a parser 'Noun' to recognize things */
+/* Constroi um 'Noun' para reconhecer coisas */
 mpc_parser_t* Noun = mpc_or(5,
   mpc_sym("lisp"), mpc_sym("language"),
   mpc_sym("book"),mpc_sym("build"), 
@@ -78,21 +80,21 @@ mpc_parser_t* Noun = mpc_or(5,
 </code></pre>
 
 <div class="alert alert-warning">
-  <p><strong>How can I access these <code>mpc</code> functions?</strong></p>
+    <p><strong>Como posso acessar essas funções <code>mpc</code>?</strong></p>
   
-  <p>For now don't worry about compiling or running any of the sample code in this chapter. Just focus on understanding the theory behind grammars. In the next chapter we'll get set up with <code>mpc</code> and use it for a language closer to our Lisp.</p>
+    <p>Por enquanto não se preocupe sobre compilar ou rodar qualquer dos exemplos de código neste capítulo. Apenas foque em entender a teoria por trás das gramáticas. No próximo capítulo vamos nos acertar com a <code>mpc</code> e usá-la para uma linguagem próxima do nosso Lisp.</p>
 </div>
 
-<p>To define <code>Phrase</code> we can reference our existing parsers. We need to use the function <code>mpc_and</code>, that specifies one thing is required then another. As input we pass it <code>Adjective</code> and <code>Noun</code>, our previously defined parsers. This function also takes the arguments <code>mpcf_strfold</code> and <code>free</code>, which say how to join or delete the results of these parsers. Ignore these arguments for now.</p>
+<p>Para definir <code>Phrase</code> nós podemos referenciar nossos parsers existentes. Nós precisaremos usar a função <code>mpc_and</code>, que especifica que alguma coisa é requerida e a seguir uma outra. Como entrada nós passamos <code>Adjective</code> e <code>Noun</code>, nossos parsers definidos anteriormente. Esta função também recebe os argumentos <code>mpcf_strfold</code> e <code>free</code>, que dizem como juntar ou deletar os resultados desses parsers. Ignore esses argumentos por enquanto.</p>
 
 <pre><code data-language='c'>mpc_parser_t* Phrase = mpc_and(2, mpcf_strfold, 
-  Adjective, Noun, free);</code></pre>
+                               Adjective, Noun, free);</code></pre>
 
-<p>To define <em>Doge</em> we must specify that <em>zero or more</em> of some parser is required. For this we need to use the function <code>mpc_many</code>. As before, this function requires the special variable <code>mpcf_strfold</code> to say how the results are joined together, which we can ignore.</p>
+<p>Para definir <em>Doge</em> nós precisamos especificar que <em>zero ou mais</em> de algum parser é necessário. Para isso, precisamos usar a função <code>mpc_many</code>. Como antes, esta função requer a variável especial <code>mpcf_strfold</code> para dizer como os resultados serão juntados, o que podemos ignorar.</p>
 
 <pre><code data-language='c'>mpc_parser_t* Doge = mpc_many(mpcf_strfold, Phrase);</code></pre>
 
-<p>By creating a parser that looks for <em>zero or more</em> occurrences of another parser an interesting thing has happened. Our <code>Doge</code> parser accepts inputs of any length. This means its language is <em>infinite</em>. Here are just some examples of possible strings <code>Doge</code> could accept. Just as we discovered in the first section of this chapter we have used a finite number of re-write rules to create an infinite language.</p>
+<p>Depois de criar um parser que procura por <em>zero ou mais</em> ocorrências de um outro parser, uma coisa interessante aconteceu. Nosso <code>Doge</code> aceita entrada de qualquer tamanho. Isto significa que sua linguagem é <em>infinita</em>. Aqui estão apenas alguns exemplos de possíveis strings <code>Doge</code> poderia aceitar. Da mesma forma que descobrimos na primeira seção deste capítulo, nós usamos um número finito de regras de reescrita para criar uma linguagem infinita.</p>
 
 <pre><code data-language='c'>"wow book such language many lisp"
 "so c such build such language"
@@ -102,14 +104,14 @@ mpc_parser_t* Noun = mpc_or(5,
 "so c"
 </code></pre>
 
-<p>If we use more <code>mpc</code> functions, we can slowly build up parsers that parse more and more complicated languages. The code we use <em>sort of</em> reads like a grammar, but becomes much more messy with added complexity. Due to this, taking this approach isn't always an easy task. A whole set of helper functions that build on simple constructs to make frequent tasks easy are all documented on the <a href="http://github.com/orangeduck/mpc">mpc repository</a>. This is a good approach for complicated languages, as it allows for fine-grained control, but won't be required for our needs.</p>
+<p>Se usarmos mais funções <code>mpc</code>, podemos devagarinho construir parsers que analisam ("parseiam") linguagens mais e mais complicadas. O código que usamos <em>meio que</em> lê-se como uma gramática, mas se torna mais bagunçado com complexidade adicional. Devido a isso, usar essa abordagem nem sempre é uma tarefa fácil. Um conjunto de funções auxiliares que usam construções simples para tornar fáceis algumas tarefas frequentes estão todas documentadas no <a href="http://github.com/orangeduck/mpc">repositório Git da mpc</a>. Essa é uma boa abordagem para linguagens complicadas, pois ela permite por controle fino, mas não serão necessários para nosso caso.</p>
 
 
-<h2>Natural Grammars</h2> <hr/>
+<h2>Gramáticas naturais</h2> <hr/>
 
-<p><code>mpc</code> lets us write grammars in a more natural form too. Rather than using C functions that look less like a grammar, we can specify the whole thing in one long string. When using this method we don't have to worry about how to join or discard inputs, with functions such as <code>mpcf_strfold</code>, or <code>free</code>. All of that is done automatically for us.</p>
+<p><code>mpc</code> nos permite escrever gramáticas numa maneira mais natural também. Em vez de usar funções C que se parecem menos com uma gramática, nós podemos especificar a coisa toda em uma grande string. Ao usar este método, não precisamos nos preocupar de como juntar ou descartar as entradas, com funções como <code>mpcf_strfold</code> ou <code>free</code>. Tudo é feito automaticamente para nós.</p>
 
-<p>Here is how we would recreate the previous examples using this method.</p>
+<p>Eis aqui como poderíamos recriar os exemplos anteriores usando este método.</p>
 
 <pre><code data-language='c'>mpc_parser_t* Adjective = mpc_new("adjective");
 mpc_parser_t* Noun      = mpc_new("noun");
@@ -127,69 +129,69 @@ mpca_lang(MPCA_LANG_DEFAULT,
   ",
   Adjective, Noun, Phrase, Doge);
 
-/* Do some parsing here... */
+/* Faz algum parsing aqui... */
 
 mpc_cleanup(4, Adjective, Noun, Phrase, Doge);
 </code></pre>
 
-<p>Without having an exact understanding of the syntax for that long string, it should be obvious how much <em>clearer</em> the grammar is in this format. If we learn what all the special symbols mean we barely need to squint.</p>
+<p>Sem ter um entendimento preciso da sintaxe para essa longa string, deve ser óbvio como a gramática fica muito mais <em>clara</em> nesse formato. Se aprendermos tudo o que os símbolos especiais significam, mal precisamos semicerrar os olhos.</p>
 
-<p>Another thing to notice is that the process is now in two steps. First we create and name several rules using <code>mpc_new</code> and then we define them using <code>mpca_lang</code>.</p>
+<p>Uma outra coisa a notar é que o processo agora está em duas etapas. Primeiro nós criamos e nomeamos várias regras usando <code>mpc_new</code> e a seguir nós as definimos usando <code>mpca_lang</code>.</p>
 
-<p>The first argument to <code>mpca_lang</code> are the options flags. For this we just use the defaults. The second is a long multi-line string in C. This is the <em>grammar</em> specification. It consists of a number of <em>re-write rules</em>. Each rule has the name of the rule on the left, a colon <code>:</code>, and on the right its definition terminated with a semicolon <code>;</code>.</p>
+<p>O primeiro argumento para <code>mpca_lang</code> são as opções da da linha de comando. Para isso, simplesmente usamos os <em>defaults</em> (valores padrões preestabelecidos). O segundo é uma longa string multi-line (isto é, em múltiplas linhas) em C. Esta é a especificação da <em>gramática</em>. Ela consiste de um certo número de <em>regras de reescrita</em>. Cada regra tem o nome da regra à esquerda, um dois pontos <code>:</code>, e à direita sua definição terminada com um ponto e vírgula <code>;</code>.</p>
 
-<p>The special symbols used to define the rules on the right hand side work as follows.</p>
+<p>Os símbolos especiais usados para definir as regras ao lado direito funcionam da seguinte forma:</p>
 
 <table class='table'>
-  <tr><td><code>"ab"</code></td><td>The string <code>ab</code> is required.</td></tr>
-  <tr><td><code>'a'</code></td><td>The character <code>a</code> is required.</td></tr>
-  <tr><td><code>'a' 'b'</code></td><td>First <code>'a'</code> is required, then <code>'b'</code> is required.</td></tr>
-  <tr><td><code>'a' | 'b'</code></td><td>Either <code>'a'</code> is required, or <code>'b'</code> is required.</td></tr>
-  <tr><td><code>'a'*</code></td><td>Zero or more <code>'a'</code> are required.</td></tr>
-  <tr><td><code>'a'+</code></td><td>One or more <code>'a'</code> are required.</td></tr>
-  <tr><td><code>&lt;abba&gt;</code></td><td>The rule called <code>abba</code> is required.</td></tr>
+  <tr><td><code>"ab"</code></td><td>A string <code>ab</code> é requerida.</td></tr>
+  <tr><td><code>'a'</code></td><td>O caractere <code>a</code> é requerido.</td></tr>
+  <tr><td><code>'a' 'b'</code></td><td>Primeiro <code>'a'</code> é requerido, a seguir <code>'b'</code> é requerido.</td></tr>
+  <tr><td><code>'a' | 'b'</code></td><td>Ou <code>'a'</code> é requerido, ou <code>'b'</code> é requerido.</td></tr>
+  <tr><td><code>'a'*</code></td><td>Zero ou mais <code>'a'</code> são requeridos.</td></tr>
+  <tr><td><code>'a'+</code></td><td>Um ou mais <code>'a'</code> são requeridos.</td></tr>
+  <tr><td><code>&lt;abba&gt;</code></td><td>A regra chamada <code>abba</code> é requerida.</td></tr>
 </table>
 
 <div class="alert alert-warning">
-  <p><strong>Sounds familiar...</strong></p>
+  <p><strong>Parece familiar...</strong></p>
 
-  <p>Did you notice that the description of what the input string to <code>mpca_lang</code> should look like sounded like I was specifying a grammar? That's because it was. <code>mpc</code> uses itself internally to parse the input you give it to <code>mpca_lang</code>. It does it by specifying a <em>grammar</em> in code using the previous method. How neat is that.</p>
+  <p>Você notou que a descrição da string de entrada para <code>mpca_lang</code> soa como se estivesse especificando uma gramática? É porque ela está mesmo. <code>mpc</code> usa a si mesma para analisar ("parsear") a entrada que você fornece para <code>mpca_lang</code>. Ela faz isso especificando uma <em>gramática</em> em código usando o método anterior. Quão elegante é isso, hein?</p>
 </div>
 
-<p>Using the table described above verify that what I've written above is equal to what we specified in code.</p>
+<p>Usando a tabela descrita acima, verifique que o que eu escrevi acima é igual ao que está especificado no código.</p>
 
-<p>This method of specifying a grammar is what we are going to use in the following chapters. It might seem overwhelming at first. Grammars can be difficult to understand. But as we continue you will become much more familiar with how to create and edit them.</p>
+<p>Este método de especificar uma gramática é o que nós vamos usar nos próximos capítulos. Ele pode parecer um pouco consternante no começo. Gramáticas podem ser difíceis de entender. Mas à medida que continuamos você se tornará mais e mais familiarizado com como criá-las e editá-las.</p>
 
-<p>This chapter is about theory, so if you are going to try some of the bonus tasks, don't worry too much about correctness. Thinking in the right mindset is more important. Feel free to invent symbols and notation for certain concepts to make them simpler to write down. Some of the bonus task also might require cyclic or recursive grammar structures, so don't worry if you have to use these!</p>
+<p>Este capítulo é sobre teoria, então se você vai tentar alguma das tarefas bônus, não se preocupe muito sobre estarem corretas. Pensar com a mentalidade certa é mais importante. Fique à vontade para inventar símbolos e notação para certos conceitos para fazê-los mais simples de escrever. Alguma tarefa bônus pode precisar de estruturas de gramática cíclicas ou recursivas, então não se preocupe caso tenha que usá-las!</p>
 
 
 
-<h2>Reference</h2> <hr/>
+<h2>Referência</h2> <hr/>
 
 <references />
 
-<h2>Bonus Marks</h2> <hr/>
+<h2>Metas bônus</h2> <hr/>
 
 <div class="alert alert-warning">
   <ul class="list-group">
-    <li class="list-group-item">&rsaquo; Write down some more examples of strings the <code>Doge</code> language contains.</li>
-    <li class="list-group-item">&rsaquo; Why are there back slashes <code>\</code> in front of the quote marks <code>"</code> in the grammar?</li>
-    <li class="list-group-item">&rsaquo; Why are there back slashes <code>\</code> at the end of the line in the grammar?</li>
-    <li class="list-group-item">&rsaquo; Describe textually a grammar for decimal numbers such as <code>0.01</code> or <code>52.221</code>.</li>
-    <li class="list-group-item">&rsaquo; Describe textually a grammar for web URLs such as <code>http://www.buildyourownlisp.com</code>.</li>
-    <li class="list-group-item">&rsaquo; Describe textually a grammar for simple English sentences such as <code>the cat sat on the mat</code>.</li>
-    <li class="list-group-item">&rsaquo; Describe more formally the above grammars. Use <code>|</code>, <code>*</code>, or any symbols of your own invention.</li>
-    <li class="list-group-item">&rsaquo; If you are familiar with JSON, textually describe a grammar for it.</li>
+    <li class="list-group-item">&rsaquo; Escreva mais alguns exemplos de strings que a linguagem <code>Doge</code> contém.</li>
+    <li class="list-group-item">&rsaquo; Por que há "back slashes" <code>\</code> em frente das aspas <code>"</code> na gramática?</li>
+    <li class="list-group-item">&rsaquo; Por que há "back slashes" <code>\</code> ao fim da linha na gramática?</li>
+    <li class="list-group-item">&rsaquo; Descreva textualmente uma gramática para números decimas como <code>0.01</code> ou <code>52.221</code>.</li>
+    <li class="list-group-item">&rsaquo; Descreva textualmente uma gramática para endereços de URLs como <code>https://construa-seu-proprio-lisp.herokuapp.com/</code>.</li>
+    <li class="list-group-item">&rsaquo; Descreva textualmente uma gramática para sentenças em Português simples como <code>o gato sentou no tapete</code>.</li>
+    <li class="list-group-item">&rsaquo; Descreva mais formalmente as gramáticas acima. Use <code>|</code>, <code>*</code>, ou qualquer símbolo que você mesmo invente.</li>
+    <li class="list-group-item">&rsaquo; Se você está familiarizado com JSON, descreva textualmente uma gramática para ele.</li>
   </ul>
 </div>
 
 
-<h2>Navigation</h2>
+<h2>Navegação</h2>
 
 <table class="table" style='table-layout: fixed;'>
   <tr>
-    <td class="text-left"><a href="chapter4_interactive_prompt"><h4>&lsaquo; An Interactive Prompt</h4></a></td>
-    <td class="text-center"><a href="contents"><h4>&bull; Contents &bull;</h4></a></td>
+    <td class="text-left"><a href="chapter4_interactive_prompt"><h4>&lsaquo; Um Prompt Interativo</h4></a></td>
+    <td class="text-center"><a href="contents"><h4>&bull; Conteúdo &bull;</h4></a></td>
     <td class="text-right"><a href="chapter6_parsing"><h4>Parsing &rsaquo;</h4></a></td>
   </tr>
 </table>
