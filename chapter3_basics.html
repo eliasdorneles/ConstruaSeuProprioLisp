@@ -10,7 +10,7 @@
 
 <p>Neste capítulo preparei uma visão geral dos recursos básicos de C. Existem bem poucos <em>recursos</em> em C, e a sintaxe é relativamente simples. Mas isso não significa que é fácil. Toda a profundidade se esconde abaixo da superfície. Por causa disso vamos cobrir os <em>recursos</em> e a <em>sintaxe</em> rapidamente agora, e depois os veremos em maior profundidade à medida que continuamos.</p>
 
-<p>O objetivo deste capítulo é coloar todo mundo no mesmo nível. Pessoas totalmente novatas em C deverão portanto tomar algum tempo para ele, enquanto outros já com alguma experiência podem achar fácil dar uma olhada rápida e voltar depois caso necessário.</p>
+<p>O objetivo deste capítulo é colocar todo mundo no mesmo nível. Pessoas totalmente novatas em C deverão portanto tomar algum tempo para ele, enquanto outros já com alguma experiência podem achar fácil dar uma olhada rápida e voltar depois caso necessário.</p>
 
 
 <h2>Programas</h2> <hr/>
@@ -28,7 +28,7 @@
 
 <p>Funções em C consistem em manipulação de <em>variáveis</em>. Estas são itens de dados aos quais damos um nome.</p>
 
-<p>Cada variável em C tem um <em>tipo</em> explícito. Esses tipos são declarados por nós mesmos ou já vêm com a linguagem. Podemos declarar uma nova variável escrevendo o nome do seu tipo, seguida do seu nome, e opcionalmente setando-a para algum valor usando <code>=</code>. Esta declaração é um <em>comando</em> (<em>statement</em>), e terminamos todos os <em>comandos</em> em C com um ponto-e-vírgula <code>;</code>.</p>
+<p>Cada variável em C tem um <em>tipo</em> explícito. Esses tipos são declarados por nós mesmos ou já vêm com a linguagem. Podemos declarar uma nova variável escrevendo o nome do seu tipo, seguida do seu nome, e opcionalmente setando-a para algum valor usando <code>=</code>. Esta declaração é um <em>comando</em> (<em>statement</em>), e terminamos todos os <em>comandos</em> em C com um ponto e vírgula <code>;</code>.</p>
 
 <p>Para criar um novo <code>int</code> chamado <code>contagem</code> podemos escrever o seguinte...</p>
 
@@ -54,7 +54,7 @@
 
 <p>Uma função é uma computação que manipula variáveis, e opcionalmente muda o estado de um programa. Ela recebe como entrada algumas variáveis e devolve uma variável única como saída.</p>
 
-<p>Para declarar uma função nós escrevemos o tipo da variável que ela devolve, o nome da função, e então entre parênteses uma lista dasa variáveis ela recebe como entrada, separada por vírgulas. O conteúdo da função é colocado dentro de chaves <code>{}</code>, e lista todos os comandos que a função executa, terminados por ponto-e-vírgulas <code>;</code>. Um comando <code>return</code> é usado para deixar a função finalizar e devolver o valor de uma variável.</p>
+<p>Para declarar uma função nós escrevemos o tipo da variável que ela devolve, o nome da função, e então entre parênteses uma lista das variáveis ela recebe como entrada, separada por vírgulas. O conteúdo da função é colocado dentro de chaves <code>{}</code>, e lista todos os comandos que a função executa, terminados por pontos e vírgulas <code>;</code>. Um comando <code>return</code> é usado para deixar a função finalizar e devolver o valor de uma variável.</p>
 
 <p>Por exemplo, uma função que recebe duas variáveis <code>int</code> chamadas <code>x</code> e <code>y</code> e soma-as poderia parecer com isto:</p>
 
@@ -80,7 +80,6 @@
 } point;</code></pre>
 
 <p>Nós podemos colocar esta definição acima de quaisquer funções que desejam usá-la. Este tipo não é diferente dos tipos de dados embutidos na linguagem, e podemos usá-lo em todas as mesmas maneiras. Para acessar um campo individual nós usamos um ponto <code>.</code>, seguido do nome do campo, como <code>x</code>.</p>
-<p>We should place this definition above any functions that wish to use it. This type is no different to the built in types, and we can use it in all the same ways. To access an individual field we use a dot <code>.</code>, followed by the name of the field, such as <code>x</code>.</p>
 
 <pre><code data-language='c'>point p;
 p.x = 0.1;
@@ -115,7 +114,7 @@ float length = sqrt(p.x * p.x + p.y * p.y);
 
 <p>Comandos condicionais permitem o programa executar algum código apenas se determinadas condições são satisfeitas.</p>
 
-<p>Para executar código sob alguma condição nós usamos o comando <code>if</code>. Este é escrito como <code>if</code> seguido de alguma condição entre parênteses, seguidaa do código para executar entre chaves. Um comando <code>if</code> pode ser seguido opcionalmente por um comand <code>else</code>, seguido de outras comandos entre chaves. O código dentro dessas chaves será exeuctado no caso em que a condição é falsa.</p>
+<p>Para executar código sob alguma condição nós usamos o comando <code>if</code>. Este é escrito como <code>if</code> seguido de alguma condição entre parênteses, seguida do código para executar entre chaves. Um comando <code>if</code> pode ser seguido opcionalmente por um comando <code>else</code>, seguido de outras comandos entre chaves. O código dentro dessas chaves será executado no caso em que a condição é falsa.</p>
 
 <p>Nós podemos testar múltiplas condições usando os operadores lógicos <code>||</code> para <em>OU</em>, e <code>&&</code> para <em>E</em>.</p>
 
@@ -132,7 +131,7 @@ float length = sqrt(p.x * p.x + p.y * p.y);
 
 <h2>Laços</h2> <hr/>
 
-<p>Laços permmitem que algum código seja repetido até que alguma condição se torne falsa, ou algum contador termine.</p>
+<p>Laços permitem que algum código seja repetido até que alguma condição se torne falsa, ou algum contador termine.</p>
 
 <p>Há dois laços principais em C. O primeiro é o laço <code>while</code> (enquanto). Este laço repete a execução de um bloco de código até que alguma condição se torne falsa. Ele é escrito com <code>while</code> seguido de uma condição entre parênteses, seguida do código a ser repetido entre chaves. Por exemplo, um laço que conta para baixo de <code>10</code> a <code>1</code> poderia ser escrito da maneira que segue.</p>
 
@@ -142,7 +141,7 @@ while (i > 0) {
   i = i - 1;
 }</code></pre>
 
-<p>O segundo tipo de laço é um <code>for</code>. No lugar de uma condição, este laço requer três expressões separadas por ponto-e-vírgulas <code>;</code>. Estas são um <em>inicializador</em>, uma <em>condição</em> e um <em>incrementador</em>. O <em>inicializador</em> é executado antes do laço começar. A <em>condição</em> é checada a antes de cada iteração do laço. Caso for falsa, o laço é interrompido. O <em>incrementador</em> é executado ao fim de cada iteração do laço. Estes laços são frequentemente usados para contar pois são mais compactos que o laço <code>while</code>.</p>
+<p>O segundo tipo de laço é um <code>for</code>. No lugar de uma condição, este laço requer três expressões separadas por pontos e vírgulas <code>;</code>. Estas são um <em>inicializador</em>, uma <em>condição</em> e um <em>incrementador</em>. O <em>inicializador</em> é executado antes do laço começar. A <em>condição</em> é checada a antes de cada iteração do laço. Caso for falsa, o laço é interrompido. O <em>incrementador</em> é executado ao fim de cada iteração do laço. Estes laços são frequentemente usados para contar pois são mais compactos que o laço <code>while</code>.</p>
 
 <p>Por exemplo, para escrever um laço que conta para cima de <code>0</code> a <code>9</code> nós poderíamos escrever o seguinte. Neste caso o operador <code>++</code> incrementa (isto é, aumenta de 1 em 1) a variável <code>i</code>.</p>
 
