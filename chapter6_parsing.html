@@ -1,96 +1,96 @@
-<h1>Parsing <small>&bull; Chapter 6</small></h1>
+<h1>Análise Sintática <small>&bull; Capítulo 6</small></h1>
 
 
 <div class='pull-right alert alert-warning' style="margin: 15px; text-align: center;">
   <img src="/static/img/polish_man.png" alt="polish man" class="img-responsive" width="252px" height="375px"/>
-  <p><small>A Polish Nobleman &bull; A typical Polish Notation user</small></p>
+  <p><small>Nobre polonês &bull; Típico usuário de notação polonesa</small></p>
 </div>
 
 
-<h2>Polish Notation</h2> <hr/>
+<h2>Notação Polonesa</h2> <hr/>
 
-<p>To try out <code>mpc</code> we're going to implement a simple grammar that resembles a mathematical subset of our Lisp. It's called <a href="http://en.wikipedia.org/wiki/Polish_notation">Polish Notation</a> and is a notation for arithmetic where the operator comes before the operands.</p>
+<p>Para testar <code>mpc</code> vamos implementar uma gramática simples que lembra um subconjunto do nosso Lisp. É chamada de <a href="https://pt.wikipedia.org/wiki/Nota%C3%A7%C3%A3o_polonesa">Notação Polonesa</a> e é uma notação para aritmética onde o operador vem antes dos operandos.</p>
 
-<p>For example...</p>
+<p>Por exemplo...</p>
 
 <table class='table' style='display: inline'>
-  <tr><td><code>1 + 2 + 6</code></td><td><em>is</em></td><td><code>+ 1 2 6</code></td></tr>
-  <tr><td><code>6 + (2 * 9)</code></td><td><em>is</em></td><td><code>+ 6 (* 2 9)</code></td></tr>
-  <tr><td><code>(10 * 2) / (4 + 2)</code></td><td><em>is</em></td><td><code>/ (* 10 2) (+ 4 2)</code></td></tr>
+  <tr><td><code>1 + 2 + 6</code></td><td><em>é</em></td><td><code>+ 1 2 6</code></td></tr>
+  <tr><td><code>6 + (2 * 9)</code></td><td><em>é</em></td><td><code>+ 6 (* 2 9)</code></td></tr>
+  <tr><td><code>(10 * 2) / (4 + 2)</code></td><td><em>é</em></td><td><code>/ (* 10 2) (+ 4 2)</code></td></tr>
   <tr><td></td><td></td><td></td></tr>
 </table>
 
-<p>We need to work out a grammar which describes this notation. We can begin by describing it <em>textually</em> and then later formalise our thoughts.</p>
+<p>Precisamos arranjar uma gramática que descreva essa notação. Podemos começar descrevendo-a <em>textualmente</em> e em seguida formalizar nossos pensamentos.</p>
 
-<p>To start, we observe that in polish notation the operator always comes first in an expression, followed by either numbers or other expressions in parentheses. This means we can say "a <em>program</em> is an <em>operator</em> followed by one or more <em>expressions</em>," where "an <em>expression</em> is either a <em>number</em>, or, in parentheses, an <em>operator</em> followed by one or more <em>expressions</em>".</p>
+<p>Para começar, observamos que na notação polonesa o operador sempre vem antes numa epxressão, seguido por ou números ou outras expressões entre parênteses. Isso significa que podemos dizer "um <em>programa</em> é um <em>operador</em> seguido de uma ou mais <em>expressões</em>," onde "uma <em>expressão</em> é ou um <em>número</em>, ou, entre parênteses, um <em>operador</em> seguido de uma ou mais <em>expressões</em>.</p>
 
-<p>More formally...</p>
+<p>Mais formalmente...</p>
 
 <table class='table'>
-  <tr><td><code>Program</code></td><td><em>the start of input</em>, an <code>Operator</code>, one or more <code>Expression</code>, and <em>the end of input</em>.</td></tr>
-  <tr><td><code>Expression</code></td><td>either a <code>Number</code> <em>or</em> <code>'('</code>, an <code>Operator</code>, one or more <code>Expression</code>, and an <code>')'</code>.</td></tr>
-  <tr><td><code>Operator</code></td><td><code>'+'</code>, <code>'-'</code>, <code>'*'</code>, or <code>'/'</code>.</td></tr>
-  <tr><td><code>Number</code></td><td>an optional <code>-</code>, and one or more characters between <code>0</code> and <code>9</code></td></tr>
+  <tr><td><code>Program</code></td><td><em>o começo da entrada</em>, um <code>Operator</code>, uma ou mais <code>Expression</code>, e <em>o fim da entrada</em>.</td></tr>
+  <tr><td><code>Expression</code></td><td>ou um <code>Number</code> <em>ou</em> <code>'('</code>, um <code>Operator</code>, uma ou mais <code>Expression</code>, e um <code>')'</code>.</td></tr>
+  <tr><td><code>Operator</code></td><td><code>'+'</code>, <code>'-'</code>, <code>'*'</code>, ou <code>'/'</code>.</td></tr>
+  <tr><td><code>Number</code></td><td>um <code>-</code> opcional, e um ou mais caracteres entre <code>0</code> e <code>9</code></td></tr>
 </table>
 
 
-<h2>Regular Expressions</h2> <hr/>
+<h2>Expressões Regulares</h2> <hr/>
 
-<p>We should be able to encode most of the above rules using things we know already, but <em>Number</em> and <em>Program</em> might pose some trouble. They contain a couple of constructs we've not learnt how to express yet. We don't know how to express the start or the end of input, optional characters, or range of characters.</p>
+<p>Devemos ser capaz de codificar a maior parte das regras acima usando coisas que já sabemos, mas <em>Number</em> e <em>Program</em> podem representar algum problema. Essas regras contêm algumas construções que ainda não aprendemos como expressar. Não sabemos como expressar o começo ou o fim da entrada, caracteres opcionais, ou uma faixa de caracteres.</p>
 
-<p>These can be expressed, but they require something called a <em>Regular Expression</em>. Regular expressions are a way of writing grammars for small sections of text such as words or numbers. Grammars written using regular expressions can't consist of multiple rules, but they do give precise and concise control over what is matched and what isn't. Here are some basic rules for writing regular expressions.</p>
+<p>Elas podem ser expressas, mas requerem uma coisa chamada <em>Expressão Regular</em>. Expressões regulares são uma maneira de escrever gramáticas para pequenas porções de texto como palavras ou números. Gramáticas escritas usando expressões regulars não podem consistir de múltiplas regras, mas dão controle preciso e conciso sobre o que está sendo casado e o que não. Eis aqui algumas regras básicas para escrever expressões regulares.</p>
 
 <table class='table'>
-  <tr><td><code>.</code></td><td>Any character is required.</td></tr>
-  <tr><td><code>a</code></td><td>The character <code>a</code> is required.</td></tr>
-  <tr><td><code>[abcdef]</code></td><td>Any character in the set <code>abcdef</code> is required.</td></tr>
-  <tr><td><code>[a-f]</code></td><td>Any character in the range <code>a</code> to <code>f</code> is required.</td></tr>
-  <tr><td><code>a?</code></td><td>The character <code>a</code> is optional.</td></tr>
-  <tr><td><code>a*</code></td><td>Zero or more of the character <code>a</code> are required.</td></tr>
-  <tr><td><code>a+</code></td><td>One or more of the character <code>a</code> are required.</td></tr>
-  <tr><td><code>^</code></td><td>The start of input is required.</td></tr>
-  <tr><td><code>$</code></td><td>The end of input is required.</td></tr>
+  <tr><td><code>.</code></td><td>É esperado algum caractere qualquer.</td></tr>
+  <tr><td><code>a</code></td><td>É esperado o caractere <code>a</code>.</td></tr>
+  <tr><td><code>[abcdef]</code></td><td>É esperado algum caractere do conjunto <code>abcdef</code>.</td></tr>
+  <tr><td><code>[a-f]</code></td><td>É esperado algum caractere na faixa de <code>a</code> a <code>f</code>.</td></tr>
+  <tr><td><code>a?</code></td><td>O caractere <code>a</code> é opcional.</td></tr>
+  <tr><td><code>a*</code></td><td>Zero ou mais do caractere <code>a</code> são esperados.</td></tr>
+  <tr><td><code>a+</code></td><td>Um ou mais do caractere <code>a</code> são esperados.</td></tr>
+  <tr><td><code>^</code></td><td>O começo da entrada é esperado.</td></tr>
+  <tr><td><code>$</code></td><td>O fim da entrada é esperado.</td></tr>
 </table>
 
-<p>These are all the regular expression rules we need for now. <a href="http://regex.learncodethehardway.org/">Whole books</a> have been written on learning regular expressions. For the curious much more information can be found online or from these sources. We will be using them in later chapters, so some basic knowledge will be required, but you won't need to master them for now.</p>
+<p>Estas são todas as regras de epxressões regulares que vamos precisar por enquanto. <a href="http://regex.learncodethehardway.org/">Há livros inteiros</a> sobre o assunto de aprender expressões regulares. Para os curiosos, mais informações podem ser achadas online ou dessas fontes. Vamos usá-las em próximos capítulos, então algum conhecimento básico será necessário, mas você não precisa dominá-las por enquanto.</p>
 
-<p>In an <code>mpc</code> grammar we write regular expressions by putting them between forward slashes <code>/</code>. Using the above guide our <em>Number</em> rule can be expressed as a regular expression using the string <code>/-?[0-9]+/</code>.</p>
+<p>Em uma gramática <code>mpc</code> nós escrevemos expressões regulares colocando-as entre barras <code>/</code>. Usando o guia acima a nossa regra <em>Number</em> pode ser expressa como uma expressão regular usando a string <code>/-?[0-9]+/</code>.</p>
 
 
-<h2>Installing mpc</h2> <hr/>
+<h2>Instalando mpc</h2> <hr/>
 
-<p>Before we work on writing this grammar we first need to <em>include</em> the <code>mpc</code> headers, and then <em>link</em> to the <code>mpc</code> library, just as we did for <code>editline</code> on Linux and Mac. Starting with your code from chapter 4, you can rename the file to <code>parsing.c</code> and download <code>mpc.h</code> and <code>mpc.c</code> from the <a href="http://github.com/orangeduck/mpc">mpc repo</a>. Put these in the same directory as your source file.</p>
+<p>Antes de trabalharmos na escrita dessa gramática precisamos primeiro <em>incluir</em> os cabeçalhos da <code>mpc</code>, e então <em>vincular</em> a biblioteca <code>mpc</code>, da mesma forma que fizemos para <code>editline</code> no Linux e Mac. Começando com seu código do capítulo 4, você pode renomear o arquivo para <code>parsing.c</code> e baixar <code>mpc.h</code> e <code>mpc.c</code> do <a href="http://github.com/orangeduck/mpc">repositório mpc</a>. Ponha estes no mesmo diretório que seu código fonte.</p>
 
-<p>To <em>include</em> <code>mpc</code> put <code>#include "mpc.h"</code> at the top of the file. To <em>link</em> to <code>mpc</code> put <code>mpc.c</code> directly into the compile command. On Linux you will also have to link to the maths library by adding the flag <code>-lm</code>.</p>
+<p>Para <em>incluir</em> <code>mpc</code> coloque <code>#include "mpc.h"</code> no topo do arquivo. Para <em>vincular</em> à <code>mpc</code> coloque <code>mpc.c</code> diretamente no comando de compilação. No Linux você também precisa ligar às bibliotecas de matemática adicionando a opção <code>-lm</code>.</p>
 
-<p>On <strong>Linux</strong> and <strong>Mac</strong></p>
+<p>No <strong>Linux</strong> e <strong>Mac</strong></p>
 
 <pre><code>cc -std=c99 -Wall parsing.c mpc.c -ledit -lm -o parsing</code></pre>
 
-<p>On <strong>Windows</strong></p>
+<p>No <strong>Windows</strong></p>
 
 <pre><code>cc -std=c99 -Wall parsing.c mpc.c -o parsing</code></pre>
 
 <div class="alert alert-warning">
-  <p><strong>Hold on, don't you mean <code>#include &lt;mpc.h&gt;</code>?</strong></p>
+  <p><strong>Espera aí, você não quer dizer <code>#include &lt;mpc.h&gt;</code>?</strong></p>
 
-  <p>There are actually two ways to include files in C. One is using angular brackets <code>&lt;&gt;</code> as we've seen so far, and the other is with quotation marks <code>""</code>.</p>
+  <p>Existem duas maneiras de incluir arquivos em C. Uma delas é usando colchetes angulares <code>&lt;&gt;</code> como já vimos até agora, e a outra é usando aspas duplas <code>""</code>.</p>
   
-  <p>The only difference between the two is that using angular brackets searches the system locations for headers first, while quotation marks searches the current directory first. Because of this system headers such as <code>&lt;stdio.h&gt;</code> are typically put in angular brackets, while local headers such as <code>"mpc.h"</code> are typically put in quotation marks.</p>
+  <p>A única diferença entre as duas é que usando colchetes angulares procura os cabeçalhos nos diretórios do sistema primeiro, já as aspas duplas procuram no diretório atual primeiro. Por causa disso cabeçalhos do sistema como <code>&lt;stdio.h&gt;</code> são tipicamente usados com colchetes angulares, e cabeçalhos locais como <code>"mpc.h"</code> tipicamente são usados com aspas duplas.</p>
 </div>
 
 
-<h2>Polish Notation Grammar</h2> <hr/>
+<h2>Gramática para notação polonesa</h2> <hr/>
 
-<p>Formalising the above rules further, and using some regular expressions, we can write a final grammar for the language of polish notation as follows. Read the below code and verify that it matches what we had written textually, and our ideas of polish notation.</p>
+<p>Formalizando as regras acima ainda mais, e usando algumas expressões regulares, podemos escrever uma gramática final para a linguagem de notação polonesa como segue. Leia o código abaixo e verifique que ele fecha com o que tínhamos escrito textualmente, e nossas ideias de notação polonesa.</p>
 
-<pre><code data-language='c'>/* Create Some Parsers */
+<pre><code data-language='c'>/* Cria Alguns Parsers */
 mpc_parser_t* Number   = mpc_new("number");
 mpc_parser_t* Operator = mpc_new("operator");
 mpc_parser_t* Expr     = mpc_new("expr");
 mpc_parser_t* Lispy    = mpc_new("lispy");
 
-/* Define them with the following Language */
+/* Define eles com a seguinte linguagem */
 mpca_lang(MPCA_LANG_DEFAULT,
   "                                                     \
     number   : /-?[0-9]+/ ;                             \
@@ -101,40 +101,40 @@ mpca_lang(MPCA_LANG_DEFAULT,
   Number, Operator, Expr, Lispy);
 </code></pre>
 
-<p>We need to add this to the interactive prompt we started on in chapter 4. Put this code right at the beginning of the <code>main</code> function before we print the <em>Version</em> and <em>Exit</em> information. At the end of our program we also need to delete the parsers when we are done with them. Right before <code>main</code> returns we should place the following clean-up code.</p>
+<p>Precisamos adicionar isso ao prompt interativo que começamos no capítulo 4. Coloque este código logo no começo da função <code>main</code>, antes de parte que mostra a informação de versão e como sair. Ao fim do nosso programa, também precisamos deletar os parsers quando não precisamos mais deles. Logo antes da <code>main</code> retornar nós devemos adicionar o código de limpeza a seguir.</p>
 
-<pre><code data-language='c'>/* Undefine and Delete our Parsers */
+<pre><code data-language='c'>/* Desfaz definicao e deleta nossos Parsers */
 mpc_cleanup(4, Number, Operator, Expr, Lispy);</code></pre>
 
 <div class="alert alert-warning">
-  <p><strong>I'm getting an error <code>undefined reference to `mpc_lang'</code></strong></p>
+  <p><strong>Estou tendo o erro <code>undefined reference to `mpc_lang'</code></strong></p>
 
-  <p>That should be <code>mpca_lang</code>, with an <code>a</code> at the end!</p>
+  <p>O correto é <code>mpca_lang</code>, com um <code>a</code> no final!</p>
 </div>
 
-<h2>Parsing User Input</h2> <hr/>
+<h2>Analisando a entrada</h2> <hr/>
 
-<p>Our new code creates a <code>mpc</code> parser for our <em>Polish Notation</em> language, but we still need to actually <em>use</em> it on the user input supplied each time from the prompt. We need to edit our <code>while</code> loop so that rather than just echoing user input back, it actually attempts to parse the input using our parser. We can do this by replacing the call to <code>printf</code> with the following <code>mpc</code> code, that makes use of our program parser <code>Lispy</code>.</p>
+<p>Nosso código cria um parser <code>mpc</code> para nossa linguagem <em>Notação Polonesa</em>, mas ainda precisamos <em>usá-lo</em> de verdade na entrada suprida pelo usuário cada vez que solicitamos. Precisamos editar nosso laço <code>while</code> para que em vez de simplesmente ecoar a entrada, ele realmente tente analisar a entrada usando nosso parser. Podemos fazer isso substituindo a chamada à <code>printf</code> com o seguinte código <code>mpc</code>, que faz uso do nosso parser de programa <code>Lispy</code>.</p>
 
-<pre><code data-language='c'>/* Attempt to Parse the user Input */
+<pre><code data-language='c'>/* Tenta Parsear/Analisar a Entrada */
 mpc_result_t r;
 if (mpc_parse("&lt;stdin&gt;", input, Lispy, &amp;r)) {
-  /* On Success Print the AST */
+  /* Caso Successo, Imprime a AST */
   mpc_ast_print(r.output);
   mpc_ast_delete(r.output);
 } else {
-  /* Otherwise Print the Error */
+  /* Senao, Imprime o Erro */
   mpc_err_print(r.error);
   mpc_err_delete(r.error);
 }</code></pre>
 
-<p>This code calls the <code>mpc_parse</code> function with our parser <code>Lispy</code>, and the input string <code>input</code>. It copies the result of the parse into <code>r</code> and returns <code>1</code> on success and <code>0</code> on failure. We use the address of operator <code>&amp;</code> on <code>r</code> when we pass it to the function. This operator will be explained in more detail in later chapters.</p>
+<p>Esse código chama a função <code>mpc_parse</code> com nosso parser <code>Lispy</code>, e a string de entrada <code>input</code>. Ele copia o resultado da análise para <code>r</code> e retorna <code>1</code> caso teve sucesso ou <code>0</code> caso falhou. Nós usamos o operador de endereço <code>&amp;</code> em <code>r</code> quando passamo-lo à função. Este operador será explicado em mais detalhes em capítulos posteriores.</p>
 
-<p>On success an internal structure is copied into <code>r</code>, in the field <code>output</code>. We can print out this structure using <code>mpc_ast_print</code> and delete it using <code>mpc_ast_delete</code>.</p>
+<p>No caso de sucesso, uma estrutura interna é copiada para <code>r</code>, no campo <code>output</code>. Nós podemos imprimir esta estrutura usando <code>mpc_ast_print</code> e deletá-la usando <code>mpc_ast_delete</code>.</p>
 
-<p>Otherwise there has been an error, which is copied into <code>r</code> in the field <code>error</code>. We can print it out using <code>mpc_err_print</code> and delete it using <code>mpc_err_delete</code>.</p>
+<p>Caso não, terá havido algum erro, que é copiado para <code>r</code> no campo <code>error</code>. Podemos imprimir o erro usando <code>mpc_err_print</code> e deletá-lo usando <code>mpc_err_delete</code>.</p>
 
-<p>Compile these updates, and take this program for a spin. Try out different inputs and see how the system reacts. Correct behaviour should look like the following.</p>
+<p>Compile essas atualizações, e bote o programa para rodar. Tente algumas entradas diferentes e veja como o sistema reage. Comportamento correto deve se parecer com o seguinte.</p>
 
 <pre><code data-language='lispy'>Lispy Version 0.0.0.0.2
 Press Ctrl+c to Exit
@@ -158,37 +158,37 @@ lispy&gt; / 1dog
 lispy&gt;</code></pre>
 
 <div class="alert alert-warning">
-  <p><strong>I'm getting an error <code>&lt;stdin&gt;:1:1: error: Parser Undefined!</code>.</strong></p>
+  <p><strong>Estou tendo o erro <code>&lt;stdin&gt;:1:1: error: Parser Undefined!</code>.</strong></p>
 
-  <p>This error is due to the syntax for your grammar supplied to <code>mpca_lang</code> being incorrect. See if you can work out what part of the grammar is incorrect. You can use the reference code for this chapter to help you find this, and verify how the grammar should look.</p>
+  <p>Este erro é devido à sintaxe para sua gramática fornecida à <code>mpca_lang</code> estar incorreta. Veja se você consegue descobrir qual parte da gramática está incorreta. Você pode usar o código de referência para este capítulo para ajudá-lo a descobrir isso, e verificar como a gramática deve ser.</p>
 </div>
 
 
-<h2>Reference</h2> <hr/>
+<h2>Referência</h2> <hr/>
 
 <references />
 
-<h2>Bonus Marks</h2> <hr/>
+<h2>Metas bônus</h2> <hr/>
 
 <div class="alert alert-warning">
   <ul class="list-group">
-    <li class="list-group-item">&rsaquo; Write a regular expression matching strings of all <code>a</code> or <code>b</code> such as <code>aababa</code> or <code>bbaa</code>.</li>
-    <li class="list-group-item">&rsaquo; Write a regular expression matching strings of consecutive <code>a</code> and <code>b</code> such as <code>ababab</code> or <code>aba</code>.</li>
-    <li class="list-group-item">&rsaquo; Write a regular expression matching <code>pit</code>, <code>pot</code> and <code>respite</code> but <em>not</em> <code>peat</code>, <code>spit</code>, or <code>part</code>.</li>
-    <li class="list-group-item">&rsaquo; Change the grammar to add a new operator such as <code>%</code>.</li>
-    <li class="list-group-item">&rsaquo; Change the grammar to recognise operators written in textual format <code>add</code>, <code>sub</code>, <code>mul</code>, <code>div</code>.</li>
-    <li class="list-group-item">&rsaquo; Change the grammar to recognize decimal numbers such as <code>0.01</code>, <code>5.21</code>, or <code>10.2</code>.</li>
-    <li class="list-group-item">&rsaquo; Change the grammar to make the operators written conventionally, between two expressions.</li>
-    <li class="list-group-item">&rsaquo; Use the grammar from the previous chapter to parse <code>Doge</code>. You must add <em>start</em> and <em>end</em> of input.</li>
+    <li class="list-group-item">&rsaquo; Escreve uma expressão regular que case strings com tudo <code>a</code> ou <code>b</code> tais como <code>aababa</code> ou <code>bbaa</code>.</li>
+    <li class="list-group-item">&rsaquo; Escreve uma expressão regular que case strings de <code>a</code> e <code>b</code> consecutivos, tais como <code>ababab</code> ou <code>aba</code>.</li>
+    <li class="list-group-item">&rsaquo; Escreva uma expressão regular que case com <code>pit</code>, <code>pot</code> e <code>respite</code> mas não case com <em>not</em> <code>peat</code>, <code>spit</code>, ou <code>part</code>.</li>
+    <li class="list-group-item">&rsaquo; Mude a gramática para adicionar um novo operador como o <code>%</code>.</li>
+    <li class="list-group-item">&rsaquo; Mude a gramática para reconhecer operadores escritos em formato textual <code>add</code>, <code>sub</code>, <code>mul</code>, <code>div</code>.</li>
+    <li class="list-group-item">&rsaquo; Mude a gramática para reconhecer números decimais como <code>0.01</code>, <code>5.21</code>, ou <code>10.2</code>.</li>
+    <li class="list-group-item">&rsaquo; Mude a gramática para fazer os operadores escritos convencionalmente, entre duas expressões.</li>
+    <li class="list-group-item">&rsaquo; Use a gramática do capítulo anterior para analisar <code>Doge</code>. Você precisa adicionar <em>começo</em> e <em>fim</em> da entrada.</li>
   </ul>
 </div>
 
-<h2>Navigation</h2>
+<h2>Navegação</h2>
 
 <table class="table" style='table-layout: fixed;'>
   <tr>
-    <td class="text-left"><a href="chapter5_languages"><h4>&lsaquo; Languages</h4></a></td>
-    <td class="text-center"><a href="contents"><h4>&bull; Contents &bull;</h4></a></td>
-    <td class="text-right"><a href="chapter7_evaluation"><h4>Evaluation &rsaquo;</h4></a></td>
+    <td class="text-left"><a href="chapter5_languages"><h4>&lsaquo; Linguagens</h4></a></td>
+    <td class="text-center"><a href="contents"><h4>&bull; Conteúdo &bull;</h4></a></td>
+    <td class="text-right"><a href="chapter7_evaluation"><h4>Avaliação &rsaquo;</h4></a></td>
   </tr>
 </table>
