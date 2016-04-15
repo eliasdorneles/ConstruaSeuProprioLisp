@@ -8,16 +8,16 @@
   <p><small>Réptil &bull; Soa quase igual <em>REPL</em></small></p>
 </div>
 
-<p>À medida que construímos nossa linguagem de programação precisaremos de alguma maneira de interagir com ela. C usa um compilador, onde você muda o seu programa, recompile e roda-o. Seria bom se pudéssemos fazer algo melhor, e interagir com a linguagem de maneira dinâmica, de maneira que possamos testar seu comportamento em diversas condições bem rapidamente. Para isso nós construiremos algo chamado um <em>prompt interativo</em>.</p>
+<p>À medida que construímos nossa linguagem de programação precisaremos de alguma maneira de interagir com ela. C usa um compilador, onde você muda o seu programa, recompile e roda-o. Seria bom se pudéssemos fazer algo melhor, para interagir com a linguagem de maneira dinâmica, de maneira que possamos testar seu comportamento em diversas condições bem rapidamente. Para isso, construiremos algo chamado <em>prompt interativo</em>.</p>
 
-<p>Isso é um programa que solicita (em inglês, <em>prompts</em>) ao usuário alguma entrada, e quando esta for fornecida, responde de volta com alguma mensagem. Usando isso será a maneira mais fácil de testar nossa linguagem de programação e ver como ela age. Este sistema é também chamado um <em>REPL</em>, que significa <em>read</em>-<em>evaluate</em>-<em>print</em> <em>loop</em> (laço leia-avalie-imprima). É uma maneira comum de interagir com uma linguagem de programação que você pode ter usado antes em linguagens como <em>Python</em>.</p>
+<p>Isso é um programa que solicita (em inglês, <em>prompts</em>) alguma entrada ao usuário, e quando esta for fornecida, ele responde de volta com alguma mensagem. Usar isso será a maneira mais fácil de testar nossa linguagem de programação e ver como ela age. Este sistema é também chamado de <em>REPL</em>, que significa <em>read</em>-<em>evaluate</em>-<em>print</em> <em>loop</em> (laço leia-avalie-imprima). É uma maneira comum de interagir com uma linguagem de programação, que você talvez tenha usado antes em linguagens como <em>Python</em> ou <em>Ruby</em>.</p>
 
 <p>Antes de construir um <em>REPL</em> completo, começaremos com alguma coisa mais simples. Vamos fazer um sistema que solicita entrada, e ecoa qualquer entrada de volta. Se fizermos isto, podemos depois estendê-lo para analisar a entrada do usuário e avaliá-la, como se fosse um verdadeiro programa Lisp.</p>
 
 
 <h2>Um prompt interativo</h2> <hr/>
 
-<p>Para a construção básica nós queremos escrever um laço que repetidamente escreve uma mensagem, e então espera por alguma entrada. Para obter entrada do usuário nós podemos usar uma função chamada <code>fgets</code>, que lê qualquer entrada até uma quebra de linha. Nós precisamo de algum lugar para armazenar essa entrada do usuário. Para isso vamos declarar um <em>buffer de entrada</em> com tamanho constante.</p>
+<p>Para a construção básica, queremos escrever um laço que repetidamente escreve uma mensagem, e então espera por alguma entrada. Para obter entrada do usuário, podemos usar uma função chamada <code>fgets</code>, que lê qualquer entrada até uma quebra de linha. Precisamos de algum lugar para armazenar essa entrada do usuário. Para isso vamos declarar um <em>buffer de entrada</em> com tamanho constante.</p>
 
 <p>Uma vez que tenhamos a entrada do usuário armazenada, podemos imprimi-la de volta usando uma função chamada <code>printf</code>.</p>
 
@@ -56,22 +56,22 @@ int main(int argc, char** argv) {
 
 <p>Vamos repassar esse programa com um pouco mais de profundidade.</p>
 
-<p>A linha <code>static char input[2048];</code> declara um array global de 2048 caracteres. Isto é um bloco reservado de dados que podemos acessar de qualquer lugar do nosso programa. Nele nós vamos armazenar a entrada do usuário que é digitada na linha de comando. A palavra chave <code>static</code> torna essa variável local a este arquivo, e a seção <code>[2048]</code> é o que declara o seu tamanho.</p>
+<p>A linha <code>static char input[2048];</code> declara um array global de 2048 caracteres. Isto é um bloco reservado de dados que podemos acessar de qualquer lugar do nosso programa. Nele vamos armazenar a entrada do usuário que é digitada na linha de comando. A palavra chave <code>static</code> torna essa variável local a este arquivo, e a seção <code>[2048]</code> é o que declara o seu tamanho.</p>
 
 <p>Nós escrevemos um laço infinito usando <code>while (1)</code>. Em um bloco condicional, <code>1</code> sempre avalia como verdadeiro. Por isso, comandos dentro desse laço vão executar para sempre.</p>
 
-<p>Para imprimir nosso prompt nós usamos a função <code>fputs</code>. Esta é uma pequena variação de <code>puts</code> que não acrescenta um caractere de quebra de linha. Nós usamos a função <code>fgets</code> para obter entrada do usuário da linha de comando. Ambas funções requerem algum arquivo para onde escrever, ou de onde ler. Para isso, nós fornecemos as variáveis especiais <code>stdin</code> e <code>stdout</code>. Estas são declaradas em <code>&lt;stdio.h&gt;</code> e são variáveis de arquivo especiais representando a entrada e a saída da linha de comando. Quando passamos essa variável, a função <code>fgets</code> espera o usuário digitar uma linha de texto, e quando ele o faz ela armazena-a no buffer <code>input</code>, incluindo o caractere quebra de linha. Para que a <code>fgets</code> não leia dados demais nós também fornecemos o tamanho do buffer <code>2048</code>.</p>
+<p>Para imprimir nosso prompt, usamos a função <code>fputs</code>. Esta é uma pequena variação de <code>puts</code> que não acrescenta um caractere de quebra de linha. Usamos a função <code>fgets</code> para obter entrada do usuário da linha de comando. Ambas funções requerem um arquivo para onde escrever, ou de onde ler. Para isso, fornecemos as variáveis especiais <code>stdin</code> e <code>stdout</code>. Estas são declaradas em <code>&lt;stdio.h&gt;</code> e são variáveis de arquivo especiais representando a entrada e a saída da linha de comando. Quando passamos essa variável, a função <code>fgets</code> espera o usuário digitar uma linha de texto, e quando ele o faz ela armazena-a no buffer <code>input</code>, incluindo o caractere quebra de linha. Para que a <code>fgets</code> não leia dados demais, também fornecemos o tamanho do buffer <code>2048</code>.</p>
 
-<p>Para ecoar a mensagem de volta ao usuário nós usamos a função <code>printf</code>. Esta é uma função que provê uma maneira de imprimir mensagens consistindo de vários elementos. Ela casa argumentos com padrões dentro da string fornecida. Por exemplo, em nosso caso, nós podemos ver o padrão <code>%s</code> na string dada. Isto significa que ele será substituído por qualquer que seja o próximo argumento passado a seguir, interpretado como uma string.</p>
+<p>Para ecoar a mensagem de volta ao usuário, usamos a função <code>printf</code>. Esta é uma função que provê uma maneira de imprimir mensagens consistindo de vários elementos. Ela casa argumentos com padrões dentro da string fornecida. Por exemplo, em nosso caso, podemos ver o padrão <code>%s</code> na string dada. Isto significa que ele será substituído por qualquer que seja o próximo argumento passado a seguir, interpretado como uma string.</p>
 
 <p>Para mais informação sobre esses diferentes padrões, veja a <a href="http://en.cppreference.com/w/c/io/printf">documentação</a> sobre <code>printf</code>.</p>
 
 <div class="alert alert-warning">
   <p><strong>Como é que vou saber sobre funções como <code>fgets</code> e <code>printf</code>?</strong></p>
   
-  <p>Não é imediatamente óbvio como saber sobre essas funções padrão, e quando usá-las. Ao confrontar com um problema, leva alguma experiência saber quando ele já foi resolvido para você por funções de bibliotecas.</p>
+  <p>Não é imediatamente óbvio como saber sobre essas funções padrão, e quando usá-las. Ao confrontar com um problema, é necessário alguma experiência para saber quando este já foi resolvido para você por funções de bibliotecas.</p>
 
-  <p>Por sorte C tem uma biblioteca padrão bem pequena e quase todas elas podem ser aprendidas na prática. Se você quiser fazer algo que seja bem básico, ou fundamental, vale a pena olhar a <a href="http://en.cppreference.com/w/c">documentação de referência</a> para a biblioteca padrão e checar se existem quaisquer funções incluídas que fazem o que você quer.</p>
+  <p>Por sorte C tem uma biblioteca padrão bem pequena e quase todas elas podem ser aprendidas na prática. Se quiser fazer algo que seja bem básico, ou fundamental, vale a pena olhar a <a href="http://en.cppreference.com/w/c">documentação de referência</a> para a biblioteca padrão e checar se existem quaisquer funções incluídas que fazem o que você quer.</p>
 </div>
 
 
@@ -97,7 +97,7 @@ lispy&gt;</code></pre>
 
 <h2>Editando a entrada</h2> <hr/>
 
-<p>Se você está trabalhando no Linux ou Mac você notará um comportamento estranho caso tente usar as setas do teclado para tentar editar a entrada.</p>
+<p>Se você está trabalhando no Linux ou Mac, notará um comportamento estranho caso tente usar as setas do teclado para tentar editar a entrada.</p>
 
 <pre><code data-language='lispy'>Lispy Version 0.0.0.0.3
 Press Ctrl+c to Exit
@@ -105,9 +105,9 @@ Press Ctrl+c to Exit
 lispy> hel^[[D^[[C           
 </code></pre>
 
-<p>Usar as setas está criando estes caracteres estranhos <code>^[[D</code> ou <code>^[[C</code>, em vez de mover o cursor pela entrada. O que nós realmente queremos é ser capaz de mover em torno da linha, deletando e editando a entrada caso tenhamos cometido algum erro.</p>
+<p>Usar as setas está criando estes caracteres estranhos <code>^[[D</code> ou <code>^[[C</code>, em vez de mover o cursor pela entrada. O que realmente queremos é ser capaz de mover em torno da linha, deletando e editando a entrada caso tenhamos cometido algum erro.</p>
 
-<p>No Windows este comportamento é o padrão. No Linux e no Mac isso é providenciado por uma biblioteca chamada <code>editline</code>. No Linux e no Mac nós precisamos substituir nossas chamadas para <code>fputs</code> e <code>fgets</code> com chamadas para as funções que esta biblioteca fornece.</p>
+<p>No Windows este comportamento é o padrão. No Linux e no Mac isso é providenciado por uma biblioteca chamada <code>editline</code>. No Linux e no Mac, precisamos substituir nossas chamadas para <code>fputs</code> e <code>fgets</code> com chamadas para as funções que esta biblioteca fornece.</p>
 
 <p>Caso esteja desenvolvendo no Windows e queira simplesmente continuar, fique à vontade para pular para o fim deste capítulo já que as próximas seções podem não ser relevantes.</p>
 
@@ -149,23 +149,23 @@ int main(int argc, char** argv) {
   return 0;
 }</code></pre>
 
-<p>Nós <em>incluímos</em> alguns novos <em>cabeçalhos</em> (headers). Há o <code>#include &lt;stdlib.h&gt;</code>, que nos dá acesso à função <code>free</code> usada mais tarde no código. Nós também adicionamos <code>#include &lt;editline/readline.h&gt;</code> e <code>#include &lt;editline/history.h&gt;</code> que nós dá acesso às funções <code>editline</code>, <code>readline</code> e <code>add_history</code>.</p>
+<p>Nós <em>incluímos</em> alguns novos <em>cabeçalhos</em> (headers). Há o <code>#include &lt;stdlib.h&gt;</code>, que nos dá acesso à função <code>free</code> usada mais tarde no código. Também adicionamos <code>#include &lt;editline/readline.h&gt;</code> e <code>#include &lt;editline/history.h&gt;</code> que nos dá acesso às funções <code>editline</code>, <code>readline</code> e <code>add_history</code>.</p>
 
-<p>Em lugar de solicitar a entrada, e pegá-la com <code>fgets</code>, nós fazemos em uma vez só usando <code>readline</code>. O resultado disso nós passamos para <code>add_history</code> para gravá-lo. Finalmente nós o imprimimos como antes usando <code>printf</code>.</p>
+<p>Em lugar de solicitar a entrada, e pegá-la com <code>fgets</code>, fazemos ambos em uma vez usando apenas <code>readline</code>. O resultado disso nós passamos para <code>add_history</code> para gravá-lo. Finalmente o imprimimos como antes, usando <code>printf</code>.</p>
 
-<p>Diferentemente da <code>fgets</code>, a função <code>readline</code> retira o caractere quebra-de-linha à direita da entrada, então nós precisamos adicioná-lo na chamada à função <code>printf</code>. Nós também precisamos deletar a entrada nos dada pela função <code>readline</code> usando <code>free</code>. Isto é porque diferentemente da <code>fgets</code>, que escreve para um buffer existente, a função <code>readline</code> aloca nova memória quando é chamada. Quando liberar memória é algo que vamos cobrir em profundidade em capítulos posteriores.</p>
+<p>Diferentemente da <code>fgets</code>, a função <code>readline</code> retira o caractere quebra-de-linha à direita da entrada, então precisamos adicioná-lo na chamada à função <code>printf</code>. Também precisamos deletar a entrada nos dada pela função <code>readline</code> usando <code>free</code>. Isto é porque diferentemente da <code>fgets</code>, que escreve para um buffer existente, a função <code>readline</code> aloca nova memória quando é chamada. Quando devemos liberar memória é algo que vamos cobrir em profundidade em capítulos posteriores.</p>
 
 <h3>Compilando com a Editline</h3>
 
-<p>Se você tentar compilar isto imediatamente com o comando anterior você obterá um erro. Isto é porque primeiro nós precisamos instalar a biblioteca <code>editline</code> no seu computador.</p>
+<p>Se tentar compilar isto imediatamente com o comando anterior você obterá um erro. Isto é porque primeiro precisamos instalar a biblioteca <code>editline</code> no seu computador.</p>
 
 <pre><code>fatal error: editline/readline.h: No such file or directory #include &lt;editline/readline.h&gt;</code></pre>
 
-<p>No <strong>Mac</strong> a biblioteca <code>editline</code> vem com <em>Command Line Tools</em> (ferramentas da linha de comando). Instruções para instalação podem ser encontradas no <a href="/chapter2_installation">Capítulo 2</a>. Você pode ainda receber um erro sobre o cabeçalho de histórico (history header) não ser encontrado. Neste caso, remova a linha <code>#include &lt;editline/history.h&gt;</code>, pois esta pode não ser necessário.</p>
+<p>No <strong>Mac</strong> a biblioteca <code>editline</code> vem com <em>Command Line Tools</em> (ferramentas da linha de comando). Instruções para instalação podem ser encontradas no <a href="/chapter2_installation">Capítulo 2</a>. Você pode ainda receber um erro sobre o cabeçalho de histórico (history header) não ser encontrado. Neste caso, remova a linha <code>#include &lt;editline/history.h&gt;</code>, pois esta pode não ser necessária.</p>
 
-<p>No <strong>Linux</strong> você pode instalar a <em>editline</em> com <code>sudo apt-get install libedit-dev</code>. No Fedora, você pode usar o comando <code>su -c "yum install libedit-dev*"</code>.</p>
+<p>No <strong>Linux</strong> você pode instalar a <em>editline</em> com <code>sudo apt-get install libedit-dev</code>. No Fedora, pode usar o comando <code>su -c "yum install libedit-dev*"</code>.</p>
 
-<p>Tendo instalado a <em>editline</em>, você pode tentar compilar novamente. Dessa vez você obterá um erro diferente.</p>
+<p>Tendo instalado a <em>editline</em>, você pode tentar compilar novamente. Dessa vez obterá um erro diferente.</p>
 
 <pre><code>undefined reference to `readline'
 undefined reference to `add_history'
@@ -175,18 +175,18 @@ undefined reference to `add_history'
 
 <pre><code>cc -std=c99 -Wall prompt.c -ledit -o prompt</code></pre>
 
-<p>Rode isso e verifique se agora você pode editar a entrada à medida que você digita.</p>
+<p>Rode isso e verifique se agora consegue editar a entrada à medida que você digita.</p>
 
 <div class="alert alert-warning">
   <p><strong>Ainda não está funcionando!</strong></p>
   
-  <p>Alguns sistemas podem ter pequenas variações em como instalar, incluir e vincular com <code>editline</code>. Por exemplo, no Arch Linux o cabeçalho history da editline é <code>histedit.h</code>. Caso esteja tendo problemas, pesquise online e veja se você consegue encontrar instruções específicas para sua distribuição em como instalar e usar a biblioteca <code>editline</code>. Se isso não der certo, busque por instruções para a biblioteca <code>readline</code>, que é um substituto para a editline. No Mac ela pode ser instalada usando HomeBrew ou MacPorts.</p>
+  <p>Alguns sistemas podem ter pequenas variações em como instalar, incluir e vincular com <code>editline</code>. Por exemplo, no Arch Linux o cabeçalho history da editline é <code>histedit.h</code>. Caso esteja tendo problemas, pesquise online e veja se consegue encontrar instruções específicas para sua distribuição em como instalar e usar a biblioteca <code>editline</code>. Se isso não der certo, busque por instruções para a biblioteca <code>readline</code>, que é um substituto para a editline. No Mac ela pode ser instalada usando HomeBrew ou MacPorts.</p>
 </div>
 
 
 <h2>O pré-processador C</h2> <hr/>
 
-<p>Para um projeto tão pequeno pode ser tranquilo ter que programar diferentemente dependendo de qual sistema operacional estamos usando, mas se queremos enviar o código fonte a um amigo em um sistema operacional diferente para me ajudar com a programação, isso vai causar problemas. Num mundo ideal eu gostaria que meu código fonte fosse capaz de compilar não importa onde, ou em qual computador ele está sendo compilado. Este é um problema geral em C, e é chamado <em>portabilidade</em>. Nem sempre há uma solução fácil ou correta.</p>
+<p>Para um projeto tão pequeno, pode ser tranquilo ter que programar diferentemente dependendo de qual sistema operacional estamos usando, mas se queremos enviar o código fonte a um amigo em um sistema operacional diferente para me ajudar com a programação isso vai causar problemas. Num mundo ideal eu gostaria que meu código fonte fosse capaz de compilar não importa onde ou em qual computador ele está sendo compilado. Este é um problema geral em C, e é chamado <em>portabilidade</em>. Nem sempre há uma solução fácil ou correta.</p>
 
 <div class='pull-right alert alert-warning' style="margin: 15px; text-align: center;">
   <img src="/static/img/octopus.png" alt="octopus" class="img-responsive" width="266px" height="268px"/>
@@ -195,13 +195,13 @@ undefined reference to `add_history'
 
 <p>Mas C fornece um mecanismo para ajudar, chamado <em>o pré-processador</em>.</p>
 
-<p>O pré-processador é um programa que roda antes do compilador. Ele tem uma gama de propósitos, e nós já o estamos usando-o sem saber. Qualquer linha que comece com um caractere octothorpe/jogo-da-velha/sustenido <code>#</code> é um comando do pré-processador. Nós o estamos usando para incluir (<em>include</em>) arquivos de cabeçalho, nos dando acesso às funções da biblioteca padrão e outras.</p>
+<p>O pré-processador é um programa que roda antes do compilador. Ele tem uma gama de propósitos, e nós já o estamos usando sem saber. Qualquer linha que comece com um caractere octothorpe/jogo-da-velha/sustenido <code>#</code> é um comando do pré-processador. Nós o estamos usando para incluir (<em>include</em>) arquivos de cabeçalho, nos dando acesso às funções da biblioteca padrão e outras.</p>
 
 <p>Um outro uso do pré-processador é detectar qual sistema operacional o código está sendo compilado, e usar isto para emitir código diferente.</p>
 
 <p>Isto é exatamente como nós vamos fazê-lo. Se estivermos rodando Windows, vamos deixar o pré-processador emitir código com algumas funções que preparei imitando <code>readline</code> e <code>add_history</code>, senão vamos incluir os cabeçalhos da <code>editline</code> e usá-los.</p>
 
-<p>Para declarar qual código o compilador deve emitir nós podemos o envolver em comandos do pré-processador <code>#ifdef</code>, <code>#else</code>, e <code>#endif</code>. Estes são como uma função <code>if</code> que acontece antes do código ser compilado. Todo o conteúdo do arquivo desde o primeiro <code>#ifdef</code> ao próximo <code>#else</code> é usado se a condição for verdadeira, senão todo o conteúdo desde o <code>#else</code> até o último <code>#endif</code> será usado no lugar. Colocando isso em torno das nossas funções imitadoras, e de nossos cabeçalhos da editline, o código que será emitido deverá compilar no Windows, Linux ou Mac.</p>
+<p>Para declarar qual código o compilador deve emitir, podemos envolvê-lo em comandos do pré-processador <code>#ifdef</code>, <code>#else</code>, e <code>#endif</code>. Estes são como uma função <code>if</code> que acontece antes do código ser compilado. Todo o conteúdo do arquivo desde o primeiro <code>#ifdef</code> ao próximo <code>#else</code> é usado se a condição for verdadeira, caso contrário todo o conteúdo desde o <code>#else</code> até o último <code>#endif</code> será usado no lugar. Colocando isso em torno das nossas funções imitadoras, e de nossos cabeçalhos da editline, o código que será emitido deverá compilar no Windows, Linux ou Mac.</p>
 
 <pre><code data-language='c'>#include &lt;stdio.h&gt;
 #include &lt;stdlib.h&gt;

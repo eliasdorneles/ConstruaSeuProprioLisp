@@ -8,16 +8,16 @@
   <p><small>Programas &bull; Úteis para o teatro.</small></p>
 </div>
 
-<p>Neste capítulo preparei uma visão geral dos recursos básicos de C. Existem bem poucos <em>recursos</em> em C, e a sintaxe é relativamente simples. Mas isso não significa que é fácil. Toda a profundidade se esconde abaixo da superfície. Por causa disso vamos cobrir os <em>recursos</em> e a <em>sintaxe</em> rapidamente agora, e depois os veremos em maior profundidade à medida que continuamos.</p>
+<p>Neste capítulo preparei uma visão geral dos recursos básicos de C. Existem bem poucos <em>recursos</em> em C, e a sintaxe é relativamente simples. Mas isso não significa que é fácil. Toda a profundidade se esconde debaixo da superfície. Por causa disso vamos cobrir rapidamente os <em>recursos</em> e a <em>sintaxe</em> agora, e depois os veremos em maior profundidade à medida que continuamos.</p>
 
-<p>O objetivo deste capítulo é colocar todo mundo no mesmo nível. Pessoas totalmente novatas em C deverão portanto tomar algum tempo para ele, enquanto outros já com alguma experiência podem achar fácil dar uma olhada rápida e voltar depois caso necessário.</p>
+<p>O objetivo deste capítulo é colocar todo mundo no mesmo nível. Pessoas totalmente novatas em C deverão portanto tomar algum tempo nele, enquanto outros já com alguma experiência podem achar fácil dar uma olhada rápida e voltar depois caso necessário.</p>
 
 
 <h2>Programas</h2> <hr/>
 
-<p>Um programa em C consiste de somente <em>definições de funções</em> e <em>definições de estruturas</em>.</p>
+<p>Um programa em C consiste em somente <em>definições de funções</em> e <em>definições de estruturas</em>.</p>
 
-<p>Portando um arquivo de código-fonte é simplesmente uma lista de <em>funções</em> e <em>tipos</em> (types). Estas funções podem chamar umas às outras ou a si próprias, e podem usar quaisquer tipos de dados que foram declarados ou já venham com a linguagem.</p>
+<p>Portanto um arquivo de código-fonte é simplesmente uma lista de <em>funções</em> e <em>tipos</em> (types). Estas funções podem chamar umas às outras ou a si próprias, e podem usar quaisquer tipos de dados que foram declarados ou já venham com a linguagem.</p>
 
 <p>É possível chamar funções em outras bibliotecas, ou usar seus tipos de dados. É assim que camadas de complexidade são acumuladas em programação C.</p>
 
@@ -54,7 +54,7 @@
 
 <p>Uma função é uma computação que manipula variáveis, e opcionalmente muda o estado de um programa. Ela recebe como entrada algumas variáveis e devolve uma variável única como saída.</p>
 
-<p>Para declarar uma função nós escrevemos o tipo da variável que ela devolve, o nome da função, e então entre parênteses uma lista das variáveis ela recebe como entrada, separada por vírgulas. O conteúdo da função é colocado dentro de chaves <code>{}</code>, e lista todos os comandos que a função executa, terminados por pontos e vírgulas <code>;</code>. Um comando <code>return</code> é usado para deixar a função finalizar e devolver o valor de uma variável.</p>
+<p>Para declarar uma função, escrevemos o tipo da variável que ela devolve, o nome da função, e a seguir entre parênteses uma lista das variáveis ela recebe como entrada, separada por vírgulas. O conteúdo da função é colocado dentro de chaves <code>{}</code>, e lista todos os comandos que a função executa, terminados por pontos e vírgulas <code>;</code>. O comando <code>return</code> é usado para deixar a função finalizar e devolver o valor de uma variável.</p>
 
 <p>Por exemplo, uma função que recebe duas variáveis <code>int</code> chamadas <code>x</code> e <code>y</code> e soma-as poderia parecer com isto:</p>
 
@@ -63,14 +63,14 @@
   return resultado;
 }</code></pre>
 
-<p>Nós chamamos funções retornando seu nome e colocando os argumentos para a função entre parênteses, separados por vírgulas. Por exemplo, para chamar a função acima e armazenar o resultado em uma variável <code>somados</code> poderíamos escrever o seguinte:</p>
+<p>Nós chamamos funções escrevendo seu nome e colocando os argumentos para a função entre parênteses, separados por vírgulas. Por exemplo, para chamar a função acima e armazenar o resultado em uma variável <code>somados</code> poderíamos escrever o seguinte:</p>
 
 <pre><code data-language='c'>int somados = calcula_soma(10, 18);</code></pre>
 
 
 <h2>Declarações de estruturas</h2> <hr/>
 
-<p>Estruturas são usadas para declarar novos <em>tipos</em>. Estruturas são várias variáveis aglomeradas em um único pacote.</p>
+<p>Estruturas são usadas para declarar novos <em>tipos</em>. Estruturas são um conjunto de variáveis aglomeradas em um único pacote.</p>
 
 <p>Nós podemos usar estruturas para representar tipos de dados mais complexos. Por exemplo, para representar um ponto no espaço 2D nós poderíamos criar uma estrutura chamada <code>point</code> que empacota dois valores <code>float</code> (decimais) chamados <code>x</code> e <code>y</code>. Para declarar estruturas nós podemos usar a palavra-chave <code>struct</code> em conjunto com a palavra-chave <code>typedef</code>. Nossa declaração se pareceria com isto:</p>
 
@@ -79,7 +79,7 @@
   float y;
 } point;</code></pre>
 
-<p>Nós podemos colocar esta definição acima de quaisquer funções que desejam usá-la. Este tipo não é diferente dos tipos de dados embutidos na linguagem, e podemos usá-lo em todas as mesmas maneiras. Para acessar um campo individual nós usamos um ponto <code>.</code>, seguido do nome do campo, como <code>x</code>.</p>
+<p>Podemos colocar esta definição acima de quaisquer funções que desejam usá-la. Este tipo não é diferente dos tipos de dados embutidos na linguagem, e podemos usá-lo em todas as mesmas maneiras. Para acessar um campo individual, usamos um ponto <code>.</code>, seguido do nome do campo, como <code>x</code>.</p>
 
 <pre><code data-language='c'>point p;
 p.x = 0.1;
@@ -98,25 +98,25 @@ float length = sqrt(p.x * p.x + p.y * p.y);
   <p><small>Pointer &bull; Um com cabelo curto</small></p>
 </div>
 
-<p>Um apontador é uma variação de um tipo normal onde o nome do tipo é sufixado com um asterisco. Por exemplo, nós poderíamos declarar um <em>apontador para um inteiro</em> escrevendo <code>int*</code>. Nós já vimos um tipo apontador <code>char** argv</code>. Este é um <em>apontador para apontadores de caracteres</em>, e é usado como entrada para a função <code>main</code>.</p>
+<p>Um apontador é uma variação de um tipo normal onde o nome do tipo é sufixado com um asterisco. Por exemplo, poderíamos declarar um <em>apontador para um inteiro</em> escrevendo <code>int*</code>. Já vimos um tipo apontador antes: <code>char** argv</code>. Este é um <em>apontador para apontadores de caracteres</em>, e é usado como entrada para a função <code>main</code>.</p>
 
-<p>Apontadores são usadas para uma grande quantidade de coisas como strings (tipo de dados de texto) ou listas. Eles são uma parte difícil de C e serão explicados em maior detalhe nos capítulos posteriores. Nós não faremos uso deles por um tempo, então por enquanto é simplesmente bom saber que eles existem, e como identificá-los. Não deixe eles assustarem você!</p>
+<p>Apontadores são usadas para uma grande quantidade de coisas como strings (tipo de dados de texto) ou listas. Eles são uma parte difícil de C e serão explicados em maior detalhe nos capítulos posteriores. Não faremos uso deles por um tempo, então por enquanto é simplesmente bom saber que eles existem, e como identificá-los. Não deixe eles assustarem você!</p>
 
 
 <h2>Strings</h2> <hr/>
 
-<p>Em C, strings são representadas pelo apontador <code>char*</code>. Por baixo dos panos eles são armazenados como uma lista de caracteres, onde o caractere final é um caractere especial chamado o <em>terminador null</em>. Strings são uma parte complicada e importante de C, que aprenderemos a usar efetivamente nos próximos capítulos.</p>
+<p>Em C, strings são representadas pelo apontador <code>char*</code>. Por baixo dos panos, eles são armazenados como uma lista de caracteres onde o caractere final é um caractere especial chamado o <em>terminador null</em>. Strings são uma parte complicada e importante de C, que aprenderemos a usar efetivamente nos próximos capítulos.</p>
 
-<p>Strings podem ser declaradas literalmente colocando seu texto entre aspas. Nós usamos isso no capítulo anterior com nossa string <code>"Hello, World!"</code>. Por ora, lembre-se que se você ver <code>char*</code>, você pode lê-lo como <em>string</em>.</p>
+<p>Strings podem ser declaradas literalmente colocando seu texto entre aspas. Usamos isso no capítulo anterior com nossa string <code>"Hello, World!"</code>. Por ora, lembre-se que se você ver <code>char*</code>, pode lê-lo como <em>string</em>.</p>
 
 
 <h2>Condicionais</h2> <hr/>
 
-<p>Comandos condicionais permitem o programa executar algum código apenas se determinadas condições são satisfeitas.</p>
+<p>Comandos condicionais permitem ao programa executar algum código apenas se determinadas condições são satisfeitas.</p>
 
 <p>Para executar código sob alguma condição nós usamos o comando <code>if</code>. Este é escrito como <code>if</code> seguido de alguma condição entre parênteses, seguida do código para executar entre chaves. Um comando <code>if</code> pode ser seguido opcionalmente por um comando <code>else</code>, seguido de outras comandos entre chaves. O código dentro dessas chaves será executado no caso em que a condição é falsa.</p>
 
-<p>Nós podemos testar múltiplas condições usando os operadores lógicos <code>||</code> para <em>OU</em>, e <code>&&</code> para <em>E</em>.</p>
+<p>Podemos testar múltiplas condições usando os operadores lógicos <code>||</code> para <em>OU</em>, e <code>&&</code> para <em>E</em>.</p>
 
 <p>Dentro dos parênteses de um comando condicional, qualquer valor que não for <code>0</code> será avaliado como verdadeiro. Isso é importante lembrar pois muitas condições usam isto para checar coisas implicitamente.</p>
 
@@ -141,9 +141,9 @@ while (i > 0) {
   i = i - 1;
 }</code></pre>
 
-<p>O segundo tipo de laço é um <code>for</code>. No lugar de uma condição, este laço requer três expressões separadas por pontos e vírgulas <code>;</code>. Estas são um <em>inicializador</em>, uma <em>condição</em> e um <em>incrementador</em>. O <em>inicializador</em> é executado antes do laço começar. A <em>condição</em> é checada a antes de cada iteração do laço. Caso for falsa, o laço é interrompido. O <em>incrementador</em> é executado ao fim de cada iteração do laço. Estes laços são frequentemente usados para contar pois são mais compactos que o laço <code>while</code>.</p>
+<p>O segundo tipo de laço é o <code>for</code>. No lugar de uma condição, este laço requer três expressões separadas por pontos e vírgulas <code>;</code>. Estas são: um <em>inicializador</em>, uma <em>condição</em> e um <em>incrementador</em>. O <em>inicializador</em> é executado antes do laço começar. A <em>condição</em> é checada a antes de cada iteração do laço. Caso for falsa, o laço é interrompido. O <em>incrementador</em> é executado ao fim de cada iteração do laço. Estes laços são frequentemente usados para contar pois são mais compactos que o laço <code>while</code>.</p>
 
-<p>Por exemplo, para escrever um laço que conta para cima de <code>0</code> a <code>9</code> nós poderíamos escrever o seguinte. Neste caso o operador <code>++</code> incrementa (isto é, aumenta de 1 em 1) a variável <code>i</code>.</p>
+<p>Por exemplo, para escrever um laço que conta para cima de <code>0</code> a <code>9</code>, poderíamos escrever o código a seguir -- neste caso o operador <code>++</code> incrementa (isto é, aumenta de 1 em 1) a variável <code>i</code>.</p>
 
 <pre><code data-language='c'>for (int i = 0; i < 10; i++) {
   puts("Loop Iteration");
@@ -156,7 +156,7 @@ while (i > 0) {
   <ul class="list-group">
     <li class="list-group-item">&rsaquo; Use um laço <code>for</code> para imprimir <code>Hello World!</code> 5 vezes.</li>
     <li class="list-group-item">&rsaquo; Use um laço <code>while</code> para imprimir <code>Hello World!</code> 5 times.</li>
-    <li class="list-group-item">&rsaquo; Declare uma função que imprima <code>Hello World!</code> <code>n</code> vezes. Chame-a da função <code>main</code>.</li>
+    <li class="list-group-item">&rsaquo; Declare uma função que imprima <code>Hello World!</code> <code>n</code> vezes. Chame-a desde a função <code>main</code>.</li>
     <li class="list-group-item">&rsaquo; Quais outros tipos embutidos existem que não foram listados?</li>
     <li class="list-group-item">&rsaquo; Quais outros operadores condicionais existem que além de <em>maior que</em> <code>&gt;</code>, e <em>menor que</em> <code>&lt;</code>?</li>
     <li class="list-group-item">&rsaquo; Quais outros operadores matemáticos existem além de <em>soma</em> <code>+</code>, e <em>subtração</em> <code>-</code>?</li>

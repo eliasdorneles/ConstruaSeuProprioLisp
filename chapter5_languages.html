@@ -3,9 +3,9 @@
 
 <h2>O que é uma linguagem de programação?</h2> <hr/>
 
-<p>Uma linguagem de programação é bem parecida à uma linguagem real. Existe uma estrutura por trás dela, e algumas regras que ditam o que é e o que não é válido dizer. Quando lemos e escrevemos linguagem natural, estamos subconscientemente aprendendo estas regras, e o mesmo é verdade para linguagens de programação. Nós podemos utilizar essas regras para entender os outros, e gerar nosso próprio discurso, ou código.</p>
+<p>Uma linguagem de programação é bem parecida a uma linguagem real. Existe uma estrutura por trás dela, e algumas regras que ditam o que é e o que não é válido dizer. Quando lemos e escrevemos linguagem natural, estamos subconscientemente aprendendo estas regras, e o mesmo é verdade para linguagens de programação. Nós podemos utilizar essas regras para entender os outros, e gerar nosso próprio discurso, ou código.</p>
 
-<p>Nos anos 1950, o linguista Noam Chomsky formalizou algumas <a href="http://en.wikipedia.org/wiki/Chomsky_hierarchy">observações importantes</a> sobre linguagens. Muitas delas formam a base do nosso entendimento de linguagem hoje. Uma delas foi a observação que linguagens naturais tendem a ser construídas de subestruturas recursivas e repetidas.</p>
+<p>Nos anos 1950, o linguista Noam Chomsky formalizou algumas <a href="http://en.wikipedia.org/wiki/Chomsky_hierarchy">observações importantes</a> sobre linguagens. Muitas delas formam a base do nosso entendimento de linguagem hoje. Uma delas foi a observação que linguagens naturais tendem a ser construídas a partir de subestruturas recursivas e repetidas.</p>
 
 <div class='pull-left alert alert-warning' style="margin: 15px; text-align: center;">
   <img src="/static/img/cat.png" alt="cat" class="img-responsive" width="227px" height="246px"/>
@@ -26,17 +26,17 @@
 
 <p>&rsaquo; <code>Os <strong>gatos brancos</strong> e <strong>cachorros pretos</strong> caminhavam no carpete.</code></p>
 
-<p>Estes são apenas dois exemplos, mas o Português tem muitas outras regras diferentes para como os tipos de palavras podem ser mudados, manipulados e substituídos.</p>
+<p>Estes são apenas dois exemplos, mas o Português tem muitas outras regras diferentes sobre como os tipos de palavras podem ser mudados, manipulados e substituídos.</p>
 
-<p>Nós notamos este exato comportamento em linguagens de programação também. Em C, o corpo de um comando <code>if</code> contém uma lista de novos comandos. Cada um destes novos comandos podem eles mesmos ser um outro comando <code>if</code>. Estas estruturas e substituições repetidas se refletem em todas as partes da linguagem. Elas são às vezes chamadas de regras de reescrita (<em>re-write rules</em>) porque elas dizem como uma coisa pode ser <em>reescrita</em> como alguma outra coisa.</p>
+<p>Nós notamos este exato comportamento em linguagens de programação também. Em C, o corpo de um comando <code>if</code> contém uma lista de novos comandos. Cada um destes novos comandos podem ser eles mesmos um outro comando <code>if</code>. Estas estruturas e substituições repetidas se refletem em todas as partes da linguagem. Elas são às vezes chamadas de <em>regras de reescrita<em> (em inglês, <em>re-write rules</em>), porque elas dizem como uma coisa pode ser <em>reescrita</em> como alguma outra coisa.</p>
 
 <p>&rsaquo; <code>if (x > 5) { return x; }</code></p>
 
 <p>&rsaquo; <code>if (x > 5) { <strong>if (x > 10) { return x; }</strong> }</code></p>
 
-<p>A consequência desta observação por Chomsky é importante. Ela significa que embora existe um número infinito de coisas diferentes que podem ser ditas, ou escritas em uma linguagem particular, ainda é possível processar e entender todas elas com um número finito de regras de reescrita. Um conjunto de regras de reescrita é chamado de <em>gramática</em>.</p>
+<p>A consequência desta observação por Chomsky é importante. Ela significa que embora exista um número infinito de coisas diferentes que podem ser ditas, ou escritas em uma linguagem particular, ainda é possível processar e entender todas elas com um número finito de regras de reescrita. Um conjunto de regras de reescrita é chamado de <em>gramática</em>.</p>
 
-<p>Nós podemos descrever regras de reescrita de várias maneiras. Uma delas é textual. Nós podemos dizer algo como, "uma <em>sentença</em> deve ser uma <em>frase verbal</em>", ou "uma <em>frase verbal</em> pode ser ou um <em>verbo</em>, ou um <em>advérbio</em> e um <em>verbo</em>". Este método é bom para humanos mas é muito impreciso para os computadores entender. Ao programar, precisamos escrever uma descrição mais formal de uma gramática.</p>
+<p>Nós podemos descrever regras de reescrita de várias maneiras. Uma delas é textual. Nós podemos dizer algo como, "uma <em>sentença</em> deve ser uma <em>frase verbal</em>", ou "uma <em>frase verbal</em> pode ser ou um <em>verbo</em>, ou um <em>advérbio</em> e um <em>verbo</em>". Este método é bom para humanos mas é muito impreciso para os computadores entender. Ao programar, precisamos escrever uma descrição mais formal duma gramática.</p>
 
 <p>Para escrever uma linguagem de programação como Lisp nós vamos precisar entender gramáticas. Para ler a entrada do usuário nós precisamos escrever uma <em>gramática</em> que a descreva. Então nós podemos usá-la juntamente com a entrada do usuário, para decidir se a entrada é válida. Nós também podemos usá-la para construir uma representação interna estruturada, o que fará bem mais fácil o trabalho de entendê-la, e então avaliá-la, executando a computação codificada nela.</p>
 
@@ -45,14 +45,14 @@
 
 <h2>Parser Combinators</h2> <hr/>
 
-<p><code>mpc</code> é uma biblioteca combinadora de <em>parsers</em> ou analisadores sintáticos (em inglês, <em>Parser Combinator</em>) que escrevi.  Isto significa que ela é uma biblioteca que permite a você construir programas que entendem e processam linguagens específicas. Eles são conhecidos como <em>parsers</em> ou analisadores sintáticos. Há muitas maneiras diferentes de construir parsers, mas o legal de usar uma biblioteca combinadora de <em>parsers</em> é que ela permite você construir <em>parsers</em> facilmente, simplesmente especificando a <em>gramática</em> ... ou quase isso.</p>
+<p><code>mpc</code> é uma biblioteca combinadora de analisadores sintáticos (em inglês, <em>Parser Combinator</em>) que escrevi. Isto significa que ela é uma biblioteca que permite a você construir programas que entendem e processam linguagens específicas. Eles são conhecidos como <em>parsers</em>, ou analisadores sintáticos. Há muitas maneiras diferentes de construir parsers, mas o legal de usar uma biblioteca combinadora de <em>parsers</em> é que ela permite você construir <em>parsers</em> facilmente, simplesmente especificando a <em>gramática</em> ... ou quase isso.</p>
 
-<p>Muitas bibliotecas combinadoras de parsers funcionam deixando você escrever código normal que <em>se parece um pouco com</em> uma gramática, não deixando você especificar uma gramática diretamente. Em muitas situações isto não tem problema, mas às vezes pode ficar desajeitado e complicado. Para nossa sorte, <code>mpc</code> nos permite escrever código normal que se parece com uma gramática, <em>OU</em> podemos usar uma notação especial para escrever a gramática diretamente!</p>
+<p>Muitas bibliotecas combinadoras de parsers funcionam deixando você escrever código normal que <em>se parece um pouco com</em> uma gramática, não deixando você especificar uma gramática diretamente. Em muitas situações isto não é um problema, mas às vezes pode ficar desajeitado e complicado. Para nossa sorte, <code>mpc</code> nos permite escrever código normal que se parece com uma gramática, <em>OU</em> podemos usar uma notação especial para escrever a gramática diretamente!</p>
 
 
 <h2>Codificando gramáticas</h2> <hr/>
 
-<p>Então, com o que se parece um código que se parece com uma gramática? Vamos dar uma olhada no <code>mpc</code> tentando escrever código para uma gramática que reconhece <a href="https://en.wikipedia.org/wiki/Doge_(meme)">a linguagem do cachorro Shiba Inu</a>. Mais conhecido coloquialmente como <em>Doge</em>, nos memes da Internet. Esta linguagem nós vamos definir como segue:</p>
+<p>Então, com o que se parece um código que se parece com uma gramática? Vamos dar uma olhada no <code>mpc</code>, tentando escrever código para uma gramática que reconhece <a href="https://en.wikipedia.org/wiki/Doge_(meme)">a linguagem do cachorro Shiba Inu</a>. Mais conhecido coloquialmente como <em>Doge</em>, nos memes da Internet. Esta linguagem nós vamos definir como segue:</p>
     
 <p><sub>nota do tradutor: mantendo os nomes das em inglês, para simetria com o código e proximidade do meme</sub>):</p>
 
@@ -104,7 +104,7 @@ mpc_parser_t* Noun = mpc_or(5,
 "so c"
 </code></pre>
 
-<p>Se usarmos mais funções <code>mpc</code>, podemos devagarinho construir parsers que analisam ("parseiam") linguagens mais e mais complicadas. O código que usamos <em>meio que</em> lê-se como uma gramática, mas se torna mais bagunçado com complexidade adicional. Devido a isso, usar essa abordagem nem sempre é uma tarefa fácil. Um conjunto de funções auxiliares que usam construções simples para tornar fáceis algumas tarefas frequentes estão todas documentadas no <a href="http://github.com/orangeduck/mpc">repositório Git da mpc</a>. Essa é uma boa abordagem para linguagens complicadas, pois ela permite por controle fino, mas não serão necessários para nosso caso.</p>
+<p>Se usarmos mais funções <code>mpc</code>, podemos devagarinho construir parsers que analisam ("parseiam") linguagens mais e mais complicadas. O código que usamos lê-se <em>mais ou menos</em> como uma gramática, mas se torna mais bagunçado com complexidade adicional. Devido a isso, usar essa abordagem nem sempre é uma tarefa fácil. Um conjunto de funções auxiliares que usam construções simples para tornar fáceis algumas tarefas frequentes estão todas documentadas no <a href="http://github.com/orangeduck/mpc">repositório Git da mpc</a>. Essa é uma boa abordagem para linguagens complicadas pois ela permite um controle fino, mas não serão necessários para nosso caso.</p>
 
 
 <h2>Gramáticas naturais</h2> <hr/>
@@ -136,9 +136,9 @@ mpc_cleanup(4, Adjective, Noun, Phrase, Doge);
 
 <p>Sem ter um entendimento preciso da sintaxe para essa longa string, deve ser óbvio como a gramática fica muito mais <em>clara</em> nesse formato. Se aprendermos tudo o que os símbolos especiais significam, mal precisamos semicerrar os olhos.</p>
 
-<p>Uma outra coisa a notar é que o processo agora está em duas etapas. Primeiro nós criamos e nomeamos várias regras usando <code>mpc_new</code> e a seguir nós as definimos usando <code>mpca_lang</code>.</p>
+<p>Uma outra coisa a notar é que o processo agora está em duas etapas. Primeiro nós criamos e nomeamos várias regras usando <code>mpc_new</code> e a seguir as definimos usando <code>mpca_lang</code>.</p>
 
-<p>O primeiro argumento para <code>mpca_lang</code> são as opções da da linha de comando. Para isso, simplesmente usamos os <em>defaults</em> (valores padrões preestabelecidos). O segundo é uma longa string multi-line (isto é, em múltiplas linhas) em C. Esta é a especificação da <em>gramática</em>. Ela consiste de um certo número de <em>regras de reescrita</em>. Cada regra tem o nome da regra à esquerda, um dois pontos <code>:</code>, e à direita sua definição terminada com um ponto e vírgula <code>;</code>.</p>
+<p>O primeiro argumento para <code>mpca_lang</code> são as opções da linha de comando. Para isso, simplesmente usamos os <em>defaults</em> (valores padrões preestabelecidos). O segundo é uma longa string multi-line (isto é, em múltiplas linhas) em C. Esta é a especificação da <em>gramática</em>. Ela consiste de um certo número de <em>regras de reescrita</em>. Cada regra tem o nome da regra à esquerda, um dois pontos <code>:</code>, e à direita sua definição terminada com um ponto e vírgula <code>;</code>.</p>
 
 <p>Os símbolos especiais usados para definir as regras ao lado direito funcionam da seguinte forma:</p>
 
@@ -160,10 +160,9 @@ mpc_cleanup(4, Adjective, Noun, Phrase, Doge);
 
 <p>Usando a tabela descrita acima, verifique que o que eu escrevi acima é igual ao que está especificado no código.</p>
 
-<p>Este método de especificar uma gramática é o que nós vamos usar nos próximos capítulos. Ele pode parecer um pouco consternante no começo. Gramáticas podem ser difíceis de entender. Mas à medida que continuamos você se tornará mais e mais familiarizado com como criá-las e editá-las.</p>
+<p>Este método de especificar uma gramática é o que vamos usar nos próximos capítulos. Ele pode parecer um pouco consternante no começo. Gramáticas podem ser difíceis de entender. Mas à medida que continuamos você se tornará mais e mais familiarizado com como criá-las e editá-las.</p>
 
 <p>Este capítulo é sobre teoria, então se você vai tentar alguma das tarefas bônus, não se preocupe muito sobre estarem corretas. Pensar com a mentalidade certa é mais importante. Fique à vontade para inventar símbolos e notação para certos conceitos para fazê-los mais simples de escrever. Alguma tarefa bônus pode precisar de estruturas de gramática cíclicas ou recursivas, então não se preocupe caso tenha que usá-las!</p>
-
 
 
 <h2>Referência</h2> <hr/>
@@ -175,8 +174,8 @@ mpc_cleanup(4, Adjective, Noun, Phrase, Doge);
 <div class="alert alert-warning">
   <ul class="list-group">
     <li class="list-group-item">&rsaquo; Escreva mais alguns exemplos de strings que a linguagem <code>Doge</code> contém.</li>
-    <li class="list-group-item">&rsaquo; Por que há "back slashes" <code>\</code> em frente das aspas <code>"</code> na gramática?</li>
-    <li class="list-group-item">&rsaquo; Por que há "back slashes" <code>\</code> ao fim da linha na gramática?</li>
+    <li class="list-group-item">&rsaquo; Por que há barras invertidas <code>\</code> em frente das aspas <code>"</code> na gramática?</li>
+    <li class="list-group-item">&rsaquo; Por que há barras invertidas <code>\</code> ao fim da linha na gramática?</li>
     <li class="list-group-item">&rsaquo; Descreva textualmente uma gramática para números decimas como <code>0.01</code> ou <code>52.221</code>.</li>
     <li class="list-group-item">&rsaquo; Descreva textualmente uma gramática para endereços de URLs como <code>https://construa-seu-proprio-lisp.herokuapp.com/</code>.</li>
     <li class="list-group-item">&rsaquo; Descreva textualmente uma gramática para sentenças em Português simples como <code>o gato sentou no tapete</code>.</li>

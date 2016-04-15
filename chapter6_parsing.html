@@ -9,7 +9,7 @@
 
 <h2>Notação Polonesa</h2> <hr/>
 
-<p>Para testar <code>mpc</code> vamos implementar uma gramática simples que lembra um subconjunto do nosso Lisp. É chamada de <a href="https://pt.wikipedia.org/wiki/Nota%C3%A7%C3%A3o_polonesa">Notação Polonesa</a> e é uma notação para aritmética onde o operador vem antes dos operandos.</p>
+<p>Para testar a <code>mpc</code> vamos implementar uma gramática simples que lembra um subconjunto do nosso Lisp. Ela é chamada de <a href="https://pt.wikipedia.org/wiki/Nota%C3%A7%C3%A3o_polonesa">Notação Polonesa</a> e é uma notação para aritmética onde o operador vem antes dos operandos.</p>
 
 <p>Por exemplo...</p>
 
@@ -22,7 +22,7 @@
 
 <p>Precisamos arranjar uma gramática que descreva essa notação. Podemos começar descrevendo-a <em>textualmente</em> e em seguida formalizar nossos pensamentos.</p>
 
-<p>Para começar, observamos que na notação polonesa o operador sempre vem antes numa epxressão, seguido por ou números ou outras expressões entre parênteses. Isso significa que podemos dizer "um <em>programa</em> é um <em>operador</em> seguido de uma ou mais <em>expressões</em>," onde "uma <em>expressão</em> é ou um <em>número</em>, ou, entre parênteses, um <em>operador</em> seguido de uma ou mais <em>expressões</em>.</p>
+<p>Para começar, observamos que na notação polonesa o operador sempre vem antes numa expressão, seguido por números ou outras expressões entre parênteses. Isso significa que podemos dizer "um <em>programa</em> é um <em>operador</em> seguido de uma ou mais <em>expressões</em>," onde "uma <em>expressão</em> é ou um <em>número</em>, ou, entre parênteses, um <em>operador</em> seguido de uma ou mais <em>expressões</em>.</p>
 
 <p>Mais formalmente...</p>
 
@@ -38,7 +38,7 @@
 
 <p>Devemos ser capaz de codificar a maior parte das regras acima usando coisas que já sabemos, mas <em>Number</em> e <em>Program</em> podem representar algum problema. Essas regras contêm algumas construções que ainda não aprendemos como expressar. Não sabemos como expressar o começo ou o fim da entrada, caracteres opcionais, ou uma faixa de caracteres.</p>
 
-<p>Elas podem ser expressas, mas requerem uma coisa chamada <em>Expressão Regular</em>. Expressões regulares são uma maneira de escrever gramáticas para pequenas porções de texto como palavras ou números. Gramáticas escritas usando expressões regulars não podem consistir de múltiplas regras, mas dão controle preciso e conciso sobre o que está sendo casado e o que não. Eis aqui algumas regras básicas para escrever expressões regulares.</p>
+<p>Elas podem ser expressas, mas requerem uma coisa chamada <em>Expressão Regular</em>. Expressões regulares são uma maneira de escrever gramáticas para pequenas porções de texto como palavras ou números. Gramáticas escritas usando expressões regularas não podem consistir de múltiplas regras, mas dão controle preciso e conciso sobre o que está sendo casado e o que não. Eis aqui algumas regras básicas para escrever expressões regulares.</p>
 
 <table class='table'>
   <tr><td><code>.</code></td><td>É esperado algum caractere qualquer.</td></tr>
@@ -52,7 +52,7 @@
   <tr><td><code>$</code></td><td>O fim da entrada é esperado.</td></tr>
 </table>
 
-<p>Estas são todas as regras de epxressões regulares que vamos precisar por enquanto. <a href="http://regex.learncodethehardway.org/">Há livros inteiros</a> sobre o assunto de aprender expressões regulares. Para os curiosos, mais informações podem ser achadas online ou dessas fontes. Vamos usá-las em próximos capítulos, então algum conhecimento básico será necessário, mas você não precisa dominá-las por enquanto.</p>
+<p>Estas são todas as regras de expressões regulares que vamos precisar por enquanto. <a href="http://regex.learncodethehardway.org/">Há livros inteiros</a> sobre o assunto de aprender expressões regulares. Para os curiosos, mais informações podem ser achadas online ou dessas fontes. Vamos usá-las em próximos capítulos, então algum conhecimento básico será necessário, mas você não precisa dominá-las por enquanto.</p>
 
 <p>Em uma gramática <code>mpc</code> nós escrevemos expressões regulares colocando-as entre barras <code>/</code>. Usando o guia acima a nossa regra <em>Number</em> pode ser expressa como uma expressão regular usando a string <code>/-?[0-9]+/</code>.</p>
 
@@ -160,7 +160,7 @@ lispy&gt;</code></pre>
 <div class="alert alert-warning">
   <p><strong>Estou tendo o erro <code>&lt;stdin&gt;:1:1: error: Parser Undefined!</code>.</strong></p>
 
-  <p>Este erro é devido à sintaxe para sua gramática fornecida à <code>mpca_lang</code> estar incorreta. Veja se você consegue descobrir qual parte da gramática está incorreta. Você pode usar o código de referência para este capítulo para ajudá-lo a descobrir isso, e verificar como a gramática deve ser.</p>
+  <p>Este erro é devido à sintaxe para sua gramática fornecida à <code>mpca_lang</code> estar incorreta. Veja se consegue descobrir qual parte da gramática está incorreta. Você pode usar o código de referência para este capítulo para ajudá-lo a descobrir isso, e verificar como a gramática deve ser.</p>
 </div>
 
 
@@ -172,8 +172,8 @@ lispy&gt;</code></pre>
 
 <div class="alert alert-warning">
   <ul class="list-group">
-    <li class="list-group-item">&rsaquo; Escreve uma expressão regular que case strings com tudo <code>a</code> ou <code>b</code> tais como <code>aababa</code> ou <code>bbaa</code>.</li>
-    <li class="list-group-item">&rsaquo; Escreve uma expressão regular que case strings de <code>a</code> e <code>b</code> consecutivos, tais como <code>ababab</code> ou <code>aba</code>.</li>
+    <li class="list-group-item">&rsaquo; Escreva uma expressão regular que case strings com tudo <code>a</code> ou <code>b</code> tais como <code>aababa</code> ou <code>bbaa</code>.</li>
+    <li class="list-group-item">&rsaquo; Escreva uma expressão regular que case strings de <code>a</code> e <code>b</code> consecutivos, tais como <code>ababab</code> ou <code>aba</code>.</li>
     <li class="list-group-item">&rsaquo; Escreva uma expressão regular que case com <code>pit</code>, <code>pot</code> e <code>respite</code> mas não case com <em>not</em> <code>peat</code>, <code>spit</code>, ou <code>part</code>.</li>
     <li class="list-group-item">&rsaquo; Mude a gramática para adicionar um novo operador como o <code>%</code>.</li>
     <li class="list-group-item">&rsaquo; Mude a gramática para reconhecer operadores escritos em formato textual <code>add</code>, <code>sub</code>, <code>mul</code>, <code>div</code>.</li>

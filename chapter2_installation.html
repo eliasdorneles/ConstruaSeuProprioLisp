@@ -8,7 +8,7 @@
   <p><small>Gato &bull; Instale por sua conta própria e risco.</small></p>
 </div>
 
-<p>Antes de começar a programar em C precisaremos instalar algumas coisas, e configurar nosso ambiente para que tenhamos tudo que precisamos. Como C é uma linguagem tão universal, com sorte isso será razoavelmente simples. Precisamos instalar duas coisas principais. Um <em>editor de texto</em> e um <em>compilador</em>.</p>
+<p>Antes de começar a programar em C precisaremos instalar algumas coisas, e configurar nosso ambiente para que tenhamos tudo que precisamos. Como C é uma linguagem tão universal, com sorte isso será razoavelmente simples. Precisamos instalar duas coisas principais: um <em>editor de texto</em> e um <em>compilador</em>.</p>
 
 
 <h2>Editor de texto</h2> <hr/>
@@ -26,22 +26,22 @@
 
 <p>O compilador é um programa que transforma o código fonte C em um programa que seu computador pode rodar. O processo de instalação para ele é diferente dependendo de qual sistema operacional você está usando.</p>
 
-<p>Compilar e rodar programas em C também vai requerer algum conhecimento básico da linha de comando. Isto eu não vou cobrir, então vou assumir que você tem pelo menos alguma familiaridade em usar a linha de comando. Se isto preocupa você um pouco, então busque por <a href="http://cli.learncodethehardway.org/book/">tutoriais online</a> em como usá-la, relevante ao seu sistema operacional.</p>
+<p>Compilar e rodar programas em C também requer algum conhecimento básico da linha de comando. Isto eu não vou cobrir, então vou assumir que você tem pelo menos alguma familiaridade em usar a linha de comando. Se isto preocupa você um pouco, então procure por <a href="http://cli.learncodethehardway.org/book/">tutoriais online</a> em como usá-la, relevantes ao seu sistema operacional.</p>
 
 <p>No <strong>Linux</strong> você pode instalar um compilador baixando alguns pacotes. Se você estiver rodando Ubuntu ou Debian, pode instalar tudo que precisa com o seguinte comando: <code>sudo apt-get install build-essential</code>. Caso esteja rodando Fedora ou alguma variante Linux parecida, pode usar o comando: <code>su -c "yum groupinstall development-tools"</code>.</p>
 
-<p>No <strong>Mac</strong>, você pode instalar um compilador baixando e instalando a última versão do XCode da Apple. Se você não tem certeza sobre como fazer isso você pode buscar online por "instalar xcode" e siga o conselho mostrado. A seguir, você vai precisar instalar as <em>Command Line Tools</em>. No Mac OS X 10.9 isso pode ser feito rodando: <code>xcode-select --install</code> na linha de comando. Em versão anteriores ao 10.9 isso pode ser feito indo em XCode Preferences, Downloads, e selecionando <em>Command Line Tools</em> para instalação.</p>
+<p>No <strong>Mac</strong>, você pode instalar um compilador baixando e instalando a última versão do XCode da Apple. Se você não tem certeza como fazer isso, pode buscar online por "instalar xcode" e siga o conselho mostrado. A seguir, você vai precisar instalar as <em>Command Line Tools</em>. No Mac OS X 10.9 isso pode ser feito rodando: <code>xcode-select --install</code> na linha de comando. Em versão anteriores ao 10.9 isso pode ser feito indo em XCode Preferences, Downloads, e selecionando <em>Command Line Tools</em> para instalação.</p>
 
 <p>No <strong>Windows</strong> você pode instalar um compilador baixando e instalando <a href="http://www.mingw.org/">MinGW</a>. Caso use o instalador, em algum momento ele vai apresentar uma lista de possíveis pacotes. Certifique-se de marcar pelo menos <code>mingw32-base</code> e <code>msys-base</code>. Uma vez instalado, você precisa adicionar o compilador e outros programas na variável de sistema <code>PATH</code>. Para fazer isso, siga <a href="http://www.computerhope.com/issues/ch000549.htm">as instruções aqui (em inglês)</a> adicionando o valor <code>;C:\MinGW\bin</code> à variável chamada <code>PATH</code>. Você pode criar esta variável caso ela não exista. Você talvez tenha que reiniciar <code>cmd.exe</code> para as mudanças fazerem efeito. Isto vai permitir que você rode um compilador da linha de comando <code>cmd.exe</code>. Vai também instalar outros programas que fazem <code>cmd.exe</code> se comportar como uma linha de comando Unix.
 
 
 <h3>Testando o Compilador</h3>
 
-<p>Para testar se seu compilador C está instalado corretamente, digite o seguinte na linha de comando.</p>
+<p>Para testar se o seu compilador C está instalado corretamente, digite o seguinte na linha de comando.</p>
 
 <pre><code>cc --version</code></pre>
 
-<p>Se você receber uma informação sobre a versão do compilador, então ele deve estar instalado corretamente. Você está pronto! Se você receber qualquer tipo de mensagem de erro sobre um comando não reconhecido ou não encontrado, então ainda não está pronto. você pode ter que reiniciar a linha de comando ou seu computador para as mudanças fazerem efeito.</p>
+<p>Se você receber uma informação sobre a versão do compilador, então ele deve estar instalado corretamente. Você está pronto! Se você receber qualquer tipo de mensagem de erro sobre um comando não reconhecido ou não encontrado, então ainda não está pronto. Você talvez tenha que reiniciar a linha de comando ou seu computador para as mudanças fazerem efeito.</p>
 
 
 <h2>Hello World</h2> <hr/>
@@ -64,16 +64,16 @@ int main(int argc, char** argv) {
 
 <p>Inicialmente isso pode não fazer sentido nenhum. Tentarei explicar passo a passo.</p>
 
-<p>Na primeira linha nós <em>incluímos</em> (<em>include</em>) o que é chamado de um <em>cabeçalho</em> (<em>header</em>). Este comando nos permite usar as função em <code>stdio.h</code>, a biblioteca de entrada e saída padrão (<em>standard input and output</em>) que vem incluída em C. Uma das funções dessa biblioteca é a função <code>puts</code> que você vê a seguir no programa.</p>
+<p>Na primeira linha nós <em>incluímos</em> (<em>include</em>) o que é chamado de um <em>cabeçalho</em> (<em>header</em>). Este comando nos permite usar as função da <code>stdio.h</code>, a biblioteca de entrada e saída padrão (<em>standard input and output</em>) que vem incluída em C. Uma das funções dessa biblioteca é a função <code>puts</code> que você vê a seguir no programa.</p>
 
-<p>A seguir nós <em>declaramos</em> uma função chamado <code>main</code>. Esta função é declarada como tendo por saída um <code>int</code>, e recebe como entrada um <code>int</code> chamado <code>argc</code> e um <code>char**</code> chamado <code>argv</code>. Todos os programas C precisam conter essa função. Todos os programas começam a rodar a partir dessa função.</p>
+<p>A seguir nós <em>declaramos</em> uma função chamada <code>main</code>. Esta função é declarada como tendo por saída um <code>int</code>, e recebe como entrada um <code>int</code> chamado <code>argc</code> e um <code>char**</code> chamado <code>argv</code>. Todos os programas C precisam conter essa função. Todos os programas começam a rodar a partir dessa função.</p>
 
-<p>Dentro da <code>main</code> a função <code>puts</code> é <em>chamada</em> com o argumento <code>"Hello, world!"</code>. Isso joga a mensagem <code>Hello, world!</code> na saída da linha de comando. A função <code>puts</code> é abreviação de <em>put string</em>. O segundo comando dentro da função é <code>return 0;</code>. Isto diz a função <code>main</code> para terminar e devolver <code>0</code>. Quando um programa C devolve <code>0</code> isso indica que não houveram erros rodando o programa.</p>
+<p>Dentro da <code>main</code>, a função <code>puts</code> é <em>chamada</em> com o argumento <code>"Hello, world!"</code>. Isso joga a mensagem <code>Hello, world!</code> na saída da linha de comando. A função <code>puts</code> é abreviação para <em>put string</em>. O segundo comando dentro da função é <code>return 0;</code>. Isto diz a função <code>main</code> para terminar e devolver <code>0</code>. Quando um programa C devolve <code>0</code> isso indica que não houveram erros rodando o programa.</p>
 
 
 <h2>Compilação</h2> <hr/>
 
-<p>Antes de rodar este programa precisamos compilá-lo. Isto irá produzir o <em>executável</em> que podemos efetivamente rodar no nosso computador. Abra a linha de comando e navegue até o diretório em que o arquivo <code>hello_world.c</code> está salvo. Você pode compilar o seu programa usando o seguinte comando.</p>
+<p>Antes de rodar este programa precisamos compilá-lo. Isto irá produzir o <em>executável</em> que poderemos efetivamente rodar no nosso computador. Abra a linha de comando e navegue até o diretório em que o arquivo <code>hello_world.c</code> está salvo. Você pode compilar o seu programa usando o seguinte comando.</p>
 
 <pre><code>cc -std=c99 -Wall hello_world.c -o hello_world</code></pre>
 
@@ -88,22 +88,22 @@ int main(int argc, char** argv) {
 
 <p>Se houver alguns problemas com seu programa C o processo de compilação pode falhar. Estas questões podem variar de simples erros de sintaxe até outros problemas complicados que são difíceis de entender.</p>
 
-<p>Às vezes a mensagem de erro do compilador fará sentido, mas se você está tendo dificuldade de entendê-la tente buscando ela online. Você deverá tentar achar uma explicação concisa para o que ela significa, e descobrir como corrigir. Lembre disso: há muitas pessoas que tiveram o mesmo problema antes de você.</p>
+<p>Às vezes a mensagem de erro do compilador fará sentido, mas se você está tendo dificuldade de entendê-la, experimente buscar ela online. Você deverá tentar achar uma explicação concisa para o que ela significa, e descobrir como corrigir. Lembre disso: há muitas pessoas que tiveram o mesmo problema antes de você.</p>
 
 <div class='pull-left alert alert-warning' style="margin: 15px; text-align: center;">
   <img src="/static/img/smash.png" alt="smash" class="img-responsive" width="281px" height="220px"/>
   <p><small>Raiva &bull; Uma técnica pobre de depuração</small></p>
 </div>
 
-<p>Às vezes haverão muitos erros de compilação decorrentes do mesmo código fonte. Sempre passe pelos erros de compilação do primeiro até o último. Isso pode ser uma arte bem além do escopo deste livro.</p>
+<p>Às vezes haverão muitos erros de compilação decorrentes do mesmo código fonte. Sempre passe pelos erros de compilação desde o primeiro até o último. Isso pode ser uma arte bem além do escopo deste livro.</p>
 
-<p>Às vezes o compilador compilará um programa, mas quando você roda ele vai falhar. Depurar programas C nesta situação é difícil. Também pode ser uma arte bem além do escopo deste livro.</p>
+<p>Às vezes o compilador compilará um programa, mas quando você roda, ele falha. Depurar programas C nesta situação é difícil. Também pode ser uma arte bem além do escopo deste livro.</p>
 
 <p>Caso seja um iniciante, a primeira parada para depurar um programa C falhando seria imprimir (isto é, jogar na saída) bastante informação à medida que o programa roda. Usando este método você deve tentar isolar exatamente qual parte do código está incorreta e o que, se for o caso, está dando errado. Essa é uma técnica de depuração que é <em>ativa</em>. Isso é uma coisa importante. Desde que você esteja fazendo <em>alguma coisa</em>, e não apenas encarando o código, o processo é menos doloroso e a tentação de desistir é reduzida.</p>
 
-<p>Para pessoas se sentindo mais confiantes um programa chamado <code>gdb</code> pode ser usado para debugar seu programa. Isso pode ser difícil e complicado de usar, mas é também bem poderoso, pode lhe dar informação extremamente valiosa e o que aconteceu errado e onde. Informações em como usar <code>gdb</code> pode ser encontrada <a href="http://web.archive.org/web/20140910051410/http://www.dirac.org/linux/gdb/">online (em inglês)</a>.</p>
+<p>Para pessoas se sentindo mais confiantes um programa chamado <code>gdb</code> pode ser usado para debugar seu programa. Isso pode ser difícil e complicado de usar, mas é também bem poderoso, pode lhe dar informação extremamente valiosa, o que aconteceu errado e onde. Informações em como usar o <code>gdb</code> podem ser encontradas <a href="http://web.archive.org/web/20140910051410/http://www.dirac.org/linux/gdb/">online (em inglês)</a>.</p>
 
-<p>No <strong>Mac</strong>, as versões mais recentes do OS X não vêm com <code>gdb</code>. No lugar, você pode usar o <code>lldb</code> que faz praticamente a mesma tarefa.</p>
+<p>No <strong>Mac</strong>, as versões mais recentes do OS X não vêm com <code>gdb</code>. No lugar dele, você pode usar o <code>lldb</code> que faz praticamente a mesma tarefa.</p>
 
 <p>No <strong>Linux</strong> ou <strong>Mac</strong>, o <code>valgrind</code> pode ser usado para ajudar a depurar vazamento de memória (<em>memory leaks</em>) e outros erros desagradáveis. Valgrind é uma ferramenta que pode salvar horas, ou mesmo dias, de depuração. Não leva muito tempo para ficar proficiente nele, então investigá-lo é altamente recomendado. Informação em como usá-lo pode ser encontrada <a href="http://www.cprogramming.com/debugging/valgrind.html">online (em inglês)</a>.</p>
 
