@@ -1,18 +1,18 @@
-<h1>Evaluation <small>&bull; Chapter 7</small></h1>
+<h1>Avaliação <small>&bull; Capítulo 7</small></h1>
 
 
-<h2>Trees</h2> <hr/>
+<h2>Árvores</h2> <hr/>
 
-<p>Now we can read input, and we have it structured internally, but we are still unable to evaluate it. In this chapter we add the code that evaluates this structure and actually performs the computations encoded within.</p>
+<p>Agora podemos ler a entrada, temos ela estruturada internamente, mas ainda não conseguimos avaliá-la (isto é, interpretá-la). Neste capítulo adicionamos o código que avalia esta estrutura e executa de verdade as computações codificadas nela.</p>
 
-<p>This internal structure is what we saw printed out by the program in the previous chapter. It is called an <em>Abstract Syntax Tree</em>, and it represents the structure of the program based on the input entered by the user. At the leaves of this tree are numbers and operators - the actual data to be processed. At the branches are the rules used to produce this part of the tree - the information on how to traverse and evaluate it.</p>
+<p>Essa estrutura interna que vimos impressa pelo programa no capítulo anterior é chamada <em>Árvore sintática abstrata</em> (<em>Abstract Syntax Tree</em>), e representa a estrutura do programa baseada na entrada digitada pelo usuário. Nas folhas desta árvore estão números e operadores - os dados a serem realmente processados. Nos galhos estão as regras usadas para produzir esta parte da árvore - a informação em como atravessá-la (e.g. em que ordem visitar os galhos e folhas?) e avaliá-la.</p>
 
 <div class='pull-left alert alert-warning' style="margin: 15px; text-align: center;">
   <img src="/static/img/tree.png" alt="tree" class="img-responsive" width="303px" height="512px"/>
-  <p><small>Abstract Christmas Tree &bull; A seasonal variation</small></p>
+  <p><small>Árvore de Natal Abstrata &bull; Uma variação sazonal</small></p>
 </div>
 
-<p>Before working out exactly how we are going to do this traversal, let's see exactly how this structure is defined internally. If we peek inside <code>mpc.h</code> we can have a look at the definition of <code>mpc_ast_t</code>, which is the data structure we got from the parse.</p>
+<p>Antes de resolver exatamente como vamos fazer essa travessia, vamos ver exatamente como esta estrutura é definida internamente. Se olharmos dentro do <code>mpc.h</code> podemos dar uma olhada na definição de <code>mpc_ast_t</code>, que é a estrutura de dados que obtemos da análise sintática.</p>
 
 <pre style='margin-left: 375px;'><code data-language='c'>typedef struct mpc_ast_t {
   char* tag;
@@ -22,31 +22,31 @@
   struct mpc_ast_t** children;
 } mpc_ast_t;</code></pre>
 
-<p>This struct has a number of fields we can access. Let's take a look at them one by one.</p>
+<p>Esta estrutura tem alguns campos que podemos acessar. Vamos dar uma olhada neles, um por um.</p>
 
-<p>The first field is <code>tag</code>. When we printed out the tree this was the information that preceded the contents of the node. It was a string containing a list of all the rules used to parse that particular item. For example <code>expr|number|regex</code>.</p>
+<p>O primeiro campo é <code>tag</code> (etiqueta). Quando imprimimos a árvore, a <code>tag</code> era a informação que precedia o conteúdo do nó. Era uma string contendo uma lista de todas as regras usadas para analisar àquele item. Por exemplo, <code>expr|number|regex</code>.</p>
 
-<p>This <code>tag</code> field is going to be important as it lets us see what parse rules have been used to create the node.</p>
+<p>Esse campo <code>tag</code> vair ser importante pois permite que vejamos quais regras de parsing foram usadas para criar o nó.</p>
 
-<p>The second field is <code>contents</code>. This will contain the actual contents of the node such as <code>'*'</code>, <code>'('</code> or <code>'5'</code>. You'll notice for branches this is empty, but for leaves we can use it to find the operator or number to use.</p>
+<p>O segundo campo é <code>contents</code>. Este conterá o conteúdo de verdade do nó, como <code>'*'</code>, <code>'('</code> ou <code>'5'</code>. Você vai notar que para galhos ele é vazio, mas para folhas podemos usá-los para encontrar o operador ou número a usar.</p>
 
-<p>The next field is <code>state</code>. This contains information about what state the parser was in when it found this node, such as the line and column number. We won't make use of this in our program.</p>
+<p>O próximo campo é <code>state</code>. Este contém informação sobre o estado em que o parser estava quando encontrou esse nó, como o número da linha e coluna. Não faremos uso dele neste programa.</p>
 
-<p>Finally we see two fields that are going to help us traverse the tree. These are <code>children_num</code> and <code>children</code>. The first field tells us how many children a node has, and the second is an array of these children.</p>
+<p>Finalmente, vemos dois campos que irão nos ajudar a atravessar a árvore. Eles são <code>children_num</code> e <code>children</code>. O primeiro campo nos diz quantos filhos um nó tem, e o segundo é um conjunto desses filhos.</p>
 
-<p>The type of the <code>children</code> field is <code>mpc_ast_t**</code>. This is a double pointer type. It isn't as scary as it looks and will be explained in greater detail in later chapters. For now you can think of it as a list of the child nodes of this tree.</p>
+<p>O tipo do campo <code>children</code> é <code>mpc_ast_t**</code>, que é um apontador duple. Isso não é tão assustador quanto parece, e será explicado em maior detalhe em capítulos posteriores. Por enquanto, você pode pensar nele como uma lista dos nós desta árvore.</p>
 
-<p>We can access a child node by accessing this field using array notation. This is done by writing the field name <code>children</code> and suffixing it with square brackets containing the index of the child to access. For example to access the first child of the node we can use <code>children[0]</code>. Notice that C counts its array indices from <code>0</code>.</p>
+<p>Nós podemos acessar um nó filho accessando este campo usando a notação de <em>array</em>. Fazemos isso escrevendo o nome do campo <code>children</code> e adicionando um sufico com colchetes contendo o índice do filho a ser acessado. Por exemplo, para acessar o primeiro filho do nó, podemos usar <code>children[0]</code>. Note como C conta os índices do array a partir de <code>0</code>.</p>
 
-<p>Because the type <code>mpc_ast_t*</code> is a <em>pointer</em> to a struct, there is a slightly different syntax to access its fields. We need to use an arrow <code>-></code> instead of a dot <code>.</code>. There is no fundamental reason for this switch in operators, so for now just remember that field access of pointer types uses an arrow.</p>
+<p>Como o tipo <code>mpc_ast_t*</code> é um <em>apontador</em> para uma estrutura, há uma sintaxe um pouco diferente para acessar os seus campos. Precisamos usar uma seta <code>-></code> em vez de um ponto <code>.</code>. Há um motivo fundamental para essa troca de operadores, então por enquanto simplemente lembre-se que o acesso de campo de tipos apontadores usa uma flecha.</p>
 
-<pre><code data-language='c'>/* Load AST from output */
+<pre><code data-language='c'>/* Carrega AST do output */
 mpc_ast_t* a = r.output;
 printf("Tag: %s\n", a-&gt;tag);
 printf("Contents: %s\n", a-&gt;contents);
 printf("Number of children: %i\n", a-&gt;children_num);
 
-/* Get First Child */
+/* Pega primeiro filho */
 mpc_ast_t* c0 = a-&gt;children[0];
 printf("First Child Tag: %s\n", c0-&gt;tag);
 printf("First Child Contents: %s\n", c0-&gt;contents);
@@ -55,30 +55,30 @@ printf("First Child Number of children: %i\n",
 </code></pre>
 
 
-<h2>Recursion</h2> <hr/>
+<h2>Recursão</h2> <hr/>
 
-<p>There is a odd thing about this tree structure. It refers to itself. Each of its children are themselves trees again, and the children of those children are trees yet again. Just like our languages and re-write rules, data in this structure contains repeated substructures that resemble their parents.</p>
+<p>Há uma coisa estranha sobre esta estrutura de árvore. Ela se referencia à si mesma. Cada um dos seus filhos são eles próprios árvores novamente, e os filhos destes filhos também são árvores novamente. Da mesma forma que nossas linguagens e regras de reescrita, dados nesta estrutura contém subestruturas repetidas que lembram seus parentes.</p>
 
 <div class='pull-right alert alert-warning' style="margin: 15px; text-align: center;">
   <img src="/static/img/recursion.png" alt="recursion" class="img-responsive" width="302px" height="371px"/>
-  <p><small>Recursion &bull; Dangerous in a fire.</small></p>
+  <p><small>Recursão &bull; Perigosa em caso de fogo.</small></p>
 </div>
 
-<p>This pattern of repeated substructures could go on and on. Clearly if we want a function which can work on all possible trees we can't look just a couple of nodes down, we have to define it to work on trees of any depth.</p>
+<p>Esse padrão de subestruturas repetidas pode continuar infinitamente. Claramente se queremos uma função que funcione com todas as árvores possíveis nós não podemos apenas olhar alguns nós abaixo, nós temos que defini-la para funcionar com qualquer profundidade.</p>
 
-<p>Luckily we can do this, by exploiting the nature of how these substructures repeat and using a technique called <em>recursion</em>.</p>
+<p>Felizmente podemos fazer isto, explorando a natureza de como essas subestruturas repetem e usando uma técnica chamada <em>recursão</em>.</p>
 
-<p>Put simply a <em>recursive function</em> is one that calls itself as some part of its calculation.</p>
+<p>De maneira simples, uma <em>função recursiva</em> é uma que chama a si mesma como parte do seu cálculo.</p>
 
-<p>It sounds weird for a function to be defined in terms of itself. But consider that functions can give different outputs when supplied with different inputs. If we give changed, or different inputs to a recursive call to the same function, and provide a way for this function to not call itself again under certain conditions, we can be more confident this <em>recursive function</em> is doing something useful.</p>
+<p>Soa estranho para uma função ser definida em termos dela mesma. Mas considere que funções podem ter diferentes saídas quando fornecidas entradas diferentes. Se provemos entradas mudadas ou substituídas para uma chamada recursiva da mesma função, e provemos uma maneira para esta função não chamar a si mesma em certas condições, podemos ter mais confiança de que essa <em>função recursiva</em> está fazendo algo útil.</p>
 
-<p>As an example we can write a recursive function which will count the number of nodes in our tree structure.</p>
+<p>Como um exemplo, vamos escrever uma função recursiva que irá contar o número de nós em nossa estrutura árvore.</p>
 
-<p>To begin we work out how it will act in the most simple case - if the input tree has no children. In this case we know the result is simply one. Now we can go on to define the more complex case - if the tree has one or more children. In this case the result will be one (for the node itself), plus the number of nodes in all of those children.</p>
+<p>Para começar, vamos definir como a função deve agir no caso mais simples - se a árvore não tem nenhum filho. Neste caso, sabemos que o resultado é simplesmente um. Agora podemos definir o caso mais complexo - se a árvore tem um ou mais filhos. Neste caso, o resultado será um (para o próprio nó), mais a soma do número de nós de todos os seus filhos.</p>
 
-<p>But how do we find the number of nodes in all of the children? Well we can use the function we are in the process of defining! <em>Yeah, Recursion.</em></p>
+<p>Mas como descobrimos o número de nós em todos os seus filhos? Bem, podemos usar a função que estamos no processo de definier! <em>Yeah, Recursão!</em></p>
 
-<p>In C we might write it something like this.</p>
+<p>Em poderíamos escrever algo assim:</p>
 
 <pre><code data-language='C'>int number_of_nodes(mpc_ast_t* t) {
   if (t-&gt;children_num == 0) { return 1; }
@@ -92,16 +92,16 @@ printf("First Child Number of children: %i\n",
   return 0;
 }</code></pre>
 
-<p>Recursive functions are weird because they require an odd leap of faith. First we have to assume we have a function which does something correctly already, and then we have to go about using this function, to write the initial function we assumed we had!</p>
+<p>Funções recursivas são esquisitas porque requerem um certo salto de fé. Primeiro, temos que assumir que temos uma função que faz uma coisa corretamente, e então temos que prosseguir e usar essa função, para escrever a função inicial que assumimos que tínhamos!</p>
 
-<p>Like most things, recursive functions almost always end up following a similar pattern. First a <em>base case</em> is defined. This is the case that ends the recursion, such as <code>t->children_num == 0</code> in our previous example. After this the <em>recursive case</em> is defined, such as <code>t->children_num >= 1</code> in our previous example, which breaks down a computation into smaller parts, and calls itself recursively to compute those parts, before combining them together.</p>
+<p>Como a maioria das coisas, funções recursivas quase sempre acabam seguindo um padrão parecido. Primeiro um <em>caso base</em> é definido. Este é o caso que termina a recursão, como <code>t->children_num == 0</code> no exemplo anterior. Em seguida, é definido o <em>caso recursivo</em>, que quebra a computação em partes menores e chama a si mesmo recursivamente para computar as outras partes, e por fim combiná-las.</p>
 
-<p>Recursive functions can take some thought, so pause now and ensure you understand them before continuing onto other chapters because we'll be making good use of them in the rest of the book. If you are still uncertain, you can attempt some of the bonus marks for this chapter.</p>
+<p>Funções recursivas precisa de uma certa concentração, então faça uma pausa agora e entenda-as antes de continuar para outros capítulos porque faremos bastante uso delas no resto do livro. Se você está um pouco inseguro, pode tentar alguma das metas bônus para este capítulo.</p>
 
 
-<h2>Evaluation</h2> <hr/>
+<h2>Avaliação</h2> <hr/>
 
-<p>To evaluate the parse tree we are going to write a recursive function. But before we get started, let us try and see what observations we can make about the structure of the tree we get as input. Try printing out some expressions using your program from the previous chapter. What do you notice?</p>
+<p>Para avaliar a árvore sintática vamos escrever uma função recursiva. Mas antes de começar, vamos tentar ver quais observações podemos fazer sobre a estrutura da árvore que recebemos como entrada. Tente imprimir algumas expressões usando seu programa do capítulo anterior. O que você percebe?</p>
 
 <pre><code data-language='lispy'>lispy&gt; * 10 (+ 1 51)
 &gt;
@@ -117,36 +117,36 @@ printf("First Child Number of children: %i\n",
   regex
 </code></pre>
 
-<p>One observation is that if a node is tagged with <code>number</code> it is always a number, has no children, and we can just convert the contents to an integer. This will act as the <em>base case</em> in our recursion.</p>
+<p>Uma observação é que se um nó tem uma tag ou etiqueta <code>number</code> ele é sempre um número, não tem filhos, e podemos simplesmente convertê-lo para um inteiro. Isso funcionará como um <em>caso base</em> na nossa recursão.</p>
 
-<p>If a node is tagged with <code>expr</code>, and is <em>not</em> a <code>number</code>, we need to look at its second child (the first child is always <code>'('</code>) and see which operator it is. Then we need to apply this operator to the <em>evaluation</em> of the remaining children, excluding the final child which is always <code>')'</code>. This is our <em>recursive case</em>. This also needs to be done for the root node.</p>
+<p>Se um nó está etiquetado com <code>expr</code>, e <em>não</em> <code>number</code>, precisamos olhar para o segundo filho ( o primeiro filho é sempre <code>'('</code>) e ver qual é o operador. Então precisamos aplicar este operador para a <em>avaliação</em> dos filhos restantes, excluindo o último filho que é sempre ')'. Esse é nosso <em>caso recursivo</em>. Isto também precisa ser feito para o nó raiz.</p>
 
-<p>When we evaluate our tree, just like when counting the nodes, we'll need to accumulate the result. To represent this result we'll use the C type <code>long</code> which means a <em>long</em> <em>integer</em>.</p>
+<p>Quando avaliamos nossa árvore, assimo como quando contamos os nós, precisaremos acumular o resultado. Para representar este resultado usaremos o tipo C <code>long</code>, que significa um <em>longo inteiro</em> <em>long integer</em>.</p>
 
-<p>To detect the tag of a node, or to get a number from a node, we will need to make use of the <code>tag</code> and <code>contents</code> fields. These are <em>string</em> fields, so we are going to have to learn a couple of string functions first.</p>
+<p>Para detectar a etiqueta de um nó, ou para obter o número de um nó, vamos precisar usar os campos <code>tag</code> e <code>contents</code>. Estes são campos <em>string</em>, então teremos que aprender algumas funções de string antes.</p>
 
 <table class='table'>
-  <tr><td><code>atoi</code></td><td>Converts a <code>char*</code> to a <code>long</code>.</td></tr>
-  <tr><td><code>strcmp</code></td><td>Takes as input two <code>char*</code> and if they are equal it returns <code>0</code>.</td></tr>
-  <tr><td><code>strstr</code></td><td>Takes as input two <code>char*</code> and returns a pointer to the location of the second in the first, or <code>0</code> if the second is not a sub-string of the first.</td></tr>
+  <tr><td><code>atoi</code></td><td>Converte um <code>char*</code> para um <code>long</code>.</td></tr>
+  <tr><td><code>strcmp</code></td><td>Recebe duas strings (<code>char*</code>) como entrada e caso forem iguais, devolve <code>0</code>.</td></tr>
+  <tr><td><code>strstr</code></td><td>Recebe duas strings (<code>char*</code>) e devolve um apontador para a localização da segunda dentro da primeira, ou <code>0</code> caso o segundo não é uma sub-string do primeiro.</td></tr>
 </table>
 
-<p>We can use <code>strcmp</code> to check which operator to use, and <code>strstr</code> to check if a tag contains some substring. Altogether our recursive evaluation function looks like this.</p>
+<p>Podemos usar <code>strcmp</code> para checar qual operador usar, e <code>strstr</code> para checar se uma tag contain alguma substring. Juntas, nossa função de avaliação recursiva fica assim:</p>
 
 <pre><code data-language='c'>long eval(mpc_ast_t* t) {
   
-  /* If tagged as number return it directly. */ 
+  /* Caso etiquetado como numero, retorna diretamente. */ 
   if (strstr(t-&gt;tag, "number")) {
     return atoi(t-&gt;contents);
   }
   
-  /* The operator is always second child. */
+  /* O operador eh sempre o segundo filho. */
   char* op = t-&gt;children[1]-&gt;contents;
   
-  /* We store the third child in `x` */
+  /* Armazenamos o terceiro filho em `x` */
   long x = eval(t-&gt;children[2]);
   
-  /* Iterate the remaining children and combining. */
+  /* Itera sobre os filhos restantes, e combina resultado. */
   int i = 3;
   while (strstr(t-&gt;children[i]-&gt;tag, "expr")) {
     x = eval_op(x, op, eval(t-&gt;children[i]));
@@ -156,9 +156,9 @@ printf("First Child Number of children: %i\n",
   return x;  
 }</code></pre>
 
-<p>We can define the <code>eval_op</code> function as follows. It takes in a number, an operator string, and another number. It tests for which operator is passed in, and performs the corresponding C operation on the inputs.</p>
+<p>Podemos definir a função <code>eval_op</code> como segue. Ela recebe um número, uma string operador, e um outro número. Ela testa qual operador é passado, e executa a operação correspondente para as entradas.</p>
 
-<pre><code data-language='c'>/* Use operator string to see which operation to perform */
+<pre><code data-language='c'>/* Usa string operador para ver qual operacao executar */
 long eval_op(long x, char* op, long y) {
   if (strcmp(op, "+") == 0) { return x + y; }
   if (strcmp(op, "-") == 0) { return x - y; }
@@ -168,17 +168,17 @@ long eval_op(long x, char* op, long y) {
 }</code></pre>
 
 
-<h2>Printing</h2> <hr/>
+<h2>Imprimindo</h2> <hr/>
 
-<p>Instead of printing the tree, we now want to print the result of the evaluation. Therefore we need to pass the tree into our <code>eval</code> function, and print the result we get using <code>printf</code> and the specifier <code>%li</code>, which is used for <code>long</code> type.</p>
+<p>Em lugar de imprimir a árvore, agora queremos imprimir o resultado da avaliação. Por isso precisamos passar a árvore para nossa função <code>eval</code>, e imprimir o resultado que obtemos usando <code>printf</code> e o especificador <code>%li</code> que é usado para o tipo <code>long</code>.</p>
 
-<p>We also need to remember to delete the output tree after we are done evaluating it.</p>
+<p>Também precisamos lembrar de deletar a árvore de saída quando terminamos de avaliá-la.</p>
 
 <pre><code data-language='c'>long result = eval(r.output);
 printf("%li\n", result);
 mpc_ast_delete(r.output);</code></pre>
 
-<p>If all of this is successful we should be able to do some basic maths with our new programming language!</p>
+<p>Se tudo isso deu certo, devemos poder fazer alguma matemática básica na nossa nova linguagem de programação!</p>
 
 <pre><code data-language='lispy'>Lispy Version 0.0.0.0.3
 Press Ctrl+c to Exit
@@ -189,24 +189,24 @@ lispy&gt; - (* 10 10) (+ 1 1 1)
 97</code></pre>
 
 
-<h2>Reference</h2> <hr/>
+<h2>Referência</h2> <hr/>
 
 <references />
 
-<h2>Bonus Marks</h2> <hr/>
+<h2>Metas bônus</h2> <hr/>
 
 <div class="alert alert-warning">
   <ul class="list-group">
-    <li class="list-group-item">&rsaquo; Write a recursive function to compute the number of leaves of a tree.</li>
-    <li class="list-group-item">&rsaquo; Write a recursive function to compute the number of branches of a tree.</li>
-    <li class="list-group-item">&rsaquo; Write a recursive function to compute the most number of children spanning from one branch of a tree.</li>
-    <li class="list-group-item">&rsaquo; How would you use <code>strstr</code> to see if a node was tagged as an <code>expr</code>?</li>
-    <li class="list-group-item">&rsaquo; How would you use <code>strcmp</code> to see if a node had the contents <code>'('</code> or <code>')'</code>?</li>
-    <li class="list-group-item">&rsaquo; Add the operator <code>%</code>, which returns the remainder of division. For example <code>% 10 6</code> is <code>4</code>.</li>
-    <li class="list-group-item">&rsaquo; Add the operator <code>^</code>, which raises one number to another. For example <code>^ 4 2</code> is <code>16</code>.</li>
-    <li class="list-group-item">&rsaquo; Add the function <code>min</code>, which returns the smallest number. For example <code>min 1 5 3</code> is <code>1</code>.</li>
-    <li class="list-group-item">&rsaquo; Add the function <code>max</code>, which returns the biggest number. For example <code>max 1 5 3</code> is <code>5</code>.</li>
-    <li class="list-group-item">&rsaquo; Change the minus operator <code>-</code> so that when it receives one argument it negates it.</li>
+      <li class="list-group-item">&rsaquo; Escreva uma função recursiva para calcular o número de folhas de uma árvore.</li>
+    <li class="list-group-item">&rsaquo; Escreva uma função recursiva para calcular o número de galhos de uma árore.</li>
+    <li class="list-group-item">&rsaquo; Escreva uma função recursiva para calcular o maior número de filhos saindo dum galho duma árvore.</li>
+    <li class="list-group-item">&rsaquo; Como usar <code>strstr</code> para ver se um nó foi etiquetado como <code>expr</code>?</li>
+    <li class="list-group-item">&rsaquo; Como usar <code>strcmp</code> para ver se um nó possuía o conteúdo <code>'('</code> ou <code>')'</code>?</li>
+    <li class="list-group-item">&rsaquo; Adicione o operador <code>%</code>, que devolve o resto da divisão. Por exemplo <code>% 10 6</code> é <code>4</code>.</li>
+    <li class="list-group-item">&rsaquo; Adicione o operador <code>^</code>, que eleva um número ao outro. Por exemplo <code>^ 4 2</code> é <code>16</code>.</li>
+    <li class="list-group-item">&rsaquo; Adicione a função <code>min</code>, que devolve o menor número. Por exemplo <code>min 1 5 3</code> é <code>1</code>.</li>
+    <li class="list-group-item">&rsaquo; Adicione a função <code>max</code>, que devolve o maior número. Por exemplo  <code>max 1 5 3</code> é <code>5</code>.</li>
+    <li class="list-group-item">&rsaquo; Mude o operador menos <code>-</code> para que quando receba um argumento ele o transforme em negativo.</li>
   </ul>
 </div>
 
