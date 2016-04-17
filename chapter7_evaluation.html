@@ -26,7 +26,7 @@
 
 <p>O primeiro campo é <code>tag</code> (etiqueta). Quando imprimimos a árvore, a <code>tag</code> era a informação que precedia o conteúdo do nó. Era uma string contendo uma lista de todas as regras usadas para analisar àquele item. Por exemplo, <code>expr|number|regex</code>.</p>
 
-<p>Esse campo <code>tag</code> vair ser importante pois permite que vejamos quais regras de parsing foram usadas para criar o nó.</p>
+<p>Esse campo <code>tag</code> vai ser importante pois permite que vejamos quais regras de parsing foram usadas para criar o nó.</p>
 
 <p>O segundo campo é <code>contents</code>. Este conterá o conteúdo de verdade do nó, como <code>'*'</code>, <code>'('</code> ou <code>'5'</code>. Você vai notar que para galhos ele é vazio, mas para folhas podemos usá-los para encontrar o operador ou número a usar.</p>
 
@@ -36,9 +36,9 @@
 
 <p>O tipo do campo <code>children</code> é <code>mpc_ast_t**</code>, que é um apontador duple. Isso não é tão assustador quanto parece, e será explicado em maior detalhe em capítulos posteriores. Por enquanto, você pode pensar nele como uma lista dos nós desta árvore.</p>
 
-<p>Nós podemos acessar um nó filho accessando este campo usando a notação de <em>array</em>. Fazemos isso escrevendo o nome do campo <code>children</code> e adicionando um sufico com colchetes contendo o índice do filho a ser acessado. Por exemplo, para acessar o primeiro filho do nó, podemos usar <code>children[0]</code>. Note como C conta os índices do array a partir de <code>0</code>.</p>
+<p>Nós podemos acessar um nó filho acessando este campo usando a notação de <em>array</em>. Fazemos isso escrevendo o nome do campo <code>children</code> e adicionando um sufixo com colchetes contendo o índice do filho a ser acessado. Por exemplo, para acessar o primeiro filho do nó, podemos usar <code>children[0]</code>. Note como C conta os índices do array a partir de <code>0</code>.</p>
 
-<p>Como o tipo <code>mpc_ast_t*</code> é um <em>apontador</em> para uma estrutura, há uma sintaxe um pouco diferente para acessar os seus campos. Precisamos usar uma seta <code>-></code> em vez de um ponto <code>.</code>. Há um motivo fundamental para essa troca de operadores, então por enquanto simplemente lembre-se que o acesso de campo de tipos apontadores usa uma flecha.</p>
+<p>Como o tipo <code>mpc_ast_t*</code> é um <em>apontador</em> para uma estrutura, há uma sintaxe um pouco diferente para acessar os seus campos. Precisamos usar uma seta <code>-></code> em vez de um ponto <code>.</code>. Há um motivo fundamental para essa troca de operadores, então por enquanto simplesmente lembre-se que o acesso de campo de tipos apontadores usa uma flecha.</p>
 
 <pre><code data-language='c'>/* Carrega AST do output */
 mpc_ast_t* a = r.output;
@@ -76,7 +76,7 @@ printf("First Child Number of children: %i\n",
 
 <p>Para começar, vamos definir como a função deve agir no caso mais simples - se a árvore não tem nenhum filho. Neste caso, sabemos que o resultado é simplesmente um. Agora podemos definir o caso mais complexo - se a árvore tem um ou mais filhos. Neste caso, o resultado será um (para o próprio nó), mais a soma do número de nós de todos os seus filhos.</p>
 
-<p>Mas como descobrimos o número de nós em todos os seus filhos? Bem, podemos usar a função que estamos no processo de definier! <em>Yeah, Recursão!</em></p>
+<p>Mas como descobrimos o número de nós em todos os seus filhos? Bem, podemos usar a função que estamos no processo de definir! <em>Yeah, Recursão!</em></p>
 
 <p>Em poderíamos escrever algo assim:</p>
 
@@ -117,11 +117,11 @@ printf("First Child Number of children: %i\n",
   regex
 </code></pre>
 
-<p>Uma observação é que se um nó tem uma tag ou etiqueta <code>number</code> ele é sempre um número, não tem filhos, e podemos simplesmente convertê-lo para um inteiro. Isso funcionará como um <em>caso base</em> na nossa recursão.</p>
+<p>Uma observação é que se um nó tem uma tag/etiqueta <code>number</code> ele é sempre um número, não tem filhos, e podemos simplesmente convertê-lo para um inteiro. Isso funcionará como um <em>caso base</em> na nossa recursão.</p>
 
 <p>Se um nó está etiquetado com <code>expr</code>, e <em>não</em> <code>number</code>, precisamos olhar para o segundo filho ( o primeiro filho é sempre <code>'('</code>) e ver qual é o operador. Então precisamos aplicar este operador para a <em>avaliação</em> dos filhos restantes, excluindo o último filho que é sempre ')'. Esse é nosso <em>caso recursivo</em>. Isto também precisa ser feito para o nó raiz.</p>
 
-<p>Quando avaliamos nossa árvore, assimo como quando contamos os nós, precisaremos acumular o resultado. Para representar este resultado usaremos o tipo C <code>long</code>, que significa um <em>longo inteiro</em> <em>long integer</em>.</p>
+<p>Quando avaliamos nossa árvore, assim como quando contamos os nós, precisaremos acumular o resultado. Para representar este resultado usaremos o tipo C <code>long</code>, que significa um <em>longo inteiro</em> <em>long integer</em>.</p>
 
 <p>Para detectar a etiqueta de um nó, ou para obter o número de um nó, vamos precisar usar os campos <code>tag</code> e <code>contents</code>. Estes são campos <em>string</em>, então teremos que aprender algumas funções de string antes.</p>
 
@@ -131,7 +131,7 @@ printf("First Child Number of children: %i\n",
   <tr><td><code>strstr</code></td><td>Recebe duas strings (<code>char*</code>) e devolve um apontador para a localização da segunda dentro da primeira, ou <code>0</code> caso o segundo não é uma sub-string do primeiro.</td></tr>
 </table>
 
-<p>Podemos usar <code>strcmp</code> para checar qual operador usar, e <code>strstr</code> para checar se uma tag contain alguma substring. Juntas, nossa função de avaliação recursiva fica assim:</p>
+<p>Podemos usar <code>strcmp</code> para checar qual operador usar, e <code>strstr</code> para checar se uma tag contém alguma sub-string. Juntas, nossa função de avaliação recursiva fica assim:</p>
 
 <pre><code data-language='c'>long eval(mpc_ast_t* t) {
   
@@ -168,7 +168,7 @@ long eval_op(long x, char* op, long y) {
 }</code></pre>
 
 
-<h2>Imprimindo</h2> <hr/>
+<h2>Impressão</h2> <hr/>
 
 <p>Em lugar de imprimir a árvore, agora queremos imprimir o resultado da avaliação. Por isso precisamos passar a árvore para nossa função <code>eval</code>, e imprimir o resultado que obtemos usando <code>printf</code> e o especificador <code>%li</code> que é usado para o tipo <code>long</code>.</p>
 
@@ -198,7 +198,7 @@ lispy&gt; - (* 10 10) (+ 1 1 1)
 <div class="alert alert-warning">
   <ul class="list-group">
       <li class="list-group-item">&rsaquo; Escreva uma função recursiva para calcular o número de folhas de uma árvore.</li>
-    <li class="list-group-item">&rsaquo; Escreva uma função recursiva para calcular o número de galhos de uma árore.</li>
+    <li class="list-group-item">&rsaquo; Escreva uma função recursiva para calcular o número de galhos de uma árvore.</li>
     <li class="list-group-item">&rsaquo; Escreva uma função recursiva para calcular o maior número de filhos saindo dum galho duma árvore.</li>
     <li class="list-group-item">&rsaquo; Como usar <code>strstr</code> para ver se um nó foi etiquetado como <code>expr</code>?</li>
     <li class="list-group-item">&rsaquo; Como usar <code>strcmp</code> para ver se um nó possuía o conteúdo <code>'('</code> ou <code>')'</code>?</li>
@@ -215,8 +215,8 @@ lispy&gt; - (* 10 10) (+ 1 1 1)
 
 <table class="table" style='table-layout: fixed;'>
   <tr>
-    <td class="text-left"><a href="chapter6_parsing"><h4>&lsaquo; Parsing</h4></a></td>
-    <td class="text-center"><a href="contents"><h4>&bull; Contents &bull;</h4></a></td>
-    <td class="text-right"><a href="chapter8_error_handling"><h4>Error Handling &rsaquo;</h4></a></td>
+    <td class="text-left"><a href="chapter6_parsing"><h4>&lsaquo; Análise Sintática</h4></a></td>
+    <td class="text-center"><a href="contents"><h4>&bull; Conteúdo &bull;</h4></a></td>
+    <td class="text-right"><a href="chapter8_error_handling"><h4>Tratamento de Erros &rsaquo;</h4></a></td>
   </tr>
 </table>
