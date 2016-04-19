@@ -1,37 +1,37 @@
-<h1>Error Handling <small>&bull; Chapter 8</small></h1>
+<h1>Tratamento de Erros <small>&bull; Capítulo 8</small></h1>
 
 
 <h2>Crashes</h2> <hr/>
 
-<p>Some of you may have noticed a problem with the previous chapter's program. Try entering this into the prompt and see what happens.</p>
+<p>Alguns de vocês talvez notaram um problema com o programa do capítulo anterior. Tente digitar o seguinte no prompt e veja o que acontece.</p>
 
 <pre><code data-language='lispy'>Lispy Version 0.0.0.0.3
 Press Ctrl+c to Exit
 
 lispy&gt; / 10 0</code></pre>
 
-<p>Ouch. The program crashed upon trying to divide by zero. It's okay if a program crashes during development, but our final program would hopefully never crash, and should always explain to the user what went wrong.</p>
+<p>Eita! O programa falhou tentando dividir por zero. Não tem problema que um programa falhe durante o desenvolvimento, mas nosso programa final idealmente nunca falharia, e deve sempre explicar ao usuário o que deu errado.</p>
 
 <div class='pull-left alert alert-warning' style="margin: 15px; text-align: center;">
   <img src="/static/img/walterwhite.png" alt="walterwhite" class="img-responsive" width="166px" height="219px"/>
   <p><small>Walter White &bull; Heisenberg</small></p>
 </div>
 
-<p>At the moment our program can produce syntax errors but it still has no functionality for reporting errors in the evaluation of expressions. We need to build in some kind of error handling functionality to do this. It can be awkward in C, but if we start off on the right track, it will pay off later on when our system gets more complicated.</p>
+<p>No momento, nosso programa pode produzir erros de sintaxe mas ainda não tem funcionalidade para reportar erros na avaliação das expressões. Precisamos embutir algum tipo de funcionalidade de tratamento de erros para fazer isso. Pode ser um pouco desajeitado em C, mas se começarmos no caminho certo, vai valer a pena mais tarde quando nosso sistema fica mais complicado.</p>
 
-<p>C programs crashing is a fact of life. If anything goes wrong the operating system kicks them out. Programs can crash for many different reasons, and in many different ways. You will see at least one <a href="http://en.wikipedia.org/wiki/Heisenbug">Heisenbug</a>.</p>
+<p>Programas C falhando são coisas da vida. Se alguma coisa dá errado, o sistema operacional os expulsa. Programas podem falhar por causa de muitas razões diferentes, de muitas maneiras diferentes. Você verá pelo menos um <a href="http://en.wikipedia.org/wiki/Heisenbug">Heisenbug</a> (isto é, um bug que parece desaparecer quando você tenta investigá-lo).</p>
 
-<p>But there is no magic in how C programs work. If you face a really troublesome bug don't give up or sit and stare at the screen till your eyes bleed. Take this chance to properly learn how to use <code>gdb</code> and <code>valgrind</code>. These will be more weapons in your tool-kit, and after the initial investment, save you a lot of time and pain.</p>
+<p>Mas não há mágica em como programas C funcionam. Se você encontrar um bug realmente perturbador, não desista ou sente e encare a tela até seus olhos sangrarem. Aproveita esta chance para aprender propriamente como usar <code>gdb</code> e <code>valgrind</code>. Serão mais armas no seu arsenal, e depois do investimento inicial, pouparão bastante tempo e dor.</p>
 
-<h2>Lisp Value</h2> <hr/>
+<h2>Valor Lisp</h2> <hr/>
 
-<p>There are several ways to deal with errors in C, but in this context my preferred method is to make errors a possible result of evaluating an expression. Then we can say that, in Lispy, an expression will evaluate to <em>either</em> a <em>number</em>, or an <em>error</em>. For example <code>+ 1 2</code> will evaluate to a number, but <code>/ 10 0</code> will evaluate to an error.</p>
+<p>Há muitas maneiras de lidar com erros em C, mas neste contexto meu jeito preferido é tornar erros um possível resultado de avaliar uma expressão. Assim podemos dizer que, em Lispy, uma expressão resultará <em>ou</em> em um <em>número</em>, ou em um <em>erro</em>. Por exemplo, <code>+ 1 2</code> resultará em um número, mas <code>/ 10 0</code> resultará em um erro.</p>
 
-<p>For this we need a data structure that can act as either one thing or anything. For simplicity sake we are just going to use a <code>struct</code> with fields specific to each thing that can be represented, and a special field <code>type</code> to tell us exactly what fields are meaningful to access.</p>
+<p>Para isso, precisamos uma estrutura de dados que possa agir como uma coisa ou qualquer outra. Para simplificar, vamos usar uma <code>struct</code> com campos específicos para cada coisa que pode ser representadas, e um tipo especial <code>type</code> para nos dizer exatamente quais campos são significativos para acessar.</p>
 
-<p>This we are going to call an <code>lval</code>, which stands for <em>Lisp Value</em>.</p>
+<p>Vamos chamar isto de um <code>lval</code>, que significa <em>Lisp Value</em> (valor Lisp).</p>
 
-<pre><code data-language='c'>/* Declare New lval Struct */
+<pre><code data-language='c'>/* Declara uma struct lval */
 typedef struct {
   int type;
   long num;
@@ -39,32 +39,32 @@ typedef struct {
 } lval;</code></pre>
 
 
-<h2>Enumerations</h2> <hr/>
+<h2>Enumerações</h2> <hr/>
 
-<p>You'll notice the type of the fields <code>type</code>, and <code>err</code>, is <code>int</code>. This means they are represented by a single integer number.</p>
+<p>Você vai notar que o tipo dos campos <code>type</code>, e <code>err</code> é <code>int</code>. Isto significa que são representados por um único número inteiro.</p>
 
-<p>The reason we pick <code>int</code> is because we will assign meaning to each integer value, to encode what we require. For example we can make a rule <em>"If <code>type</code> is <code>0</code> then the structure is a Number."</em>, or <em>"If <code>type</code> is <code>1</code> then the structure is an Error."</em> This is a simple and effective way of doing things.</p>
+<p>O motivo que escolhemos <code>int</code> é porque vamos atribuir significado a cada valor inteiro, para codificar o que necessitamos. Por exemplo, podemos fazer uma regra <em>"Se <code>type</code> for <code>0</code>, então a estrutura é um Number."</em>, ou <em>"Se <code>type</code> for <code>1</code> então a estrutura é um Error."</em>. Esta é uma forma simples e efetiva de fazer as coisas.</p>
 
-<p>But if we litter our code with stray <code>0</code> and <code>1</code> then it is going to become increasingly unclear as to what is happening. Instead we can use named constants that have been assigned these integer values. This gives the reader an indication as to <em>why</em> one might be comparing a number to <code>0</code> or <code>1</code> and <em>what</em> is meant in this context.</p>
+<p>Mas se enchermos com <code>0</code> e <code>1</code> perdidos no nosso código, vai se tornar cada vez mais obscuro o que está acontecendo. Em vez disso, podemos usar constantes nomeadas que tenham esses valores inteiros atribuídos. Isto dá ao leitor uma indicação do <em>por que</em> alguém poderia comparar um número com <code>0</code> ou <code>1</code> e o <em>que</em> quer dizer neste contexto.</p>
 
-<p>In C this is supported using an <code>enum</code>.</p>
+<p>Em C, isto se faz usando um <code>enum</code>.</p>
 
-<pre><code data-language='c'>/* Create Enumeration of Possible lval Types */
+<pre><code data-language='c'>/* Cria Enumeracao dos Possiveis Tipos lval */
 enum { LVAL_NUM, LVAL_ERR };</code></pre>
 
-<p>An <code>enum</code> is a declaration of variables which under the hood are automatically assigned integer constant values. Above describes how we would declare some enumerated values for the <code>type</code> field.</p>
+<p>Um <code>enum</code> é uma declaração de variáveis às quais por baixo dos panos são atribuídos valores inteiros constantes automaticamente. O código acima descreve como declararíamos valores enumerados para o campo <code>type</code>.</p>
 
-<p>We also want to declare an enumeration for the <em>error</em> field. We have three error cases in our particular program. There is division by zero, an unknown operator, or being passed a number that is too large to be represented internally using a <code>long</code>. These can be enumerated as follows.</p>
+<p>Também queremos declarar uma enumeração para o campo <em>error</em>. Temos três casos de erro no nosso programa específico. Há divisão por zero, um operador desconhecido, ou um número sendo passado que seja grande demais para ser representado internamente usando um <code>long</code>. Estes casos podem ser enumerados como segue.</p>
 
 <pre><code data-language='c'>/* Create Enumeration of Possible Error Types */
 enum { LERR_DIV_ZERO, LERR_BAD_OP, LERR_BAD_NUM };</code></pre>
 
 
-<h2>Lisp Value Functions</h2> <hr/>
+<h2>Funções de valor Lisp</h2> <hr/>
 
-<p>Our <code>lval</code> type is almost ready to go. Unlike the previous <code>long</code> type we have no current method for creating new instances of it. To do this we can declare two functions that construct an <code>lval</code> of either an <em>error</em> type or a <em>number</em> type.</p>
+<p>Nosso tipo <code>lval</code> está quase pronto. Diferentemente do tipo <code>long</code> anterior, não temos atualmente uma maneira de criar novas instâncias dele. Para fazer isso, podemos declarar duas funções que constrói um <code>lval</code> a partir de um tipo <em>error</em> ou um tipo <em>number</em>.</p>
 
-<pre><code data-language='c'>/* Create a new number type lval */
+<pre><code data-language='c'>/* Cria um novo lval do tipo numero */
 lval lval_num(long x) {
   lval v;
   v.type = LVAL_NUM;
@@ -72,7 +72,7 @@ lval lval_num(long x) {
   return v;
 }
 
-/* Create a new error type lval */
+/* Cria um novo lval do tipo erro */
 lval lval_err(int x) {
   lval v;
   v.type = LVAL_ERR;
@@ -80,22 +80,22 @@ lval lval_err(int x) {
   return v;
 }</code></pre>
 
-<p>These functions first create an <code>lval</code> called <code>v</code>, and assign the fields before returning it.</p>
+<p>Estas funções primeiro criam um <code>lval</code> chamado <code>v</code>, e atribuem os campos antes de retorná-lo.</p>
 
-<p>Because our <code>lval</code> function can now be one of two things we can no longer just use <code>printf</code> to output it. We will want to behave differently depending upon the type of the <code>lval</code> that is given. There is a concise way to do this in C using the <code>switch</code> statement. This takes some value as input and compares it to other known values, known as <em>cases</em>. When the values are equal it executes the code that follows up until the next <code>break</code> statement.</p>
+<p>Como nossa função <code>lval</code> pode agora ser uma de duas coisas, não podemos mais simplesmente usar <code>printf</code> para imprimi-la. Vamos querer se comportar de maneira diferente dependendo do tipo do <code>lval</code> que for dado. Há uma maneira concisa de fazer isto em C usando o comando <code>switch</code>. Ele toma algum valor como entrada, e compara com alguns valores conhecidos, conhecidos como <em>casos</em>. Quando os valores são iguais, ele executa o código que segue até o próximo comando <code>break</code>.</p>
 
-<p>Using this we can build a function that can print an <code>lval</code> of any type like this.</p>
+<p>Usando isso podemos construir uma função que imprime um <code>lval</code> de qualquer tipo, assim:</p>
 
-<pre><code data-language='c'>/* Print an "lval" */
+<pre><code data-language='c'>/* Imprime um "lval" */
 void lval_print(lval v) {
   switch (v.type) {
-    /* In the case the type is a number print it */
-    /* Then 'break' out of the switch. */
+    /* Caso o tipo for um numero, imprima-o */
+    /* A seguir, sai fora (break) do switch. */
     case LVAL_NUM: printf("%li", v.num); break;
 
-    /* In the case the type is an error */
+    /* Caso o tipo for um erro */
     case LVAL_ERR:
-      /* Check what type of error it is and print it */
+      /* Checa qual o tipo do erro e imprime-o */
       if (v.err == LERR_DIV_ZERO) {
         printf("Error: Division By Zero!");
       }
@@ -109,30 +109,30 @@ void lval_print(lval v) {
   }
 }
 
-/* Print an "lval" followed by a newline */
+/* Imprime um "lval" seguido duma quebra de linha */
 void lval_println(lval v) { lval_print(v); putchar('\n'); }</code></pre>
 
 
-<h2>Evaluating Errors</h2> <hr/>
+<h2>Avaliando erros</h2> <hr/>
 
-<p>Now that we know how to work with the <code>lval</code> type, we need to change our evaluation functions to use it instead of <code>long</code>.</p>
+<p>Agora que sabemos como trabalhar com o tipo <code>lval</code>, precisamos mudar nossas funções de avaliação para usá-lo em vez de <code>long</code>.</p>
 
-<p>As well as changing the type signatures we need to change the functions such that they work correctly upon encountering either an <em>error</em> as input, or a <em>number</em> as input.</p>
+<p>Precisamos mudar as assinaturas de tipo, precisamos mudar as funções de forma que funcionem corretamente ao encontrar na entrada tanto um <em>error</em> quanto um <em>number</em>.</p>
 
-<p>In our <code>eval_op</code> function, if we encounter an error we should return it right away, and only do computation if both the arguments are numbers. We should modify our code to return an error rather than attempt to divide by zero. This will fix the crash described at the beginning of this chapter.</p>
+<p>Em nossa função <code>eval_op</code>, se encontramos um erro devemos retorná-lo imediatamente, e somente fazer alguma computação se ambos os argumentos são números. Devemos modificar nosso código para retornar um erro em vez de tentar dividir por zero. Isso vai corrigir a falha descrita no começo deste capítulo.</p>
 
 <pre><code data-language='c'>lval eval_op(lval x, char* op, lval y) {
 
-  /* If either value is an error return it */
+  /* Se algum valor for erro, retorna-o */
   if (x.type == LVAL_ERR) { return x; }
   if (y.type == LVAL_ERR) { return y; }
 
-  /* Otherwise do maths on the number values */
+  /* Senao, faz a matematica nos valores numericos */
   if (strcmp(op, "+") == 0) { return lval_num(x.num + y.num); }
   if (strcmp(op, "-") == 0) { return lval_num(x.num - y.num); }
   if (strcmp(op, "*") == 0) { return lval_num(x.num * y.num); }
   if (strcmp(op, "/") == 0) {
-    /* If second operand is zero return error */
+    /* Se o segundo operando for zero, retorna erro */
     return y.num == 0 
       ? lval_err(LERR_DIV_ZERO) 
       : lval_num(x.num / y.num);
@@ -142,23 +142,23 @@ void lval_println(lval v) { lval_print(v); putchar('\n'); }</code></pre>
 }</code></pre>
 
 <div class="alert alert-warning">
-  <p><strong>What is that <code>?</code> doing there?</strong></p>
+  <p><strong>O que aquele <code>?</code> está fazendo ali?</strong></p>
 
-  <p>You'll notice that for division to check if the second argument is zero we use a question mark symbol <code>?</code>, followed by a colon <code>:</code>. This is called the <em>ternary operator</em>, and it allows you to write conditional expressions on one line.</p>
+  <p>Você vai notar que para a divisão checar se o segundo argumento é zero usamos um ponto de interrogação <code>?</code>, seguido de dois pontos <code>:</code>. Este é o chamado <em>operador ternário</em>, e permite escrever expressões condicionais em uma linha.</p>
 
-  <p>It works something like this. <code>&lt;condition&gt; ? &lt;then&gt; : &lt;else&gt;</code>. In other words, if the condition is true it returns what follows the <code>?</code>, otherwise it returns what follows <code>:</code>.</p>
+  <p>Ele funciona mais ou menos assim: <code>&lt;condição&gt; ? &lt;então&gt; : &lt;senão&gt;</code>. Em outras palavras, se a condição é verdadeira, ele retorna o que segue o <code>?</code>, senão ele retorna o que segue o <code>:</code>.</p>
 
-  <p>Some people dislike this operator because they believe it makes code unclear. If you are unfamiliar with the ternary operator, you may initially find it awkward to use; but once you get to know it there are rarely problems.</p>
+  <p>Algumas pessoas não gostam desde operador porque acreditam que ele torna o código obscuro. Se você não está familiarizado com o operador ternário, pode inicialmente achá-lo estranho de usar; mas uma vez que o conhece bem raramente há problemas.</p>
 </div>
 
-<p>We need to give a similar treatment to our <code>eval</code> function. In this case because we've defined <code>eval_op</code> to robustly handle errors we just need to add the error conditions to our number conversion function.</p>
+<p>Precisamos dar um tratamento similar para nossa função <code>eval</code>. Neste caso, como definimos <code>eval_op</code> para tratar erros de maneira robusta, precisamos apenas adicionar as condições de erro para nossa função de conversão de números.</p>
 
-<p>In this case we use the <code>strtol</code> function to convert from string to <code>long</code>. This allows us to check a special variable <code>errno</code> to ensure the conversion goes correctly. This is a more robust way to convert numbers than our previous method using <code>atoi</code>.</p>
+<p>Neste caso, usamos a função <code>strtol</code> para converter de string para <code>long</code>. Isto nos permite checar uma variável especial <code>errno</code> para se certificar que a conversão funcionou corretamente. Essa é uma maneira mais robusta de converter números que nosso método anterior usando <code>atoi</code>.</p>
 
 <pre><code data-language='c'>lval eval(mpc_ast_t* t) {
   
   if (strstr(t-&gt;tag, "number")) {
-    /* Check if there is some error in conversion */
+    /* Checa se existe algum erro na conversao */
     errno = 0;
     long x = strtol(t-&gt;contents, NULL, 10);
     return errno != ERANGE ? lval_num(x) : lval_err(LERR_BAD_NUM);
@@ -176,13 +176,13 @@ void lval_println(lval v) { lval_print(v); putchar('\n'); }</code></pre>
   return x;  
 }</code></pre>
 
-<p>The final small step is to change how we print the result found by our evaluation to use our newly defined printing function which can print any type of <code>lval</code>.</p>
+<p>O último pequeno passo é mudar como imprimimos o resultado encontrado pela nossa avaliação para usar nossa nova função de impressão que pode imprimir qualquer tipo de <code>lval</code>.</p>
 
 <pre><code data-language='c'>lval result = eval(r.output);
 lval_println(result);
 mpc_ast_delete(r.output);</code></pre>
 
-<p>And we are done! Try running this new program and make sure there are no crashes when dividing by zero.</p>
+<p>E pronto! Tente rodar este novo programa e certifique-se que não há falhas ao dividir por zero.</p>
 
 <pre><code data-language='lispy'>lispy&gt; / 10 0
 Error: Division By Zero!
@@ -190,51 +190,51 @@ lispy&gt; / 10 2
 5</code></pre>
 
 
-<h2>Plumbing</h2> <hr/>
+<h2>Encanamento</h2> <hr/>
 
 <div class='pull-right alert alert-warning' style="margin: 15px; text-align: center;">
   <img src="/static/img/plumbing.png" alt="plumbing" class="img-responsive" width="368px" height="302px"/>
-  <p><small>Plumbing &bull; Harder than you think</small></p>
+  <p><small>Encanamento &bull; Mais difícil do que pensa</small></p>
 </div>
 
-<p>Some of you who have gotten this far in the book may feel uncomfortable with how it is progressing. You may feel you've managed to follow instructions well enough, but don't have a clear understanding of all of the underlying mechanisms going on behind the scenes.</p>
+<p>Alguns de vocês que chegaram nesse ponto do livro podem se sentir desconfortáveis com a maneira que ele está progredindo. Talvez você creia que conseguiu seguir as instruções bem o suficiente, mas não tem um entendimento claro de todos os mecanismos acontecendo por trás dos panos.</p>
 
-<p>If this is the case I want to reassure you that you are doing well. If you don't understand the internals it's because I may not have explained everything in sufficient depth. This is okay.</p>
+<p>Caso seja o seu caso, quero assegurar-lhe que você está indo bem. Caso não entenda todos os detalhes é porque posso não ter explicado tudo em profundidade suficiente. E não tem problema.</p>
 
-<p>To be able to progress and get code to work under these conditions is a great skill in programming, and if you've made it this far it shows you have it.</p>
+<p>Ser capaz de progredir e fazer o código funcionar sob essas condições é uma grande habilidade em programação, e se você chegou até aqui isso mostra que você a tem.</p>
 
-<p>In programming we call this <em>plumbing</em>. Roughly speaking this is following instructions to try to tie together a bunch of libraries or components, without fully understanding how they work internally.</p>
+<p>Em programação, chamamos isso de <em>fazer o encanamento</em> (do inglês, <em>plumbing</em>). A grosso modo, isso é seguir instruções tentando amarrar um bando de bibliotecas ou componentes, sem compreender inteiramente como eles funcionam internamente.</p>
 
-<p>It requires <em>faith</em> and <em>intuition</em>. <em>Faith</em> is required to believe that if the stars align, and every incantation is correctly performed for this magical machine, the right thing will really happen. And <em>intuition</em> is required to work out what has gone wrong, and how to fix things when they don't go as planned.</p>
+<p>Isto requer <em>fé</em> e <em>intuição</em>. <em>Fé</em> é necessário para para acreditar que se as estrelas se alinharem, e todas as encantações executarem corretamente para essa máquina mágica, a coisa certa vai realmente acontecer. E <em>intuição</em> é necessária para descobrir o que deu errado, e como corrigir coisas quando elas não vão de acordo com o planejado.</p>
 
-<p>Unfortunately these can't be taught directly, so if you've made it this far then you've made it over a difficult hump, and in the following chapters I promise we'll finish up with the plumbing, and actually start programming that feels fresh and wholesome.</p>
+<p>Infelizmente essas coisas não podem ser ensinadas diretamente, então se você chegou até aqui então você superou uma ladeira difícil, e nos capítulos seguintes prometo que vamos terminar com o encanamento, e realmente começar a programar coisas que sejam novas e saudáveis.</p>
 
 
-<h2>Reference</h2> <hr/>
+<h2>Referência</h2> <hr/>
 
 <references />
 
-<h2>Bonus Marks</h2> <hr/>
+<h2>Metas bônus</h2> <hr/>
 
 <div class="alert alert-warning">
   <ul class="list-group">
-    <li class="list-group-item">&rsaquo; Run the previous chapter's code through <code>gdb</code> and crash it. See what happens.</li>
-    <li class="list-group-item">&rsaquo; How do you give an <code>enum</code> a name?</li>
-    <li class="list-group-item">&rsaquo; What are <code>union</code> data types and how do they work?</li>
-    <li class="list-group-item">&rsaquo; What are the advantages over using a <code>union</code> instead of <code>struct</code>?</li>
-    <li class="list-group-item">&rsaquo; Can you use a <code>union</code> in the definition of <code>lval</code>?</li>
-    <li class="list-group-item">&rsaquo; Extend parsing and evaluation to support the remainder operator <code>%</code>.</li>
-    <li class="list-group-item">&rsaquo; Extend parsing and evaluation to support decimal types using a <code>double</code> field.</li>
+    <li class="list-group-item">&rsaquo; Rode o código do capítulo anterior com o <code>gdb</code> e faça-o falhar. Veja o que acontece.</li>
+    <li class="list-group-item">&rsaquo; Como você dá um nome a um <code>enum</code>?</li>
+    <li class="list-group-item">&rsaquo; O que são tipos de dados <code>union</code> e como eles funcionam?</li>
+    <li class="list-group-item">&rsaquo; Quais as vantagens de usar um <code>union</code> em vez de um <code>struct</code>?</li>
+    <li class="list-group-item">&rsaquo; É possível usar um <code>union</code> na definição de <code>lval</code>?</li>
+    <li class="list-group-item">&rsaquo; Amplie análise sintática e avaliação para suportar o operador resto da divisão <code>%</code>.</li>
+    <li class="list-group-item">&rsaquo; Amplie análise sintática e avaliação para suportar tipos decimais usando um campo <code>double</code>.</li>
   </ul>
 </div>
 
 
-<h2>Navigation</h2>
+<h2>Navegação</h2>
 
 <table class="table" style='table-layout: fixed;'>
   <tr>
-    <td class="text-left"><a href="chapter7_evaluation"><h4>&lsaquo; Evaluation</h4></a></td>
-    <td class="text-center"><a href="contents"><h4>&bull; Contents &bull;</h4></a></td>
+    <td class="text-left"><a href="chapter7_evaluation"><h4>&lsaquo; Avaliação</h4></a></td>
+    <td class="text-center"><a href="contents"><h4>&bull; Conteúdo &bull;</h4></a></td>
     <td class="text-right"><a href="chapter9_s_expressions"><h4>S-Expressions &rsaquo;</h4></a></td>
   </tr>
 </table>
