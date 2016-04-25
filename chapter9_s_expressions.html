@@ -8,9 +8,9 @@
   <p><small>ALL CAPS &bull; TÃO CERTO E TÃO ERRADO.</small></p>
 </div>
 
-<p>Lisps são famosos por ter pouca distinção entre dados e código. Elas usam as mesmas estruturas para representar ambos. Isso as permite fazerem muitas coisas poderosas que outras linguagens não podem fazer. Se queremos este poder para nossa linguagem de programção teremos que separar o processo de <em>ler</em> entrada, e <em>avaliar</em> a entrada que armazenamos.</p>
+<p>Lisps são famosos por ter pouca distinção entre dados e código. Elas usam as mesmas estruturas para representar ambos. Isso as permite fazerem muitas coisas poderosas que outras linguagens não podem fazer. Se queremos este poder para nossa linguagem de programação teremos que separar o processo de <em>ler</em> entrada, e <em>avaliar</em> a entrada que armazenamos.</p>
 
-<p>O resultado final deste capítulo diferirá apenas um pouco em termos de comportamento do capítulo anterior. Isto é porque vamos gastar algum tempo mudando como as coisas funcionam internamente. Isto é chamado <em>re-fatorar</em> e fará nossa vida muito mais fácil mais adiante. Como no preparo uma refeição, só porque estamos colocando comida em pratos não significa que estamos perdendo tempo. Às vezes a antecipação é ainda melhor que comer!</p>
+<p>O resultado final deste capítulo diferirá apenas um pouco em termos de comportamento do capítulo anterior. Isto é porque vamos gastar algum tempo mudando como as coisas funcionam internamente. Isto é chamado <em>refatorar</em> e fará nossa vida muito mais fácil mais adiante. Como no preparo uma refeição, só porque estamos colocando comida em pratos não significa que estamos perdendo tempo. Às vezes a antecipação é ainda melhor que comer!</p>
 
 <p>Para armazenar o programa teremos que criar uma estrutura interna de lista que é construída recursivamente com números, símbolos e outras listas. Em Lisp, esta estrutura é comumente chamada de S-Expression significando <em>Symbolic Expression</em> (expressão simbólica). Nós ampliaremos nossa estrutura <code>lval</code> para ser capaz de representá-la. O comportamento de avaliação das S-Expressions é o comportamento típico de Lisps, que já estamos acostumados até aqui. Para avaliar uma S-Expression nós olhamos ao primeiro item na lista, e assumimos que é o operador. A seguir olhamos para todos os outros itens na lista, e tomamo-los como operandos para obter o resultado.</p>
 
@@ -31,17 +31,17 @@
 
 <p>Nesse caso, todos os dados no computador, incluindo os structs e as variáveis usadas no programa rodando atualmente, começam em algum índice nesta lista enorme. Se, em vez de copiar o dado para a função, nós copiemos um número representando o <em>índice</em> onde este dados começa, a função sendo chamada pode buscar qualquer quantidade de dados que ela quiser.</p>
 
-<p>Usando <em>endereçoes</em> em vez de dados de verdade, permitimos uma função acessar e modificar alguma localização em memória sem ter que copiar qualquer dado. Funções podem também usar apontadores para fazer outras coisas, como jogar dados para algum endereço fornecido como entrada.</p>
+<p>Usando <em>endereços</em> em vez de dados de verdade, permitimos uma função acessar e modificar alguma localização em memória sem ter que copiar qualquer dado. Funções podem também usar apontadores para fazer outras coisas, como jogar dados para algum endereço fornecido como entrada.</p>
 
 <p>Como o tamanho total da memória do computador é fixo, o número de bytes necessário para representar um endereço é sempre o mesmo. Mas se mantermos controle sobre ele, o número de bytes que o endereço aponta pode crescer ou encolher. Isto significa que podemos criar uma estrutura de dados com tamanho variado e ainda <em>passá-la</em> para uma função, que pode inspecioná-la e modificá-la.</p>
 
 <p>Então um apontador é apenas um número. Um número representando o índice inicial de algum dado na memória. O tipo do apontador indica a nós e ao compilador, qual tipo de dado pode ser acessado nesta localização.</p>
 
-<p>Podemos declarar tipos de apontadores sufixando os existentes com o caractere <code>*</code>. Já vimos alguns exemplos disso com <code>mpc_parser_t*</code>, <code>mpc_ast_t*</code>, or <code>char*</code>.</p>
+<p>Podemos declarar tipos de apontadores sufixando os existentes com o caractere <code>*</code>. Já vimos alguns exemplos disso com <code>mpc_parser_t*</code>, <code>mpc_ast_t*</code>, e <code>char*</code>.</p>
 
 <p>Para criar um apontador para algum dado, precisamos pegar o seu índice, ou <em>endereço</em>. Para obter o endereço de algum dado usamos o operador <em>endereço de</em>: <code>&amp;</code>. Novamente você já viu isso antes quando passamos um apontador para <code>mpc_parse</code> para que ela jogasse a saída no nosso <code>mpc_result_t</code>.</p>
 
-<p>Finalmente, para obter o dado de um endereço (operação chamada de dereferencias), usamos o operador <code>*</code> no lado esquerdo da variável. Para obter o dado no campo de um apontador para uma estrutura, usamos a flecha <code>-&gt;</code>. Isto você viu no capítulo 7.</p>
+<p>Finalmente, para obter o dado de um endereço (operação chamada de de-referenciar), usamos o operador <code>*</code> no lado esquerdo da variável. Para obter o dado no campo de um apontador para uma estrutura, usamos a flecha <code>-&gt;</code>. Isto você viu no capítulo 7.</p>
 
 
 <h2>O Stack &amp; O Heap</h2> <hr/>
@@ -53,7 +53,7 @@
 <h3>O Stack, ou a pilha</h3>
 
 <div class='pull-right alert alert-warning' style="margin: 15px; text-align: center;">
-  <img src="/static/img/building.png" alt="building" class="img-responsive" width="397px" height="318px"/>
+  <img src="/static/img/building.png" alt="construção" class="img-responsive" width="397px" height="318px"/>
   <p><small>A Pilha &bull; Tipo a que você faz com tijolos.</small></p>
 </div>
 
@@ -80,7 +80,7 @@
 
 <h2>Parsing Expressions</h2> <hr/>
 
-<p>Como estamos agora pensando em S-Expressions (expressões simbólicas), e não mais em notação polonesa, precisamos atualizar nosso parser (analisador sintátic). A sintaxe para S-Expressions é simples. É apenas um certo número de outras expressões entre parênteses, onde uma expressão pode ser um número, operador, ou outra S-Expression. Podemos modificar nossas regras de parsing existentes para refletir isso. Também vamos renomear nossa regra <code>operator</code> para <code>symbol</code>. Faremos isso antecipando a adição de mais operadores, variáveis e função mais tarde.</p>
+<p>Como estamos agora pensando em S-Expressions (expressões simbólicas), e não mais em notação polonesa, precisamos atualizar nosso parser (analisador sintático). A sintaxe para S-Expressions é simples. É apenas um certo número de outras expressões entre parênteses, onde uma expressão pode ser um número, operador, ou outra S-Expression. Podemos modificar nossas regras de parsing existentes para refletir isso. Também vamos renomear nossa regra <code>operator</code> para <code>symbol</code>. Faremos isso antecipando a adição de mais operadores, variáveis e função mais tarde.</p>
 
 <pre><code data-language='c'>mpc_parser_t* Number = mpc_new("number");
 mpc_parser_t* Symbol = mpc_new("symbol");
@@ -109,17 +109,17 @@ mpca_lang(MPCA_LANG_DEFAULT,
 
 <pre><code data-language='c'>enum { LVAL_ERR, LVAL_NUM, LVAL_SYM, LVAL_SEXPR };</code></pre>
 
-<p>S-Expressions são <em>listas</em> de tamanho variável de outros valores. Como aprendemos no começo deste capítulo, não podemos criar strucuts de tamanho variável, então vamos precisar usar um apontador. Vamos criar um campo apontador <code>cell</code> que aponta para um local onde armazenamos uma lista de <code>lval*</code>. Mais especificamente, apontadores para os outros <code>lval</code> individuais. Nosso campo deve portanto ser um tipo apontador duplo <code>lval**</code>. Um <em>apontador para apontadores de <code>lval</code></em>. Também vamos precisar controlar quantos <code>lval*</code> estão nessa lista, então adicionamos um campo extra <code>count</code> para gravar isso.</p>
+<p>S-Expressions são <em>listas</em> de tamanho variável de outros valores. Como aprendemos no começo deste capítulo, não podemos criar structs de tamanho variável, então vamos precisar usar um apontador. Vamos criar um campo apontador <code>cell</code> que aponta para um local onde armazenamos uma lista de <code>lval*</code>. Mais especificamente, apontadores para os outros <code>lval</code> individuais. Nosso campo deve portanto ser um tipo apontador duplo <code>lval**</code>. Um <em>apontador para apontadores de <code>lval</code></em>. Também vamos precisar controlar quantos <code>lval*</code> estão nessa lista, então adicionamos um campo extra <code>count</code> para gravar isso.</p>
 
 <p>Para representar símbolos vamos usar uma string. Também vamos mudar a representação dos erros para uma string. Isto significa que podemos armazenar uma mensagem de erro única em vez de um código de erro. Isto fará a reportagem de erros melhor e mais flexível, e podemos nos livrar do <code>enum</code> de erros original. Nosso <code>lval</code> atualizado fica assim:</p>
 
 <pre><code data-language='c'>typedef struct lval {
   int type;
   long num;
-  /* Error and Symbol types have some string data */
+  /* Tipos Error e Symbol tem alguns dados string */
   char* err;
   char* sym;
-  /* Count and Pointer to a list of "lval*" */
+  /* Contagem e Apontador para uma lista de "lval*" */
   int count;
   struct lval** cell;
 } lval;</code></pre>
@@ -142,7 +142,7 @@ mpca_lang(MPCA_LANG_DEFAULT,
 
 <h2>Construtores &amp; Destruidores</h2> <hr/>
 
-<p>Podemos mudar nossas funções de construção de <code>lval</code> para retornar apontadores para um <code>lval</code>, em vez de um <code>lval</code> diretamete. Isto tornará mais fácil o controle das variáveis <code>lval</code>. Para isso precisamos usar <code>malloc</code> com a função <code>sizeof</code> para alocar espaço o suficiente para o struct <code>lval</code>, e a seguir preencher os campos com as informações relevantes usando o operador seta <code>-&gt;</code>.</p>
+<p>Podemos mudar nossas funções de construção de <code>lval</code> para retornar apontadores para um <code>lval</code>, em vez de um <code>lval</code> diretamente. Isto tornará mais fácil o controle das variáveis <code>lval</code>. Para isso precisamos usar <code>malloc</code> com a função <code>sizeof</code> para alocar espaço o suficiente para o struct <code>lval</code>, e a seguir preencher os campos com as informações relevantes usando o operador seta <code>-&gt;</code>.</p>
 
 <p>Quando construímos um <code>lval</code> seus campos podem conter apontadores para outras coisas que foram alocadas no heap. Isto significa que precisamos ser cuidadosos. Sempre que terminamos de usar um <code>lval</code> também precisamos apontar as coisas que ele está apontando no heap. Teremos que fazer uma regra para nós mesmos. Sempre que liberarmos a memória alocada para um <code>lval</code>, também temos que liberar todas as coisas que ele estiver apontando.</p>
 
@@ -294,10 +294,10 @@ lval* lval_sexpr(void) {
   putchar(open);
   for (int i = 0; i &lt; v-&gt;count; i++) {
 
-    /* Print Value contained within */
+    /* Imprime o valor contido dentro */
     lval_print(v-&gt;cell[i]);
 
-    /* Don't print trailing space if last element */
+    /* Nao imprime espaco caso ultimo elemento */
     if (i != (v-&gt;count-1)) {
       putchar(' ');
     }
@@ -347,7 +347,7 @@ lispy&gt;</code></pre>
 
 <p>O comportamento da nossa função de avaliação é essencialmente o mesmo de antes. Precisamos adaptá-la para lidar com <code>lval*</code> e nossa definição mais descontraída do que constitui uma expressão. Podemos pensar de nossa função de avaliação como um tipo de transformador. Ela recebe um <code>lval*</code> e transforma-o de alguma forma para um novo <code>lval*</code>. Em alguns casos, ela pode simplesmente retornar a mesma coisa. Em outros casos, ela pode modificar o <code>lval*</code> da entrada e retorná-lo. Em muitos casos ela vai deletar a entrada, e devolver algo completamente novo. Quando formos devolver alguma coisa nova, precisamos sempre lembrar de deletar o <code>lval*</code> que recebemos como entrada.</p>
 
-<p>Para S-Expressions, primeiro avaliamos todos os filhos da S-Expression. Se qualquer um desses filhos for um erro, retornamos o primeiro erro que encontrarmos usando uma função que vamos definir mais tarde chamda <code>lval_take</code>.</p>
+<p>Para S-Expressions, primeiro avaliamos todos os filhos da S-Expression. Se qualquer um desses filhos for um erro, retornamos o primeiro erro que encontrarmos usando uma função que vamos definir mais tarde chamada <code>lval_take</code>.</p>
 
 <p>Caso a S-Expression não tenha filhos, retornamo-la diretamente. Isto corresponde à expressão vazia, indicada por <code>()</code>. Também checamos por expressões únicas. Estas são expressões com apenas um filho como <code>(5)</code>. Neste caso retornamos a expressão única contida dentro dos parênteses.</p>
 
@@ -388,7 +388,7 @@ lispy&gt;</code></pre>
 </code></pre>
 
 <pre><code data-language="c">lval* lval_eval(lval* v) {
-  /* Avalia Sexpressions */
+  /* Avalia S-Expressions */
   if (v-&gt;type == LVAL_SEXPR) { return lval_eval_sexpr(v); }
   /* Todos outros tipos lval permanecem a mesma coisa */
   return v;
@@ -423,13 +423,13 @@ lispy&gt;</code></pre>
   return x;
 }</code></pre>
 
-<p>Também precisamos definiar a função de avaliação <code>builtin_op</code>. Esta é como a função <code>eval_op</code> usada em nosso capiulo anterior, mas modificada para receber um único <code>lval*</code> representando uma lista de todos os argumentos para usar na operação. Ela precisa fazer algumas checagens de erros mais rigorosas. Se quaisquer das entradas for um <code>lval*</code> não-número, precisamos retornar um erro.</p>
+<p>Também precisamos definir a função de avaliação <code>builtin_op</code>. Esta é como a função <code>eval_op</code> usada em nosso capítulo anterior, mas modificada para receber um único <code>lval*</code> representando uma lista de todos os argumentos para usar na operação. Ela precisa fazer algumas checagens de erros mais rigorosas. Se quaisquer das entradas for um <code>lval*</code> não-número, precisamos retornar um erro.</p>
 
 <p>Primeiro, ela checa se todos os argumentos da entrada são números. A seguir, ela extrai o primeiro argumento para começar. Se não há mais sub-expressões e o operador é subtração, ela executa negação unária neste primeiro número. Isto faz expressões como <code>(- 5)</code> avaliarem corretamente.</p>
 
 <p>Se há mais argumentos, ela segue extraindo o próximo da lista e executando aritmética dependendo de qual operador devemos usar. Se um zero é encontrado numa divisão, ela deleta os <code>x</code> e <code>y</code> temporários, e a lista de argumentos <code>a</code> e devolve um erro.</p>
 
-<p>Se não houve nenhum erro, os argumentos da entrada são deletados e uma novva expressão é devolvida.</p>
+<p>Se não houve nenhum erro, os argumentos da entrada são deletados e uma nova expressão é devolvida.</p>
 
 <pre><code data-language="c">lval* builtin_op(lval* a, char* op) {
   
@@ -508,8 +508,8 @@ lispy&gt;</code></pre>
     <li class="list-group-item">&rsaquo; O que a função <code>realloc</code> faz?</li>
     <li class="list-group-item">&rsaquo; O que a função <code>memmove</code> faz?</li>
     <li class="list-group-item">&rsaquo; Qual a diferença entre <code>memmove</code> e <code>memcpy</code>?</li>
-    <li class="list-group-item">&rsaquo; Amplie parsing e avaliação para suportar o operador resto da divisão <code>%</code>.</li>
-    <li class="list-group-item">&rsaquo; Amplie parsing e avaliação para suportar tipos decimais usando um campo <code>double</code>.</li>
+    <li class="list-group-item">&rsaquo; Amplie análise sintática e avaliação para suportar o operador resto da divisão <code>%</code>.</li>
+    <li class="list-group-item">&rsaquo; Amplie análise sintática e avaliação para suportar tipos decimais usando um campo <code>double</code>.</li>
   </ul>
 </div>
 
