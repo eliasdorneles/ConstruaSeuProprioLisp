@@ -1,4 +1,4 @@
-<h1>S-Expressions <small>&bull; Capítulo 9</small></h1>
+<h1>S-Expressions (expressões simbólicas) <small>&bull; Capítulo 9</small></h1>
 
 
 <h2>Listas e Lisps</h2> <hr/>
@@ -80,7 +80,7 @@
 
 <h2>Parsing Expressions</h2> <hr/>
 
-<p>Como estamos agora pensando em S-Expressions, e não mais em notação polonesa, precisamos atualizar nosso parser (analisador sintátic). A sintaxe para S-Expressions é simples. É apenas um certo número de outras expressões entre parênteses, onde uma expressão pode ser um número, operador, ou outrao S-Expression. Podemos modificar nossas regras de parsing existentes para refletir isso. Também vamos renomear nossa regra <code>operator</code> para <code>symbol</code>. Faremos isso antecipando a adição de mais operadores, variáveis e função mais tarde.</p>
+<p>Como estamos agora pensando em S-Expressions (expressões simbólicas), e não mais em notação polonesa, precisamos atualizar nosso parser (analisador sintátic). A sintaxe para S-Expressions é simples. É apenas um certo número de outras expressões entre parênteses, onde uma expressão pode ser um número, operador, ou outra S-Expression. Podemos modificar nossas regras de parsing existentes para refletir isso. Também vamos renomear nossa regra <code>operator</code> para <code>symbol</code>. Faremos isso antecipando a adição de mais operadores, variáveis e função mais tarde.</p>
 
 <pre><code data-language='c'>mpc_parser_t* Number = mpc_new("number");
 mpc_parser_t* Symbol = mpc_new("symbol");
@@ -228,20 +228,20 @@ lval* lval_sexpr(void) {
     
 <h2>Lendo Expressões</h2> <hr/>
 
-<p>First we are going to <em>read</em> in the program and construct an <code>lval*</code> that represents it all. Then we are going to <em>evaluate</em> this <code>lval*</code> to get the result of our program. This first stage should convert the <em>abstract syntax tree</em> into an S-Expression, and the second stage should evaluate this S-Expression using our normal Lisp rules.</p>
+<p>Primeiro vamos <em>ler</em> o programa e construir um <code>lval*</code> que representa todo ele. A seguir, vamos <em>avaliar</em> este <code>lval*</code> para obter o resultado do nosso programa. Este primeiro estágio deve converter a <em>árvore de sintaxe abstrata</em> em uma S-Expression, e o segundo estágio deve avaliar esta S-Expression usando nossas regras Lisp normais.</p>
 
-<p>To complete the first stage we can recursively look at each node of the tree, and construct different <code>lval*</code> types depending on the <code>tag</code> and <code>contents</code> fields of the node.</p>
+<p>Para completar o primeiro estágio podemos olhar recursivamente para cada nó da árvore, e construir tipos <code>lval*</code> diferentes dependendo dos campos <code>tag</code> e <code>contents</code> do nó.</p>
 
-<p>If the given node is tagged as a <code>number</code> or <code>symbol</code>, then we use our constructors to return an <code>lval*</code> directly for those types. If the given node is the <code>root</code>, or an <code>sexpr</code>, then we create an empty S-Expression <code>lval</code> and slowly add each valid sub-expression contained in the tree.</p>
+<p>Caso o nó está etiquetado como <code>number</code> ou <code>symbol</code>, então usamos nossos construtores para retornar um <code>lval*</code> diretamente para estes tipos. Caso este nó seja o <code>root</code>, ou uma <code>sexpr</code>, então criamos um <code>lval</code> S-Expression vazio e pacientemente adicionamos cada sub-expressão válida na árvore.</p>
 
-<p>To add an element to an S-Expression we can create a function <code>lval_add</code>. This function increases the count of the Expression list by one, and then uses <code>realloc</code> to reallocate the amount of space required by <code>v-&gt;cell</code>. This new space can be used to store the extra <code>lval*</code> required. Using this new space it sets the final value of the list with <code>v-&gt;cell[v-&gt;count-1]</code> to the value <code>lval* x</code> passed in.</p>
+<p>Para adicionar um elemento à uma S-Expression podemos criar uma função <code>lval_add</code>. Esta função adiciona um à contagem <em>count</em>) da expressão, e a seguir usa <code>realloc</code> para realocar a quantidade de espaço necessária para <code>v-&gt;cell</code>. Este novo espaço pode ser usado para armazenar o <code>lval*</code> extra necessário. Usando este novo espaço, ela seta o valor final da lista com <code>v-&gt;cell[v-&gt;count-1]</code> para o valor <code>lval* x</code> recebido.</p>
 
 <div class="alert alert-warning">
-  <p><strong>Don't Lisps use <a href="http://en.wikipedia.org/wiki/Cons">Cons cells</a>?</strong></p>
+  <p><strong>Lisps não usam <a href="http://en.wikipedia.org/wiki/Cons">Cons cells</a>?</strong></p>
 
-  <p>Other Lisps have a slightly different definition of what an S-Expression is. In most other Lisps S-Expressions are defined inductively as either an <em>atom</em> such as a symbol of number, or two other S-Expressions joined, or <em>cons</em>, together.</p>
+  <p>Outros Lisps têm uma definição um pouco diferente do que é uma S-Expression. Na maioria dos outros Lisps, S-Expressions são definidas como ou um <em>atom</em> como o símbolo de um número, ou dois outras S-Expressions unidas, ou "<em>cons</em>-adas" junto.</p>
   
-  <p>This naturally leads to an implementation using <em>linked lists</em>, a different data structure to the one we are using. I choose to represent S-Expressions as a variable sized array in this book for the purposes of simplicity, but it is important to be aware that the official definition, and typical implementation are both subtly different.</p>
+  <p>Isto naturalmente leva a uma implementação usando <em>listas ligadas</em>, uma estrutura de dados diferente da que estamos usando. Escolhi representar S-Expressions como um array de tamanho variável neste livro com objetivo de simplicidade, mas é importante saber que a definição oficial e sua implementação típico são sutilmente diferentes.</p>
 </div>
 
 <pre><code data-language='c'>lval* lval_read_num(mpc_ast_t* t) {
@@ -254,16 +254,16 @@ lval* lval_sexpr(void) {
 
 <pre><code data-language='c'>lval* lval_read(mpc_ast_t* t) {
 
-  /* If Symbol or Number return conversion to that type */
+  /* Caso Symbol ou Number, devolve a conversao para tal tipo */
   if (strstr(t-&gt;tag, "number")) { return lval_read_num(t); }
   if (strstr(t-&gt;tag, "symbol")) { return lval_sym(t-&gt;contents); }
 
-  /* If root (&gt;) or sexpr then create empty list */
+  /* Caso root (&gt;) ou sexpr entao cria lista vazia */
   lval* x = NULL;
   if (strcmp(t-&gt;tag, "&gt;") == 0) { x = lval_sexpr(); } 
   if (strstr(t-&gt;tag, "sexpr"))  { x = lval_sexpr(); }
 
-  /* Fill this list with any valid expression contained within */
+  /* Preenche a lista com qualquer expressao valida contida dentro */
   for (int i = 0; i &lt; t-&gt;children_num; i++) {
     if (strcmp(t-&gt;children[i]-&gt;contents, "(") == 0) { continue; }
     if (strcmp(t-&gt;children[i]-&gt;contents, ")") == 0) { continue; }
@@ -284,11 +284,11 @@ lval* lval_sexpr(void) {
 }
 </code></pre>
 
-<h2>Printing Expressions</h2> <hr/>
+<h2>Imprimindo Expressões</h2> <hr/>
 
-<p>We are now so close to trying out all of our new changes. We need to modify our print function to print out S-Expressions types. Using this we can double check that the <em>reading</em> phase is working correctly by printing out the S-Expressions we read in and verifying they match those we input.</p>
+<p>Estamos agora bem perto de experimentar todas nossas nova mudanças. Precisamos modificar nossa função para imprimir tipos S-Expressions. Usando isso podemos verificar se a fase de <em>leitura</em> está funcionando corretamente, imprimindo as S-Expressions que lermos e verificando que elas casam com a entrada.</p>
 
-<p>To print out S-Expressions we can create another function that loops over all the sub-expressions of an expression and prints these individually separated by spaces, in the same way they are input.</p>
+<p>Para imprimir S-Expressions podemos criar uma outra função que varre todas as sub-expressões de uma expressão e imprime-as individualmente separadas por espaços, da mesma maneira que são fornecidas.</p>
 
 <pre><code data-language="c">void lval_expr_print(lval* v, char open, char close) {
   putchar(open);
@@ -318,21 +318,21 @@ lval* lval_sexpr(void) {
 void lval_println(lval* v) { lval_print(v); putchar('\n'); }</code></pre>
 
 <div class="alert alert-warning">
-  <p><strong>I can't declare these functions because they call each other.</strong></p>
+  <p><strong>Não posso declarar essas funções porque elas chamam uma à outra.</strong></p>
 
-  <p>The <code>lval_expr_print</code> function calls the <code>lval_print</code> function and vice-versa. There is no way we can order them in the source file to resolve this dependency. Instead we need to <em>forward declare</em> one of them. This is declaring a function without giving it a body. It lets other functions call it, while allowing you to define it properly later on. To write a forward declaration, write the function definition but instead of the body put a semicolon <code>;</code>. In this example we should put <code>void lval_print(lval* v);</code> somewhere in the source file before <code>lval_expr_print</code>.</p>
+  <p>A função <code>lval_expr_print</code> chama a função <code>lval_print</code> e vice-versa. Não há outra maneira que possamos ordená-las no código fonte para resolver esta dependência. Em vez disso, precisamos <em>declarar adiantado</em> uma delas, que é declarar uma função sem dá-la um corpo. Isso faz que as outras funções possam chamá-la, e permite você defini-la devidamente mais tarde. Para escrever uma declaração adiantada, escreva a definição da função mas em vez do corpo, coloque um ponto e vírgula <code>;</code>. Neste exemplo, devemos colocar <code>void lval_print(lval* v);</code> em algum lugar no código fonte antes de <code>lval_expr_print</code>.</p>
   
-  <p>You'll definitely run into this later, and I won't always alert you to it, so try to remember how to fix it!</p>
+  <p>Você certamente vai topar com isso mais tarde, e nem sempre vou alertá-lo antes, então tente lembrar de como consertar isso!</p>
 </div>
 
 
-<p>In our main loop, we can remove the evaluation for now, and instead try reading in the result and printing out what we have read.</p>
+<p>Em nosso laço principal, podemos remover a avaliação por enquanto, e em seu lugar, tentar ler o resultado e imprimir o que temos.</p>
 
 <pre><code data-language='c'>lval* x = lval_read(r.output);
 lval_println(x);
 lval_del(x);</code></pre>
 
-<p>If this is successful you should see something like the following when entering input to your program.</p>
+<p>Caso funcionar, você verá algo como o que segue, quando digitar alguma entrada ao seu programa.</p>
 
 <pre><code data-language='lispy'>lispy&gt; + 2 2
 (+ 2 2)
@@ -343,44 +343,44 @@ lispy&gt; *     55     101  (+ 0 0 0)
 lispy&gt;</code></pre>
 
 
-<h2>Evaluating Expressions</h2> <hr/>
+<h2>Avaliando Expressões</h2> <hr/>
 
-<p>The behaviour of our evaluation function is largely the same as before. We need to adapt it to deal with <code>lval*</code> and our more relaxed definition of what constitutes an expression. We can think of our evaluation function as a kind of transformer. It takes in some <code>lval*</code> and transforms it in some way to some new <code>lval*</code>. In some cases it can just return exactly the same thing. In other cases it may modify the input <code>lval*</code> and return it. In many cases it will delete the input, and return something completely different. If we are going to return something new we must always remember to delete the <code>lval*</code> we get as input.</p>
+<p>O comportamento da nossa função de avaliação é essencialmente o mesmo de antes. Precisamos adaptá-la para lidar com <code>lval*</code> e nossa definição mais descontraída do que constitui uma expressão. Podemos pensar de nossa função de avaliação como um tipo de transformador. Ela recebe um <code>lval*</code> e transforma-o de alguma forma para um novo <code>lval*</code>. Em alguns casos, ela pode simplesmente retornar a mesma coisa. Em outros casos, ela pode modificar o <code>lval*</code> da entrada e retorná-lo. Em muitos casos ela vai deletar a entrada, e devolver algo completamente novo. Quando formos devolver alguma coisa nova, precisamos sempre lembrar de deletar o <code>lval*</code> que recebemos como entrada.</p>
 
-<p>For S-Expressions we first evaluate all the children of the S-Expression. If any of these children are errors we return the first error we encounter using a function we'll define later called <code>lval_take</code>.</p>
+<p>Para S-Expressions, primeiro avaliamos todos os filhos da S-Expression. Se qualquer um desses filhos for um erro, retornamos o primeiro erro que encontrarmos usando uma função que vamos definir mais tarde chamda <code>lval_take</code>.</p>
 
-<p>If the S-Expression has no children we just return it directly. This corresponds to the empty expression, denoted by <code>()</code>. We also check for single expressions. These are expressions with only one child such as <code>(5)</code>. In this case we return the single expression contained within the parenthesis.</p>
+<p>Caso a S-Expression não tenha filhos, retornamo-la diretamente. Isto corresponde à expressão vazia, indicada por <code>()</code>. Também checamos por expressões únicas. Estas são expressões com apenas um filho como <code>(5)</code>. Neste caso retornamos a expressão única contida dentro dos parênteses.</p>
 
-<p>If neither of these are the case we know we have a valid expression with more than one child. In this case we separate the first element of the expression using a function we'll define later called <code>lval_pop</code>. We then check this is a <em>symbol</em> and not anything else. If it is a symbol we check what symbol it is, and pass it, and the arguments, to a function <code>builtin_op</code> which does our calculations. If the first element is not a symbol we delete it, and the values passed into the evaluation function, returning an error.</p>
+<p>Se nenhum destes for o caso, sabemos que temos uma expressão válida com mais de um filho. Neste caso, separamos o primeiro elemento da expressão usando uma função que definiremos mais tarde chamada <code>lval_pop</code>. A seguir, checamos se ela for um <em>symbol</em> e não qualquer outra coisa. Se for um símbolo, checamos qual símbolo é, e passamo-lo com seus argumentos para uma função <code>builtin_op</code> que faz nossos cálculos. Caso o primeiro elemento não for um símbolo, deletamo-lo junto com os valores passados à função de avaliação, retornando um erro.</p>
 
-<p>To evaluate all other types we just return them directly back.</p>
+<p>Para avaliar todos os outros tipos, apenas os retornamos diretamente.</p>
 
 <pre><code data-language="c">lval* lval_eval_sexpr(lval* v) {
 
-  /* Evaluate Children */
+  /* Avalia os Filhos */
   for (int i = 0; i &lt; v-&gt;count; i++) {
     v-&gt;cell[i] = lval_eval(v-&gt;cell[i]);
   }
 
-  /* Error Checking */
+  /* Checa se tem Erros */
   for (int i = 0; i &lt; v-&gt;count; i++) {
     if (v-&gt;cell[i]-&gt;type == LVAL_ERR) { return lval_take(v, i); }
   }
 
-  /* Empty Expression */
+  /* Expressao Vazia */
   if (v-&gt;count == 0) { return v; }
 
-  /* Single Expression */
+  /* Expressao Unica */
   if (v-&gt;count == 1) { return lval_take(v, 0); }
 
-  /* Ensure First Element is Symbol */
+  /* Certifica que primeiro elemento eh um Symbol */
   lval* f = lval_pop(v, 0);
   if (f-&gt;type != LVAL_SYM) {
     lval_del(f); lval_del(v);
     return lval_err("S-expression Does not start with symbol!");
   }
 
-  /* Call builtin with operator */
+  /* Chama builtin com operador */
   lval* result = builtin_op(v, f-&gt;sym);
   lval_del(f);
   return result;
@@ -388,30 +388,30 @@ lispy&gt;</code></pre>
 </code></pre>
 
 <pre><code data-language="c">lval* lval_eval(lval* v) {
-  /* Evaluate Sexpressions */
+  /* Avalia Sexpressions */
   if (v-&gt;type == LVAL_SEXPR) { return lval_eval_sexpr(v); }
-  /* All other lval types remain the same */
+  /* Todos outros tipos lval permanecem a mesma coisa */
   return v;
 }</code></pre>
 
-<p>There are two functions we've used and not defined in the above code. These are <code>lval_pop</code> and <code>lval_take</code>. These are general purpose functions for manipulating S-Expression <code>lval</code> types which we'll make use of here and in the future.</p>
+<p>Usamos duas funções que não estão definidas no código acima. Elas são <code>lval_pop</code> e <code>lval_take</code>. Estas são funções de propósito geral para manipular tipos <code>lval</code> S-Expression, que faremos uso aqui e no futuro.</p>
 
-<p>The <code>lval_pop</code> function extracts a single element from an S-Expression at index <code>i</code> and shifts the rest of the list backward so that it no longer contains that <code>lval*</code>. It then returns the extracted value. Notice that it doesn't delete the input list. It is like taking an element from a list and popping it out, leaving what remains. This means both the element popped and the old list need to be deleted at some point with <code>lval_del</code>.</p>
+<p>A função <code>lval_pop</code> extrai um único elemento de uma S-Expression no índice <code>i</code> e desloca o resto da lista para trás, para que ela não mais contenha aquele <code>lval*</code>. A seguir ela retorna o valor extraído. Note que ela não deleta a lista da entrada. É como pegar um elemento duma lista e removê-lo, deixando o que sobrar. Isso significa que tanto o elemento removido quanto à lista velha precisam ser deletados em algum momento com <code>lval_del</code>.</p>
 
-<p>The <code>lval_take</code> function is similar to <code>lval_pop</code> but it deletes the list it has extracted the element from. This is like taking an element from the list and deleting the rest. It is a slight variation on <code>lval_pop</code> but it makes our code easier to read in some places. Unlike <code>lval_pop</code>, only the expression you take from the list needs to be deleted by <code>lval_del</code>.</p>
+<p>A função <code>lval_take</code> é similar à <code>lval_pop</code>, mas ela delete a lista da qual extraiu o elemento. Isso é como pegar um elemento duma lista e deletar o resto. É uma pequena variação de <code>lval_pop</code>, mas torna nosso código mais fácil de ler em alguns lugares. Diferentemente de <code>lval_pop</code>, apenas a expressão que você pega da lista precisa ser deletada com <code>lval_del</code>.</p>
 
 <pre><code data-language="c">lval* lval_pop(lval* v, int i) {
-  /* Find the item at "i" */
+  /* Encontra o item na posicao "i" */
   lval* x = v-&gt;cell[i];
 
-  /* Shift memory after the item at "i" over the top */
+  /* Desloca memoria depois do item na posicao "i" para acima do topo */
   memmove(&amp;v-&gt;cell[i], &amp;v-&gt;cell[i+1],
     sizeof(lval*) * (v-&gt;count-i-1));
 
-  /* Decrease the count of items in the list */
+  /* Diminui a contagem de itens na lista */
   v-&gt;count--;
 
-  /* Reallocate the memory used */
+  /* Realoca a memoria usada */
   v-&gt;cell = realloc(v-&gt;cell, sizeof(lval*) * v-&gt;count);
   return x;
 }
@@ -423,17 +423,17 @@ lispy&gt;</code></pre>
   return x;
 }</code></pre>
 
-<p>We also need to define the evaluation function <code>builtin_op</code>. This is like the <code>eval_op</code> function used in our previous chapter but modified to take a single <code>lval*</code> representing a list of all the arguments to operate on. It needs to do some more rigorous error checking. If any of the inputs are a non-number <code>lval*</code> we need to return an error.</p>
+<p>Também precisamos definiar a função de avaliação <code>builtin_op</code>. Esta é como a função <code>eval_op</code> usada em nosso capiulo anterior, mas modificada para receber um único <code>lval*</code> representando uma lista de todos os argumentos para usar na operação. Ela precisa fazer algumas checagens de erros mais rigorosas. Se quaisquer das entradas for um <code>lval*</code> não-número, precisamos retornar um erro.</p>
 
-<p>First it checks that all the arguments input are numbers. It then pops the first argument to start. If there are no more sub-expressions and the operator is subtraction it performs unary negation on this first number. This makes expressions such as <code>(- 5)</code> evaluate correctly.</p>
+<p>Primeiro, ela checa se todos os argumentos da entrada são números. A seguir, ela extrai o primeiro argumento para começar. Se não há mais sub-expressões e o operador é subtração, ela executa negação unária neste primeiro número. Isto faz expressões como <code>(- 5)</code> avaliarem corretamente.</p>
 
-<p>If there are more arguments it constantly pops the next one from the list and performs arithmetic depending on which operator we're meant to be using. If a zero is encountered on division it deletes the temporary <code>x</code>, <code>y</code>, and the argument list <code>a</code>, and returns an error.</p>
+<p>Se há mais argumentos, ela segue extraindo o próximo da lista e executando aritmética dependendo de qual operador devemos usar. Se um zero é encontrado numa divisão, ela deleta os <code>x</code> e <code>y</code> temporários, e a lista de argumentos <code>a</code> e devolve um erro.</p>
 
-<p>If there have been no errors the input arguments are deleted and the new expression returned.</p>
+<p>Se não houve nenhum erro, os argumentos da entrada são deletados e uma novva expressão é devolvida.</p>
 
 <pre><code data-language="c">lval* builtin_op(lval* a, char* op) {
   
-  /* Ensure all arguments are numbers */
+  /* Certifica-se que todos argumentos sejam numeros */
   for (int i = 0; i < a->count; i++) {
     if (a-&gt;cell[i]-&gt;type != LVAL_NUM) {
       lval_del(a);
@@ -441,18 +441,18 @@ lispy&gt;</code></pre>
     }
   }
   
-  /* Pop the first element */
+  /* Extrai o primeiro elemento */
   lval* x = lval_pop(a, 0);
 
-  /* If no arguments and sub then perform unary negation */
+  /* Caso nenhum argumento e sub, executa negacao unaria */
   if ((strcmp(op, "-") == 0) &amp;&amp; a-&gt;count == 0) {
     x-&gt;num = -x-&gt;num;
   }
 
-  /* While there are still elements remaining */
+  /* Enquanto ainda houver elementos sobrando */
   while (a-&gt;count &gt; 0) {
 
-    /* Pop the next element */
+    /* Extrai o proximo elemento */
     lval* y = lval_pop(a, 0);
 
     if (strcmp(op, "+") == 0) { x-&gt;num += y-&gt;num; }
@@ -472,14 +472,14 @@ lispy&gt;</code></pre>
   lval_del(a); return x;
 }</code></pre>
 
-<p>This completes our evaluation functions. We just need to change <code>main</code> again so it passes the input through this evaluation before printing it.</p>
+<p>Isso termina nossas funções de avaliação. Precisamos apenas mudar a <code>main</code> novamente para que passe a entrada por esta avaliação antes de imprimi-la.</p>
 
 <pre><code data-language='c'>lval* x = lval_eval(lval_read(r.output));
 lval_println(x);
 lval_del(x);
 </code></pre>
 
-<p>Now you should now be able to evaluate expressions correctly in the same way as in the previous chapter. Take a little breather and have a play around with the new evaluation. Make sure everything is working correctly, and the behaviour is as expected. In the next chapter we're going to make great use of these changes to implement some cool new features.</p>
+<p>Agora você deve ser capaz de avaliar expressões corretamente da mesma maneira que no capítulo anterior. Tome um pouco de ar, e brinque um pouco com a nova avaliação. Certifique-se que tudo está funcionando corretamente, e o comportamento está como o esperado. No próximo capítulo vamos fazer bastante uso destas mudanças para implementar alguns recursos novos legais.</p>
 
 <pre><code data-language='lispy'>lispy&gt; + 1 (* 7 5) 3
 39
@@ -494,32 +494,32 @@ Error: Cannot operate on non-number!
 lispy&gt;</code></pre>
 
 
-<h2>Reference</h2> <hr/>
+<h2>Referência</h2> <hr/>
 
 <references />
 
-<h2>Bonus Marks</h2> <hr/>
+<h2>Metas Bônus</h2> <hr/>
 
 <div class="alert alert-warning">
   <ul class="list-group">
-    <li class="list-group-item">&rsaquo; Give an example of a variable in our program that lives on <em>The Stack</em>.</li>
-    <li class="list-group-item">&rsaquo; Give an example of a variable in our program that points to <em>The Heap</em>.</li>
-    <li class="list-group-item">&rsaquo; What does the <code>strcpy</code> function do?</li>
-    <li class="list-group-item">&rsaquo; What does the <code>realloc</code> function do?</li>
-    <li class="list-group-item">&rsaquo; What does the <code>memmove</code> function do?</li>
-    <li class="list-group-item">&rsaquo; How does <code>memmove</code> differ from <code>memcpy</code>?</li>
-    <li class="list-group-item">&rsaquo; Extend parsing and evaluation to support the remainder operator <code>%</code>.</li>
-    <li class="list-group-item">&rsaquo; Extend parsing and evaluation to support decimal types using a <code>double</code> field.</li>
+    <li class="list-group-item">&rsaquo; Dê um exemplo de uma variável em nosso programa que viva no <em>Stack</em>.</li>
+    <li class="list-group-item">&rsaquo; Dê um exemplo de uma variável em nosso programa que viva no <<em>Heap</em>.</li>
+    <li class="list-group-item">&rsaquo; O que a função <code>strcpy</code> faz?</li>
+    <li class="list-group-item">&rsaquo; O que a função <code>realloc</code> faz?</li>
+    <li class="list-group-item">&rsaquo; O que a função <code>memmove</code> faz?</li>
+    <li class="list-group-item">&rsaquo; Qual a diferença entre <code>memmove</code> e <code>memcpy</code>?</li>
+    <li class="list-group-item">&rsaquo; Amplie parsing e avaliação para suportar o operador resto da divisão <code>%</code>.</li>
+    <li class="list-group-item">&rsaquo; Amplie parsing e avaliação para suportar tipos decimais usando um campo <code>double</code>.</li>
   </ul>
 </div>
 
 
-<h2>Navigation</h2>
+<h2>Navegação</h2>
 
 <table class="table" style='table-layout: fixed;'>
   <tr>
-    <td class="text-left"><a href="chapter8_error_handling"><h4>&lsaquo; Error Handling</h4></a></td>
-    <td class="text-center"><a href="contents"><h4>&bull; Contents &bull;</h4></a></td>
+    <td class="text-left"><a href="chapter8_error_handling"><h4>&lsaquo; Tratamento de Erros</h4></a></td>
+    <td class="text-center"><a href="contents"><h4>&bull; Conteúdo &bull;</h4></a></td>
     <td class="text-right"><a href="chapter10_q_expressions"><h4>Q-Expressions &rsaquo;</h4></a></td>
   </tr>
 </table>
