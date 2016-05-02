@@ -28,7 +28,7 @@ pages = [
 ]
 
 titles = [
-    'Learn C',
+    'Aprenda C',
     'Conte&uacute;do',
     'Credits',
     'Perguntas Frequentes',
@@ -68,7 +68,7 @@ header = """
 <!DOCTYPE html>
 <html>
   <head>
-    <title>%s &bull; Build Your Own Lisp</title>
+    <title>%s &bull; Construa Seu Pr&oacute;prio Lisp</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Bootstrap -->
     <link href="static/css/bootstrap.css" rel="stylesheet">
