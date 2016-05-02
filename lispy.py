@@ -28,14 +28,31 @@ pages = [
 ]
 
 titles = [
-    'Learn C', 'Contents', 'Credits', 'Frequently Asked Questions', 'Page Missing', 'Buy Now!', 'Test', 'Invalid Download',
+    'Learn C',
+    'Conte&uacute;do',
+    'Credits',
+    'Perguntas Frequentes',
+    'Page Missing',
+    'Compre agora!',
+    'Teste',
+    'Download inv&aacute;lido',
     'Download',
-    'Introduction &bull; Chapter 1',       'Installation &bull; Chapter 2',   'Basics &bull; Chapter 3',
-    'Interactive Prompt &bull; Chapter 4', 'languages &bull; Chapter 5',      'Parsing &bull; Chapter 6',
-    'Evaluation &bull; Chapter 7',         'Error Handling &bull; Chapter 8', 'S-Expressions &bull; Chapter 9',
-    'Q-Expressions &bull; Chapter 10',     'Variables &bull; Chapter 11',     'Functions &bull; Chapter 12',
-    'Conditionals &bull; Chapter 13',      'Strings &bull; Chapter 14',       'Standard Library &bull; Chapter 15',
-    'Bonus Projects &bull; Chapter 16'
+    'Introdu&ccedil;&atilde;o &bull; Cap&iacute;lo 1',
+    'Instala&ccedil;&atilde;o  &bull; Cap&iacute;lo 2',
+    'O B&aacute;sico &bull; Cap&iacute;lo 3',
+    'Um Prompt Interativo &bull; Cap&iacute;lo 4',
+    'Linguagens &bull; Cap&iacute;lo 5',
+    'An&aacute;lise sint&aacute;tica &bull; Cap&iacute;lo 6',
+    'Avalia&ccedil;&atilde;o &bull; Cap&iacute;lo 7',
+    'Tratamento de Erros &bull; Cap&iacute;lo 8',
+    'S-Expressions &bull; Cap&iacute;lo 9',
+    'Q-Expressions &bull; Cap&iacute;lo 10',
+    'Vari&aacute;veis &bull; Cap&iacute;lo 11',
+    'Fun&ccedil;&otilde;es &bull; Cap&iacute;lo 12',
+    'Condicionais &bull; Cap&iacute;lo 13',
+    'Strings &bull; Cap&iacute;lo 14',
+    'Biblioteca padr&atilde;o &bull; Cap&iacute;lo 15',
+    'Projetos b&ocirc;nus &bull; Cap&iacute;lo 16'
 ]
 
 sources = [
@@ -301,5 +318,6 @@ def route_paypal():
     
 if __name__ == '__main__':
     port = int(os.getenv('PORT') or 5000)
-    app.run(port=port)
+    debug = bool(os.getenv('FLASK_DEBUG')) or False
+    app.run(port=port, debug=debug)
 
