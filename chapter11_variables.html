@@ -1,41 +1,41 @@
-<h1>Variables <small>&bull; Chapter 11</small></h1>
+<h1>Variáveis <small>&bull; Capítulo 11</small></h1>
 
 
-<h2>Immutability</h2> <hr/>
+<h2>Imutabilidade</h2> <hr/>
 
 <div class='pull-right alert alert-warning' style="margin: 15px; text-align: center;">
   <img src="/static/img/turtle.png" alt="turtle" class="img-responsive" width="279px" height="267px"/>
-  <p><small>Teenage Ninja Turtle &bull; Not Immutable.</small></p>
+  <p><small>Tartarunga Ninja &bull; Não Imutável.</small></p>
 </div>
 
-<p>In the previous chapters we've made considerable progress on the infrastructure of our language.</p>
+<p>Nos capítulos anteriores fizemos progresso considerável na infraestrutura da nossa linguagem.</p>
 
-<p>Already we can do a number of cool things that other languages can't, such as putting code inside lists. Now is the time to start adding in the <em>features</em> which will make our language practical. The first one of these is going to be <em>variables</em>.</p>
+<p>Já podemos fazer algumas coisas legais que outras linguagens não fazem, como colocar código dentro de listas. Agora é a hora de começar a adicionar os <em>recursos</em> que tornarão nossa linguage prática. O primeiro deles vai ser <em>variáveis</em>.</p>
 
-<p>They're called variables, but it's a misleading name, because our variables won't vary. Our variables are <em>immutable</em> meaning they cannot change. Everything in our language so far has acted as if it is <em>immutable</em>. When we evaluate an expression we have imagined that the previous thing has been deleted and a new thing returned. In implementation often it is easier for us to reuse the data from the previous thing to build the new thing, but conceptually it is a good way to think about how our language works.</p>
+<p>Elas são chamadas variávels, mas é um nome enganoso, porque nossas variáveis não irão variar. Nossas variáveis são <em>imutáveis</em>, isto é, elas não podem mudar. Tudo em nossa linguagem até agora agiu como se fosse <em>imutável</em>. Quando avaliamos uma expressão, imaginamos que a coisa anterior foi deletada e uma coisa nova foi devolvida. Na implementação, frequentemente é mais fácil reutilizarmos os dados da coisa anterior para construir a próxima coisa, mas conceitualmente é uma boa maneira de pensar a respeito de como nossa linguagem funciona.</p>
 
-<p>So actually our variables are simply a way of <em>naming values</em>. They let us assign a <em>name</em> to a <em>value</em>, and then let us get a copy of that <em>value</em> later on when we need it.</p>
+<p>Então, na verdade nossas variáveis são meramente uma maneira de <em>nomear valores</em>. Elas nos permitem atribuir um <em>nome</em> para um <em>valor</em>, e então nos deixa obter uma cópia daquele <em>valor</em> mais tarde quando precisarmos.</p>
 
-<p>To allow for <em>naming values</em> we need to create a structure which stores the name and value of everything named in our program. We call this the <em>environment</em>. When we start a new interactive prompt we want to create a new environment to go along with it, in which each new bit of input is evaluated. Then we can store and recall variables as we program.</p>
+<p>Para permitir <em>nomear valores</em>, precisamos criar uma estrutura que armazene o nome e valor de tudo que for nomeado em nosso programa. Chamamos isto de <em>ambiente</em>. Quando começamos um novo prompt interativo, queremos criar um novo ambiente para funcionar com ele, em que cada novo trecho da entrada é avaliado. A seguir podemos armazenar e relembrar variáveis enquanto programamos.</p>
 
 <div class="alert alert-warning">
-  <p><strong>What happens when we re-assign a name to something new? Isn't this like mutability?</strong></p>
+  <p><strong>O que acontece se re-atribuirmos um nome a algo novo? Isto não é o mesmo que mutabilidade?</strong></p>
 
-  <p>In our Lisp, when we re-assign a name we're going to delete the old association and create a new one. This gives the illusion that the thing assigned to that name has changed, and is mutable, but in fact we have deleted the old thing and assigned it a new thing. This is different to C where we really can change the data pointed to by a pointer, or stored in a struct, without deleting it and creating a new one.</p>
+  <p>No nosso Lisp, quando re-atribuímos um nome vamos deletar a associação anterior e criar uma nova. Isto dá a ilusão que a coisa atribuída àquele nome mudou e é mutável, mas de fato deletamos a coisa velha e atribuímos uma coisa nova. Isto é diferente de C onde podemos realmente mudar o dado apontado por um apontador, our armazenado em uma struct, sem deletá-la e criar uma nova.</p>
 </div>
 
 
-<h2>Symbol Syntax</h2> <hr/>
+<h2>Sintaxe de Símbolo</h2> <hr/>
 
-<p>Now that we're going to allow for user defined variables we need to update the grammar for symbols to be more flexible. Rather than just our builtin functions it should match any possible valid symbol. Unlike in C, where the name a variable can be given is fairly restrictive, we're going to allow for all sorts of characters in the name of a variable.</p>
+<p>Agora que vamos permitir nosso usuário definir variáveis, precisamos que a gramática para símbolos seja mais flexível. Em vez de apenas nossas funções builtin, ela deve casar com qualquer símbolo possível válido. Diferentemente de C, onde o nome que pode ser dado a uma variável é relativamente restringido, vamos permitir vários tipos de caracteres no nome de uma variável.</p>
 
-<p>We can create a regular expression that expresses the range of characters available as follows.</p>
+<p>Podemos criar uma expressão regular que expressa a faixa de caracteres disponível como segue.</p>
 
 <pre><code>/[a-zA-Z0-9_+\\-*\\/\\\\=&lt;&gt;!&amp;]+/</code></pre>
 
-<p>On first glance this looks like we've just bashed our hands into keyboard. Actually it is a regular expression using a big range specifier <code>[]</code>. Inside range specifiers special characters lose their meaning, but some of these characters still need to be escaped with backslashes. Because this is part of a C string we need to put two backslashes to represent a single backslash character in the input.</p>
+<p>À primeira vista, parece que simplesmente batemos com nossas mãos no teclado. Na verdade, é uma expressão regular usando um especificador de intervalo <code>[]</code>. Dentro do especificador de intervalo caracteres especiais perdem seu sentido especial, mas alguns destes caracteres ainda precisam ser escapados com barras invertidas <code>/</code>. Como isto é uma parte duma string C, precisamos colocar duas barras invertidas para representar um único caractere barra invertida na entrada.</p>
 
-<p>This rule lets symbols be any of the normal C identifier characters <code>a-zA-Z0-9_</code> the arithmetic operator characters <code>+\\-*\\/</code> the backslash character <code>\\\\</code> the comparison operator characters <code>=&lt;&gt;!</code> or an ampersands <code>&amp;</code>. This will give us all the flexibility we need for defining new and existing symbols.</p>
+<p>Esta regra permite símbolos terem qualquer um entre os caracteres normais de identificadores C <code>a-zA-Z0-9_</code>, os caracteres de operação aritmética <code>+\\-*\\/</code>, o caractere barra invertida <code>\\\\</code>, os caracteres do operador de comparação <code>=&lt;&gt;!</code> ou um ampersand <code>&amp;</code>. Isto nos dará toda a flexibilidade que precisamos para definir símbolos novos e existentes.</p>
 
 <pre><code data-language='C'>mpca_lang(MPCA_LANG_DEFAULT,
   "                                                     \
@@ -50,50 +50,50 @@
 </code></pre>
 
 
-<h2>Function Pointers</h2> <hr/>
+<h2>Apontador para função</h2> <hr/>
 
-<p>Once we introduce variables, symbols will no longer represent functions in our language, but rather they will represent a name for us to look up into our environment and get some new value back from.</p>
+<p>Tendo introduzido variávels, símbolos não mais representarão funções em nossa linguagem, mas um nome para buscarmos em nosso ambiente e obter um valor de volta.</p>
 
-<p>Therefore we need a new value to represent functions in our language, which we can return once one of the builtin symbols is encountered. To create this new type of <code>lval</code> we are going to use something called a <em>function pointer</em>.</p>
+<p>Portanto, precisamos um novo valor para representar funções em nossa linguagem, que possamos devolver quando um dos nossos símbolos builtin seja encontrado. Para criar este novo tipo de <code>lval</code> vamos usar algo chamado um <em>apontador para função</em> (ou, ponteiro para função).</p>
 
-<p>Function pointers are a great feature of C that lets you store and pass around pointers to functions. It doesn't make sense to edit the data pointed to by these pointers. Instead we use them to call the function they point to, as if it were a normal function.</p>
+<p>Apontadores para funções são um grande recurso de C que permite armazenar e repassar apontadores para funções. Não faz sentido alterar o dado apontado por estes apontadores. Em vez disso, usamo-los para chamar a função para a qual apontam, como se fossem uma função normal.</p>
 
-<p>Like normal pointers, function pointers have some type associated with them. This type specifies the type of the function pointed to, not the type of the data pointed to. This lets the compiler work out if it has been called correctly.</p>
+<p>Como apontadores normais, apontadores para funções têm algum tipo associado à eles. Este tipo especifica o tipo da função sendo apontada, não o tipo de dado que ele aponta. Isto permite o compilador identificar se foi chamado corretamente.</p>
 
-<p>In the previous chapter our builtin functions took a <code>lval*</code> as input and returned a <code>lval*</code> as output. In this chapter our builtin functions will take an extra pointer to the environment <code>lenv*</code> as input. We can declare a new function pointer type called <code>lbuiltin</code>, for this type of function, like this.</p>
+<p>No capítulo anterior, nossas funções builtins receberam um <code>lval*</code> como entrada e devolveram um <code>lval*</code> como saída. Neste capítulo nossas funções builtins receberão um apontador extra para o ambiente <code>lenv*</code> como entrada. Podemos declarar a nova função um novo tipo apontador de função chamado <code>lbuiltin</code>, para este tipo de função, da seguinte forma:</p>
 
 <pre><code data-language='c'>typedef lval*(*lbuiltin)(lenv*, lval*);</code></pre>
 
 <div class="alert alert-warning">
-  <p><strong>Why is that syntax so odd?</strong></p>
+  <p><strong>Por que esta sintaxe tão estranha?</strong></p>
 
-  <p>In some places the syntax of C can look particularly weird. It can help if we understand exactly why the syntax is like this. Let us de-construct the syntax in the example above part by part.</p>
+  <p>Algumas vezes a sintaxe de C pode parecer particularmente estranha. Pode ajudar se entendermos exatamente por que a sintaxe é dessa forma. Vamos desconstruir a sintaxe no exemplo acima parte por parte.</p>
   
-  <p>First the <code>typedef</code>. This can be put before any standard variable declaration. It results in the name of the variable, being declared a new type, matching what would be the inferred type of that variable. This is why in the above declaration what looks like the function name becomes the new type name.</p>
+  <p>Primeiro o <code>typedef</code>. Ele pode ser colocado antes de qualquer declaração de variável normal. Ele resulta no nome da variável, sendo declarado como um novo tipo, correspondendo ao que seria o tipo inferido para aquela variável. Por isso, na declaração acima, o que parece um nome de função se torna o nome do novo tipo.</p>
   
-  <p>Next all those <code>*</code>. Pointer types in C are actually meant to be written with the star <code>*</code> on the left hand side of the variable name, not the right hand side of the type <code>int *x;</code>. This is because C type syntax works by a kind of inference. Instead of reading <em>"Create a new <code>int</code> pointer <code>x</code>"</em>. It is meant to read <em>"Create a new variable <code>x</code> where to dereference <code>x</code> results in an <code>int</code>."</em> Therefore <code>x</code> is inferred to be a pointer to an <code>int</code>.</p>
+  <p>A seguir, todos aquelees <code>*</code>. Tipos apontadores em C foram concebidos para serem escritos com o asterisco <code>*</code> ao lado esquerdo do nome da variável, não ao lado direito do tipo <code>int *x;</code>. Isto é porque a sintaxe de tipos de C funciona com um esquema de inferência. Em vez de ler <em>"Crie um novo apontador <code>int</code> apontador x"</em>, é feita para ler <em>"Crie uma nova variável <code>x</code> onde de-referenciar <code>x</code> resulta em um <code>int</code>"</em>. Portanto, <code>x</code> é inferido como sendo um apontador para <code>int</code>.</p>
   
-  <p>This idea is extended to function pointers. We can read the above declaration as follows. <em>"To get an <code>lval*</code> we dereference <code>lbuiltin</code> and call it with a <code>lenv*</code> and a <code>lval*</code>."</em> Therefore <code>lbuiltin</code> must be a function pointer that takes an <code>lenv*</code> and a <code>lval*</code> and returns a <code>lval*</code>.</p>
+  <p>Esta ideia é expandida em apontadores para função. Podemos ler a declaração acima como: <em>"Para obter um <code>lval*</code>, dereferenciamos <code>lbuiltin</code> e a chamamos com um <code>lenv*</code> e um <code>lval*</code>."</em> Portanto, <code>lbuiltin</code> precisa ser um apontador para função que recebe um <code>lenv*</code> e um <code>lval*</code> e devolve um <code>lval*</code>.</p>
 </div>
 
-<h2>Cyclic Types</h2> <hr/>
+<h2>Tipos Cíclicos</h2> <hr/>
 
-<p>The <code>lbuiltin</code> type references the <code>lval</code> type and the <code>lenv</code> type. This means that they should be declared first in the source file.</p>
+<p>O tipo <code>lbuiltin</code> referencia o tipo <code>lval</code> e o tipo <code>lenv</code>. Isto significa que estes devem ser declarados antes no código fonte.</p>
 
-<p>But we want to make a <code>lbuiltin</code> field in our <code>lval</code> struct so we can create function values. So therefore our <code>lbuiltin</code> declaration must go before our <code>lval</code> declaration. This leads to what is called a cyclic type dependency, where two types depend on each other.</p>
+<p>Mas queremos fazer um campo <code>lbuiltin</code> em nossa struct <code>lval</code> para que possamos criar valores funções. Então, nossa declaração <code>lbuiltin</code> deve ir antes da nossa declaração <code>lval</code>. Isto leva ao que chamamos uma dependência cíclica de tipos, onde dois tipos dependem um do outro.</p>
 
-<p>We've come across this problem before with functions which depend on each other. The solution was to create a <em>forward declaration</em> which declared a function but left the body of it empty.</p>
+<p>Nos deparamos com este problema antes com funções que dependem uma da outra. A solução foi criar uma <em>declaração adiantada</em> que declarava uma função mas deixava o corpo dela vazio.</p>
 
-<p>In C we can do exactly the same with types. First we declare two <code>struct</code> types without a body. Secondly we typedef these to the names <code>lval</code> and <code>lenv</code>. Then we can define our <code>lbuiltin</code> function pointer type. And finally we can define the body of our <code>lval</code> struct. Now all our type issues are resolved and the compiler won't complain any more.</p>
+<p>Em C podemos fazer exatamente a mesma coisa com tipos. Primeiro, declaramos os dois tipos <code>struct</code> sem um corpo. Segundo, definimos com <code>typedef</code> os nomes <code>lval</code> e <code>lenv</code>. Em seguida podemos definir nosso tipo apontador para função <code>lbuiltin</code>, e finalmente podemos definir o corpo da nossa estrutura <code>lval</code>. Agora todos nossos problemas com tipos estão resolvidos e o compilador não vai reclamar mais.</p>
 
-<pre><code data-language='c'>/* Forward Declarations */
+<pre><code data-language='c'>/* Declaracoes Adiantadas */
 
 struct lval;
 struct lenv;
 typedef struct lval lval;
 typedef struct lenv lenv;
 
-/* Lisp Value */
+/* Valor Lisp */
 
 enum { LVAL_ERR, LVAL_NUM,   LVAL_SYM, 
        LVAL_FUN, LVAL_SEXPR, LVAL_QEXPR };
@@ -113,11 +113,11 @@ struct lval {
 };</code></pre>
 
 
-<h2>Function Type</h2> <hr/>
+<h2>Tipo Função</h2> <hr/>
 
-<p>As we've added a new possible <code>lval</code> type with the enumeration <code>LVAL_FUN</code>. We should update all our relevant functions that work on <code>lvals</code> to deal correctly with this update. In most cases this just means inserting new cases into switch statements.</p>
+<p>Como adicionamos um novo tipo possível <code>lval</code> com a enumeração <code>LVAL_FUN</code>. Devemos atualizar todas nossas funções relevantes que funcionam em <code>lvals</code> para lidar corretamente com esta atualização. Na maioria dos casos isto significa apenas inserir novos casos em comandos <code>switch</code>.</p>
 
-<p>We can start by making a new constructor function for this type.</p>
+<p>Podemos começar fazendo uma nova função construtora para este tipo.</p>
 
 <pre><code data-language='c'>lval* lval_fun(lbuiltin func) {
   lval* v = malloc(sizeof(lval));
@@ -126,15 +126,15 @@ struct lval {
   return v;
 }</code></pre>
 
-<p>On <strong>deletion</strong> we don't need to do anything special for function pointers.</p>
+<p>Na <strong>deleção</strong> não precisamos fazer nada especial para apontadores de função.</p>
 
 <pre><code data-language='c'>case LVAL_FUN: break;</code></pre>
 
-<p>On <strong>printing</strong> we can just print out a nominal string.</p>
+<p>Na <strong>impressão</strong> podemos simplesmente imprimir uma string nominal.</p>
 
 <pre><code data-language='c'>case LVAL_FUN:   printf("&lt;function&gt;"); break;</code></pre>
 
-<p>We're also going to add a new function for <strong>copying</strong> an <code>lval</code>. This is going to come in useful when we put things into, and take things out of, the environment. For numbers and functions we can just copy the relevant fields directly. For strings we need to copy using <code>malloc</code> and <code>strcpy</code>. To copy lists we need to allocate the correct amount of space and then copy each element individually.</p>
+<p>Também vamos adicionar uma nova função para <strong>copiar</strong> um <code>lval</code>. Isto vai ser útil quando colocarmos e tirarmos coisas dentro do ambiente. Para números e funções podemos simplesmente copiar diretamente os campos relevantes. Para strings, precisamos copiar usando <code>malloc</code> e <code>strcpy</code>. Para copiar listas, precisamos alocar a quantidade correta de espaço e a seguir copiar cada elemento individualmente.</p>
 
 <pre><code data-language='c'>lval* lval_copy(lval* v) {
   
@@ -171,11 +171,11 @@ struct lval {
 }</code></pre>
 
 
-<h2>Environment</h2> <hr/>
+<h2>Ambiente</h2> <hr/>
 
-<p>Our environment structure must encode a list of relationships between <em>names</em> and <em>values</em>. There are many ways to build a structure that can do this sort of thing. We are going to go for the simplest possible method that works well. This is to use two lists of equal length. One is a list of <code>lval*</code>, and the other is a list of <code>char*</code>. Each entry in one list has a corresponding entry in the other list at the same position.</p>
+<p>Nossa estrutura de ambiente precisa codificar uma lista de relacionamentos entre <em>nomes</em> e <em>valores</em>. Existem muitas maneiras de construir uma estrutura que pode fazer este tipo de coisa. Vamos usar o método mais simples possível que funciona bem. Isto é, vamos usar duas listas do mesmo tamanho. Uma é uma lista de <code>lval*</code>, e a outra é uma lista de <code>char*</code>. Cada entrada em uma lista tem um valor correspondente na outra lista na mesma posição.</p>
 
-<p>We've already forward declared our <code>lenv</code> struct, so we can define it as follows.</p>
+<p>Já declaramos adiantado nossa estrutura <code>lenv</code>, então agora podemos defini-la como segue.</p>
 
 <pre><code data-language='c'>struct lenv {
   int count;
@@ -183,7 +183,7 @@ struct lval {
   lval** vals;
 };</code></pre>
 
-<p>We need some functions to create and delete this structure. These are pretty simple. Creation initialises the struct fields, while deletion iterates over the items in both lists and deletes or frees them.</p>
+<p>Precisamos algumas funções para criar e deletar esta estrutura. Elas são bem simples. Criação inicializa os campos do struct, enquanto a deleção itera atráves dos items em ambas listas e deleta ou libera eles.</p>
 
 <pre><code data-language='c'>lenv* lenv_new(void) {
   lenv* e = malloc(sizeof(lenv));
@@ -203,13 +203,13 @@ struct lval {
   free(e);
 }</code></pre>
 
-<p>Next we can create two functions that either get values from the environment or put values into it.</p>
+<p>A seguir podemos criar duas funções que ou obtém valores do ambiente ou colocam valores nele.</p>
 
-<p>To get a value from the environment we loop over all the items in the environment and check if the given symbol matches any of the stored strings. If we find a match we can return a copy of the stored value. If no match is found we should return an error.</p>
+<p>Para obter um valor do ambiente, percorremos todos os itens no ambiente e checamos se o símbolo dado casa qualquer uma das strings armazenadas. Se achamos alguma que corresponde, podemos devolver uma cópia do valor armazenado. Se nenhum valor é encontrado, devemos retornar um erro.</p>
 
-<p>The function for putting new variables into the environment is a little bit more complex. First we want to check if a variable with the same name already exists. If this is the case we should replace its value with the new one. To do this we loop over all the existing variables in the environment and check their name. If a match is found we delete the value stored at that location, and store there a copy of the input value.</p>
+<p>A função para colocar novas variáveis no ambiente é um pouco mais complexa. Primeiro queremos checar se uma variável com o mesmo nome já existe. Se este for o caso, devemos substituí-la com a nova. Para fazer isso, iteramos todas as variáveis existentes no ambiente e checamos seus nomes. Se achamos uma correspondência, deletamos o valor armazenado naquela localização e armazenamos lá uma cópia do valor da entrada.</p>
 
-<p>If no existing value is found with that name, we need to allocate some more space to put it in. For this we can use <code>realloc</code>, and store a copy of the <code>lval</code> and its name at the newly allocated locations.</p>
+<p>Se nenhum valor existente foi encontrado com esse nome, precisamos alocar mais espaço para colocá-lo. Para isso, podemos usar <code>realloc</code> e armazenar uma cópia do <code>lval</code> e seu nome nas localizações recém alocadas.</p>
 
 <pre><code data-language='c'>lval* lenv_get(lenv* e, lval* k) {
 
@@ -252,9 +252,9 @@ struct lval {
 }</code></pre>
 
 
-<h2>Variable Evaluation</h2> <hr/>
+<h2>Avaliação de Variáveis</h2> <hr/>
 
-<p>Our evaluation function now depends on some environment. We should pass this in as an argument and use it to get a value if we encounter a symbol type. Because our environment returns a copy of the value we need to remember to delete the input symbol <code>lval</code>.</p>
+<p>Nossa função de avaliação agora depende de algum ambiente. Devemos passar este como um argumento e usá-lo para obter um valor se encontramos um tipo símbolo. Como nosso ambiente devolve uma cópia do valor, precisamos lembrar de deletar o símbolo de entrada <code>lval</code>.</p>
 
 <pre><code data-language='c'>lval* lval_eval(lenv* e, lval* v) {
   if (v-&gt;type == LVAL_SYM) {
@@ -266,7 +266,7 @@ struct lval {
   return v;
 }</code></pre>
 
-<p>Because we've added a function type, our evaluation of S-Expressions also needs to change. Instead of checking for a symbol type we want to ensure it is a function type. If this condition holds we can call the <code>fun</code> field of the <code>lval</code> using the same notation as standard function calls.</p>
+<p>Como adicionamods um tipo função, nossa avaliação de S-Expressions também precisa mudar. Em vez de checar por um tipo símbolo, queremos nos certificar que é um tipo função. Se esta condição for verdadeira, podemos chamar o campo <code>fun</code> do <code>lval</code> usando a mesma notação que as chamadas de funções normais.</p>
 
 <pre><code data-language='c'>lval* lval_eval_sexpr(lenv* e, lval* v) {
 
