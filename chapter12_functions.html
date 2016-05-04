@@ -1,63 +1,63 @@
-<h1>Functions <small>&bull; Chapter 12</small></h1>
+<h1>Funções <small>&bull; Capítulo 12</small></h1>
 
-<h2>What is a Function?</h2> <hr/>
+<h2>O que é uma Função</h2> <hr/>
 
-<p>Functions are the essence of all programming. In the early days of computer science they represented a naive dream. The idea was that we could reduce computation into these smaller and smaller bits of re-usable code. Given enough time, and a proper structure for libraries, eventually we would have written code required for all computational needs. No longer would people have to write their own functions, and programming would consist of an easy job of stitching together components.</p>
+<p>Funções são a essência de toda programação. Nos primeiros dias da ciência da computação elas representavam um sonho ingênuo. A ideia era que poderiam reduzir a computação em pedaços cada vez menores de código reusável. Com o tempo e uma estrutura apropriada para bibliotecas, eventualmente teríamos escrito código para todas as necessidades computacionais. Não mais as pessoas teriam que escrever suas próprias funções, e programação consistiria de um trabalho fácil de costurar componentes uns aos outros.</p>
 
-<p>This dream hasn't come true yet, but it persists, no matter how flawed. Each new programming technique or paradigm that comes along shakes up this idea a little. They promise better re-use of code. Better abstractions, and an easier life for all.</p>
+<p>Este sonho não se tornou realidade ainda, mas ele persiste, não importa quão falho. Cada nova técnica de programação ou paradigma que aparece agita essa ideia um pouco. Eles prometem melhor reuso de código, melhores abstrações e uma vida mais fácil para todos.</p>
 
 <div class='pull-right alert alert-warning' style="margin: 15px; text-align: center;">
   <img src="/static/img/bananas.png" alt="bananas" class="img-responsive" width="369px" height="238px"/>
-  <p><small>Bananaphone &bull; Another naive dream.</small></p>
+  <p><small>Banana-phone &bull; Outro sonho ingênuo.</small></p>
 </div>
 
-<p>In reality what each paradigm delivers is simply <em>different</em> abstractions. There has always been a trade-off. For each higher level of thinking about programming, some piece is thrown away. And this means, no matter how well you decide what to keep and what to leave, occasionally someone will need that piece that has been lost. But through all of this, one way or the other, functions have always persisted, and have continually proven to be effective.</p>
+<p>Na realidade, o que cada paradigma oferece são simplesmente abstrações <em>diferentes</em>. Há sempre um <em>trade-off</em>. Para cada nível mais alto a se pensar sobre programação, alguma peça é perdida. E isto significa que, não importa quão bem você decide o que manter e o que deixar, ocasionalmente alguém precisará daquela peça que foi perdida. Mas através disso tudo, de uma maneira ou de outra, funções sempre persistiram, e continuamente provaram ser efetivas.</p>
 
-<p>We've used functions in C, we know what they <em>look like</em>, but we don't know exactly what they <em>are</em>. Here are a few ways to think about them.</p>
+<p>Nós usamos funções em C, nós sabemos o que elas <em>se parecem</em>, mas nós ainda não sabemos exatamente o que elas <em>são</em>. Aqui vão algumas maneiras de pensar sobre elas.</p>
 
-<p>One way to think about functions is as description of some computation you want to be performed later. When you define a function it is like saying "when I use <em>this</em> name I want <em>that</em> sort of thing to happen". This is a very practical idea of a function. It is very intuitive, and metaphorical to language. This is the way you would command a human or animal. Another thing I like about this is that it captures the delayed nature of functions. Functions are defined once, but can be called on repeatedly after.</p>
+<p>Uma maneira de pensar sobre funções é uma descrição de alguma computação que você quer executar depois. Quando você define uma função é como dizer "quando eu uso <em>este</em> nome, eu quero que <em>esse</em> tipo de coisa aconteça". É uma ideia muito prática de uma função. É muito intuitiva, e metafórica para a linguagem. Esta é a maneira de comandar um humano ou animal. Outro motivo pelo qual gosto dela é que captura a natureza adiada das funções. Funções são definidas uma vez, mas podem ser chamadas repetidamente depois.</p>
 
-<p>Another way to think about functions is as a black box that takes some input and produces some output. This idea is subtly different from the former. It is more algebraic, and doesn't talk about <em>computation</em> or <em>commands</em>. This idea is a mathematical concept, and is not tied to some particular machine, or language. In some situations this idea is exceptionally useful. It allows us to think about functions without worrying about their internals, or how they are computed exactly. We can then combine and compose functions together without worry of something subtle going wrong. This is the core idea behind an abstraction, and is what allows layers of complexity to work together with each other rather than conflict. This idea's strength can also be its downfall. Because it does not mention anything about computation it does not deal with a number of real world concerns. <em>"How long will this function take to run?"</em>, <em>"Is this function efficient?"</em>, <em>"Will it modify the state of my program? If so how?"</em>.</p>
+<p>Uma outra maneira de pensar sobre funções é como uma caixa preta que recebe alguma entrada e produz uma saída. Esta ideia é sutilmente diferente da anterior. É um pouco mais algébrica, e não fala sobre <em>computação</em> ou <em>comandos</em>. Esta ideia é um conceito matemático, e não está amarrada a alguma maquina ou linguagem em particular. Em algumas situações esta ideia é excepcionalmente útil. Ela nos permite pensar sobre funções sem se preocupar sobre suas partes internas ou como elas são computadas exatamente. Podemos então combinar ou compor funções umas com as outras sem se preocupar com alguma coisa sutil dar errado. Isto é a ideia central por trás de uma abstração, e é isto que permite camadas de complexidade funcionar juntamente com as outras ao invés de conflitar. A força desta ideia pode ser também a sua queda. Como ela não menciona nada sobre computação, ela não lida com algumas preocupações do mundo real. <em>"Quanto tempo esta função leva para rodar?"</em>, <em>"Esta função é eficiente?"</em>, <em>"Vai modificar o estado do meu programa? Caso sim, como?"</em>.</p>
 
 <div class='pull-left alert alert-warning' style="margin: 15px; text-align: center;">
   <img src="/static/img/black_box.png" alt="black_box" class="img-responsive" width="294px" height="293px"/>
-  <p><small>Black Box &bull; Your typical function.</small></p>
+  <p><small>Caixa Preta &bull; Sua função típica.</small></p>
 </div>
 
-<p>A third method is to think of functions as <em>partial computations</em>. Like the Mathematical model they can take some inputs. These values are required before the function can complete the computation. This is why it is called <em>partial</em>. But like the computational model, the body of the function consists of a computation specified in some language of commands. These inputs are called <em>unbound variables</em>, and to finish the computation one simply supplies them. Like fitting a cog into a machine which previously spinning aimlessly, this completes all that is needed for the computation to run, and the machine runs. The output of these <em>partial computations</em> is itself a variable with an unknown value. This output can be placed as input to a new function, and so one function relies on another.</p>
+<p>Um terceiro método é pensar em funções como <em>computações parciais</em>. Como o modelo matemático, elas podem receber algumas entradas. Estes valores são requeridos antes que a função possa completar a computação. É por isso que ela é chamada <em>parcial</em>. Mas como o modelo computacional, o corpo da função consiste de uma computação especificado em alguma linguagem de comandos. Estas entradas são chamadas <em>variáveis não vinculadas</em> (<em>unbounded variables</em>), e para terminar a computação alguém precisa simplesmente fornecê-las. Como encaixar uma engrenagem em uma máquina previamente rodando sem objetivo, isto completa tudo que é necessário para a computação rodar, e a máquina roda. A saída dessas <em>computações parciais</em> é ela mesma uma variável com um valor desconhecido. Esta saída pode ser usada como entrada para uma nova função, e assim uma função depende de outra.</p>
 
-<p>An advantage of this idea over the mathematical model is that we recognize that functions <em>contain computation</em>. We see that when the computation runs, some physical process is going on in the machine. This means we recognise the fact that certain things take time to elapse, or that a function might change the program state, or do anything else we're not sure about.</p>
+<p>Uma vantagem dessa ideia sobre o modelo matemático é reconhecermos que funções <em>contêm computação</em>. Vemos que quando a computação roda, algum processo físico está acontecendo na máquina. Isto significa que reconhecemos o fato que algumas coisas tomam tempo para decorrer, ou que a função pode mudar o estado do programa, ou fazer qualquer outra coisa que não temos muita certeza.</p>
 
-<p>All these ideas are explored in the study of functions, <em>Lambda calculus</em>. This is a field that combines logic, maths, and computer science. The name comes from the Greek letter Lambda, which is used in the representation of <em>binding variables</em>. Using Lambda calculus gives a way of defining, composing and building <em>functions</em> using a simple mathematical notation.</p>
+<p>Todas essas ideias são exploradas no estudo de funções, <em>cálculo Lambda</em>. Este é um campo que combina lógica, matemática e ciência da computação. O nome vem da letra grega Lambda, que é usada na representação de <em>vinculação de variáveis</em> (<em>binding variables</em>). Usar o cálculo Lambda nos dá uma maneira de definir, compor e construir <em>funções</em> usando uma notação matemática simples.</p>
 
-<p>We are going to use all of the previous ideas to add user defined functions to our language. Lisp is already well suited to this sort of playing around and using these concepts, it won't take much work for us to implement functions.</p>
+<p>Vamos usar todas as ideias anteriores para adicionar funções definidas pelo usuário à nossa linguagem. Lisp já é bem adequada a este tipo de diversão, e usando estes conceitos não vai levar muito trabalho para implementar funções.</p>
 
-<p>The first step will be to write a builtin function that can create user defined functions. Here is one idea as to how it can be specified. The first argument could be a list of symbols, just like our <code>def</code> function. These symbols we call the <em>formal arguments</em>, also known as the <em>unbound variables</em>. They act as the inputs to our <em>partial computation</em>. The second argument could be another list. When running the function this is going to be evaluated with our builtin <code>eval</code> function.</p>
+<p>O primeiro passo será escrever uma função bulitin que possa criar funções definidas pelo usuário. Aqui vai uma ideia sobre como ela pode ser especificada. O primeiro argumento poderia ser uma lista de símbolos, da mesma forma que a função <code>def</code>. Estes símbolos podemos chamar de <em>argumentos formais</em>, também conhecidos como <em>variáveis não vinculadas</em>. Elas agem como entradas para nossa <em>computação parcial</em>. O segundo argumento poderia ser uma outra lista. Quando rodamos a função, isto vai ser avaliado com nossa função builtin <code>eval</code>.</p>
 
-<p>This function we'll call just <code>\</code>, (a homage to The Lambda Calculus as the <code>\</code> character looks a little bit like a lambda). To create a function which takes two inputs and adds them together, we would then write something like this.</p>
+<p>Esta função chamaremos apenas <code>\</code>, (uma homenagem ao cálculo Lambda já que o caractere <code>\</code> se parece um pouco com um lambda). Para criar uma função que recebe duas entradas e as soma, poderíamos então criar algo como isso.</p>
 
 <pre><code data-language='lispy'>\ {x y} {+ x y}</code></pre>
 
-<p>We can call the function by putting it as the first argument in a normal S-Expression</p>
+<p>Podemos chamar a função colocando-a como o primeiro argumento em uma S-Expression normal.</p>
 
 <pre><code data-language='lispy'>(\ {x y} {+ x y}) 10 20</code></pre>
 
-<p>If we want to name this function we can pass it to our existing builtin <code>def</code> like any other value and store it in the environment.</p>
+<p>Se quisermos nomear esta função, podemos passá-la para nosso builtin existente <code>def</code> como qualquer outro valor, e armazená-la no ambiente.</p>
 
 <pre><code data-language='lispy'>def {add-together} (\ {x y} {+ x y})</code></pre>
 
-<p>Then we can call it by refering to it by name.</p>
+<p>A seguir, poderemos chamá-la se referindo pelo nome.</p>
 
 <pre><code data-language='lispy'>add-together 10 20</code></pre>
 
 
-<h2>Function Type</h2> <hr/>
+<h2>Tipo função</h2> <hr/>
 
-<p>To store a function as an <code>lval</code> we need to think exactly what it consists of.</p>
+<p>Para armazenar uma função como um <code>lval</code> precisamos pensar exatamente do que ela consiste.</p>
 
-<p>Using the previous definition, a function should consists of three parts. First is the list of <em>formal arguments</em>, which we must bind before we can evaluate the function. The second part is a Q-Expression that represents the body of the function. Finally we require a location to store the values assigned to the <em>formal arguments</em>. Luckily we already have a structure for storing variables, an <em>environment</em>.</p>
+<p>Usando a definição anterior, uma função deve consistir de três partes. Primeiro é a lista de <em>argumentos formais</em>, que precisamos vincular antes que possamos avaliar a função. A segunda parte é uma Q-Expression que representa o corpo da função. Finalmente, requeremos um local para armazenar os valores atribuídos para os <em>argumentos formais</em>. Com sorte, já temos uma estrutura para armazenar variáveis, um <em>ambiente</em>.</p>
 
-<p>We will store our builtin functions and user defined functions under the same type <code>LVAL_FUN</code>. This means we need a way internally to differentiate between them. To do this we can check if the <code>lbuiltin</code> function pointer is <code>NULL</code> or not. If it is not <code>NULL</code> we know the <code>lval</code> is some builtin function, otherwise we know it is a user function.</p>
+<p>Vamos armazenar nossas funções builtins e funções definidas pelo usuário com o mesmo tipo <code>LVAL_FUN</code>. Isto significa que precisaremos duma maneira de diferenciar internamente entre elas. Para fazer isso, podemos checar se o apontador de função <code>lbuiltin</code> é <code>NULL</code> ou não. Se não for <code>NULL</code>, sabemos que o <code>lval</code> é alguma função builtin, caso contrário sabemos que é uma função do usuário.</p>
 
 <pre><code data-language='c'>struct lval {
   int type;
@@ -78,29 +78,29 @@
   lval** cell;
 };</code></pre>
 
-<p>We've renamed the <code>lbuiltin</code> field from <code>func</code> to <code>builtin</code>. We should make sure to change this in all the places it is used in our code.</p>
+<p>Renomeamos o campo <code>lbuiltin</code> de <code>func</code> para <code>builtin</code>. Devemos nos certificar de mudar isto em todos os locais que é usado em nosso código.</p>
 
-<p>We also need to create a constructor for user defined <code>lval</code> functions. Here we build a new environment for the function, and assign the <code>formals</code> and <code>body</code> values to those passed in. </p>
+<p>Também precisamos criar um construtor para as funções <code>lval</code> definidas pelo usuário. Aqui construímos um ambiente para a função, e atribuímos os valores <code>formals</code> e <code>body</code> para os valores passados.</p>
 
 <pre><code data-language='c'>lval* lval_lambda(lval* formals, lval* body) {
   lval* v = malloc(sizeof(lval));
   v-&gt;type = LVAL_FUN;
 
-  /* Set Builtin to Null */
+  /* Seta Builtin para Null */
   v-&gt;builtin = NULL;
 
-  /* Build new environment */
+  /* Constroi novo ambiente */
   v-&gt;env = lenv_new();
 
-  /* Set Formals and Body */
+  /* Seta Formals e Body */
   v-&gt;formals = formals;
   v-&gt;body = body;
   return v;  
 }</code></pre>
 
-<p>As with whenever we change our <code>lval</code> type we need to update the functions for <em>deletion</em>, <em>copying</em>, and <em>printing</em> to deal with the changes. For evaluation we'll need to look in greater depth.</p>
+<p>Como sempre quando mudamos nosso tipo <code>lval</code>, precisamos atualizar as funções para <em>deleção</em>, <em>cópia</em>, e <em>impressão</em>  para lidar com as mudanças. Para avaliação, precisaremos olhar com mais profundidade.</p>
 
-<p>For <strong>Deletion</strong>...</p>
+<p>Para <strong>Deleção</strong>...</p>
 
 <pre><code data-language='c'>case LVAL_FUN: 
   if (!v-&gt;builtin) {
@@ -110,7 +110,7 @@
   }
 break;</code></pre>
 
-<p>For <strong>Copying</strong>...</p>
+<p>Para <strong>Cópia</strong>...</p>
 
 <pre><code data-language='c'>case LVAL_FUN:
   if (v-&gt;builtin) {
@@ -123,7 +123,7 @@ break;</code></pre>
   }
 break;</code></pre>
 
-<p>For <strong>Printing</strong>...</p>
+<p>Para <strong>Impressão</strong>...</p>
 
 <pre><code data-language='c'>case LVAL_FUN:
   if (v-&gt;builtin) {
@@ -135,24 +135,24 @@ break;</code></pre>
 break;</code></pre>
 
 
-<h2>Lambda Function</h2> <hr/>
+<h2>Função Lambda</h2> <hr/>
 
-<p>We can now add a builtin for our lambda function. We want it to take as input some list of symbols, and a list that represents the code. After that it should return a function <code>lval</code>. We've defined a few of builtins now, and this one will follow the same format. Like in <code>def</code> we do some error checking to ensure the argument types and count are correct (using some newly defined Macros). Then we just pop the first two arguments from the list and pass them to our previously defined function <code>lval_lambda</code>.</p>
+<p>Podemos adicionar um builtin para nossa função lambda. Queremos que receba como entrada uma lista de símbolos, e uma lista que represente o código. Depois disso, ela deve retornar uma função <code>lval</code>. Definimos já alguns builtins, e este seguirá o mesmo formato. Como em <code>def</code>, fazemos alguma checagem de erro para verificar que o número e os tipos dos argumentos (usando algumas Macros recém definidas). A seguir, apenas extraímos os primeiros dois argumentos da lista e os passamos para nossa função <code>lval_lambda</code> definida anteriormente.</p>
 
 <pre><code data-language='c'>lval* builtin_lambda(lenv* e, lval* a) {
-  /* Check Two arguments, each of which are Q-Expressions */
+  /* Verifica dois argumentos, cada um deve ser uma Q-Expression */
   LASSERT_NUM("\\", a, 2);
   LASSERT_TYPE("\\", a, 0, LVAL_QEXPR);
   LASSERT_TYPE("\\", a, 1, LVAL_QEXPR);
   
-  /* Check first Q-Expression contains only Symbols */
+  /* Verifica que a primeira Q-Expression contem apenas Symbols */
   for (int i = 0; i &lt; a-&gt;cell[0]-&gt;count; i++) {
     LASSERT(a, (a-&gt;cell[0]-&gt;cell[i]-&gt;type == LVAL_SYM),
       "Cannot define non-symbol. Got %s, Expected %s.",
       ltype_name(a-&gt;cell[0]-&gt;cell[i]-&gt;type),ltype_name(LVAL_SYM));
   }
   
-  /* Pop first two arguments and pass them to lval_lambda */
+  /* Extrai os primeiros dois argumentos e passa-os para lval_lambda */
   lval* formals = lval_pop(a, 0);
   lval* body = lval_pop(a, 0);
   lval_del(a);
@@ -161,32 +161,32 @@ break;</code></pre>
 }</code></pre>
 
 <div class="alert alert-warning">
-  <p><strong>Where did <code>LASSERT_NUM</code> and <code>LASSERT_TYPE</code> come from?</strong></p>
+  <p><strong>De onde vieram <code>LASSERT_NUM</code> e <code>LASSERT_TYPE</code>?</strong></p>
 
-  <p>I took the liberty of improving the error reporting macros for this chapter. This task was suggested in the bonus marks of the previous chapter. It makes the code so much cleaner that it was hard to ignore!</p>
+  <p>Tomei a liberdade de melhorar a comunicação de erros para este capítulo. Esta tarefa foi sugerida como meta bônus do capítulo anterior. Ela torna o código bem mais claro que era difícil de ignorar!</p>
 
-  <p>If you were planning on completing this task yourself, now might be a good time to do it. Otherwise you can look at the reference code for this chapter to see what approach I took, and integrate that into your code.</p>
+  <p>Caso esteja planejando completar esta tarefa você mesmo, agora pode ser uma boa hora de fazê-lo. Caso contrário, você pode olhar o código de referência deste capítulo para ver a abordagem que usei, e integrá-la em seu código.</p>
 </div>
 
 <div class='pull-right alert alert-warning' style="margin: 15px; text-align: center;">
   <img src="/static/img/playgroup.png" alt="playgroup" class="img-responsive" width="274px" height="321px"/>
-  <p><small>Playgroup &bull; Your typical parent environment.</small></p>
+  <p><small>Playgroup &bull; Típico ambiente pai.</small></p>
 </div>
 
 
-<h2>Parent Environment</h2> <hr/>
+<h2>Ambiente pai</h2> <hr/>
 
-<p>We've given functions their own environment. In this environment we will place the values that their formal arguments are set to. When we come to evaluate the body of the function we can do it in this  environment and know that those variables will have the correct values.</p>
+<p>Demos às funções seus próprios ambientes. Neste ambiente colocaremos os valores que seus argumentos formais são setados. Quando vamos avaliar o corpo da função, podemos fazê-lo neste ambiente e saber que aquelas variáveis terão os valores corretos.</p>
 
-<p>But ideally we also want these functions to be able to access variables which are in the global environment, such as our builtin functions.</p>
+<p>Mais idealmentes também queremos que estas funções sejam capaz de acessar variáveis que estão no ambiente global, como as nossas funções builtins.</p>
 
-<p>We can solve this problem by changing the definition of our environment to contain a reference to some <em>parent</em> environment. Then, when we want to evaluate a function, we can set this <em>parent</em> environment to our global environment, which has all of our builtins defined within.</p>
+<p>Podemos resolver este problema mudando a definição do nosso ambiente para conter uma referência a algum ambiente <em>pai</em>. A seguir, quando queremos avaliar uma função, podemos setar este ambiente <em>pai</em> para nosso ambiente global, que tem todas nossas builtins definidas dentro dele.</p>
 
-<p>When we add this to our <code>lenv</code> struct, conceptually it will be a <em>reference</em> to a parent environment, not some sub-environment or anything like that. Because of this we shouldn't <em>delete</em> it when our <code>lenv</code> gets deleted, or copy it when our <code>lenv</code> gets copied.</p>
+<p>Quando adicionamos isto ao nosso struct <code>lenv</code>, conceitualmente será uma <em>referência</em> a um ambiente pai, não algum sub-ambiente ou algo do tipo. Por causa disso, não devemos <em>deletá-lo</em> quando nosso <code>lenv</code> é deletado, ou copiá-lo quando nosso <code>lenv</code> é copiado.</p>
 
-<p>The way the <em>parent environment</em> works is simple. If someone calls <code>lenv_get</code> on the environment, and the symbol cannot be found. It will look then in any parent environment to see if the named value exists there, and repeat the process till either the variable is found or there are no more parents. To signify that an environment has no parent we set the reference to <code>NULL</code>.</p>
+<p>A maneira que o <em>ambiente pai</em> funciona é simples. Se alguém chama <code>lenv_get</code> no ambiente e o símbolo não é encontrado, ele vai buscar no ambiente pai para ver se o valor nomeado existe lá, e repetir o processo até que ou a variável seja encontrada ou não há mais pais. Para significar que um ambiente não tem pai, setamos a referência para <code>NULL</code>.</p>
 
-<p>The constructor function only require basic changes to allow for this.</p>
+<p>A função construtora somente requer mudanças básicas para permitir isto.</p>
 
 <pre><code data-language='c'>struct lenv {
   lenv* par;
@@ -205,7 +205,7 @@ lenv* lenv_new(void) {
 }
 </code></pre>
 
-<p>To get a value from an environment we need to add in the search of the parent environment in the case that a symbol is not found.</p>
+<p>Para obter um valor de um ambiente precisamos adicionar a busca do ambiente pai caso um símbolo não for encontrado.</p>
 
 <pre><code data-language='c'>lval* lenv_get(lenv* e, lval* k) {
 
@@ -215,7 +215,7 @@ lenv* lenv_new(void) {
     }
   }
 
-  /* If no symbol check in parent otherwise error */
+  /* Caso sem simbolo, verifica no ambiente pai ou devolve erro */
   if (e-&gt;par) {
     return lenv_get(e-&gt;par, k);
   } else {
@@ -223,7 +223,7 @@ lenv* lenv_new(void) {
   }
 }</code></pre>
 
-<p>Because we have a new <code>lval</code> type that has its own environment we need a function for copying environments, to use for when we copy <code>lval</code> structs.</p>
+<p>Como temos um novo tipo <code>lval</code> que tem seu próprio ambiente precisamos uma função para copiar ambientes, para usar quando copiamos structs <code>lval</code>.</p>
 
 <pre><code data-language='c'>lenv* lenv_copy(lenv* e) {
   lenv* n = malloc(sizeof(lenv));
@@ -239,20 +239,20 @@ lenv* lenv_new(void) {
   return n;
 }</code></pre>
 
-<p>Having parent environments also changes our concept of <em>defining</em> a variable.</p>
+<p>Ter ambientes pais também muda nosso conceito de <em>definir</em> uma variável.</p>
 
-<p>There are two ways we could define a variable now. Either we could define it in the local, innermost environment, or we could define it in the global, outermost environment. We will add functions to do both. We'll leave the <code>lenv_put</code> method the same. It can be used for definition in the local environment. But we'll add a new function <code>lenv_def</code> for definition in the global environment. This works by simply following the parent chain up before using <code>lenv_put</code> to define locally.</p>
+<p>Há duas maneiras que podemos definir uma variável agora. Podemos ou definila no ambiente local, mais interno, ou podemos defini-lo no ambiente global, mais externo. Vamos adicionar funções para fazer ambos. Manteremos a função <code>lenv_put</code> do mesmo jeito. Ele pode ser usado para a definição no ambiente local. Mas adicionaremos uma nova função <code>lenv_def</code> para definição no ambiente global. Ela funciona simplesmente seguindo a cadeia de pais acima, e por fima usa <code>lenv_put</code> para defini-lo localmente.</p>
 
 <pre><code data-language='c'>void lenv_def(lenv* e, lval* k, lval* v) {
-  /* Iterate till e has no parent */
+  /* Itera ate e nao ter pai */
   while (e-&gt;par) { e = e-&gt;par; }
-  /* Put value in e */
+  /* Coloca valor em e */
   lenv_put(e, k, v);
 }</code></pre>
 
-<p>At the moment this distinction may seem useless, but later on we will use it to write partial results of calculations to local variables inside a function. We should add another builtin for <em>local</em> assignment. We'll call this <code>put</code> in C, but give it the <code>=</code> symbol in Lisp. We can adapt our <code>builtin_def</code> function and re-use the common code, just like we do with our mathematical operators.</p>
+<p>No momento, esta distinção pode parecer inútil, mas mais tarde vamos usá-la para escrever resultados parciais de cálculos em variáveis locais dentro de uma função. Podemos adicionar outra builtin para atribuição <em>local</em>. Chamaremos esta de <code>put</code> em C, mas daremo-la o símbolo <code>=</code> em Lisp. Podemos adaptar nossa função <code>builtin_def</code> e reusar o mesmo código comum, da mesma forma que fazemos com nossos operadores matemáticos.</p>
 
-<p>Then we need to register these as a builtins.</p>
+<p>Em seguida, precisamos registrar estes como builtins.</p>
 
 <pre><code data-language='c'>lenv_add_builtin(e, "def", builtin_def);
 lenv_add_builtin(e, "=",   builtin_put);</code></pre>
@@ -299,98 +299,99 @@ lenv_add_builtin(e, "=",   builtin_put);</code></pre>
 </code></pre>
 
 
-<h2>Function Calling</h2> <hr/>
+<h2>Chamando Funções</h2> <hr/>
 
-<p>We need to write the code that runs when an expression gets evaluated and a function <code>lval</code> is called.</p>
+<p>Precisamos escrever o código que roda quando uma expressão é avaliada e uma função <code>lval</code> é chamada.</p>
 
-<p>When this function type is a builtin we can call it as before, using the function pointer, but we need to do something separate for our user defined functions. We need to bind each of the arguments passed in, to each of the symbols in the <code>formals</code> field. Once this is done we need to evaluate the <code>body</code> field, using the <code>env</code> field as an environment, and the calling environment as a parent.</p>
+<p>Quando o tipo desta função é um builtin, chamamo-la como antes, usando o apontador para função, mas precisamos fazer algo separado para nossas funções definidas pelo usuário. Precisamos vincular cada um dos argumentos passados para cada um dos ímbolos no campo <code>formals</code>. Feito isso, precisamos avaliar o campo <code>body</code>, usar o campo <code>env</code> como um ambiente, e o ambiente chamador como um pai.</p>
 
-<p>A first attempt, without error checking, might look like this:</p>
+<p>Uma primeira tentativa, sem checagem de erros, pode se parecer com isto:</p>
 
 <pre><code data-language='c'>lval* lval_call(lenv* e, lval* f, lval* a) {
 
-  /* If Builtin then simply call that */
+  /* Se for Builtin, apenas chame-a */
   if (f-&gt;builtin) { return f-&gt;builtin(e, a); }
 
   /* Assign each argument to each formal in order */
+  /* Atribui cada argumento para cada formal em ordem */
   for (int i = 0; i &lt; a-&gt;count; i++) {
       lenv_put(f-&gt;env, f-&gt;formals-&gt;cell[i], a-&gt;cell[i]);
   }
 
   lval_del(a);
 
-  /* Set the parent environment */
+  /* Seta o ambiente pai */
   f-&gt;env-&gt;par = e;
 
-  /* Evaluate the body */
+  /* Avalia o body */
   return builtin_eval(f-&gt;env, 
     lval_add(lval_sexpr(), lval_copy(f-&gt;body)));
 }</code></pre>
 
-<p>But this doesn't act correctly when the number of arguments supplied, and the number of formal arguments differ. In this situation it will crash.</p>
+<p>Mas isto não funciona corretamente quando o número de argumentos fornecidos e o número de argumentos formais forem diferentes. Nesta situação ela vai falhar.</p>
 
-<p>Actually this is an interesting case, and leaves us a couple of options. We <em>could</em> just throw an error when the argument count supplied is incorrect, but we can do something that is more fun. When too few arguments are supplied we could instead bind the first few formal arguments of the function and then return it, leaving the rest unbound.</p>
+<p>Na verdade este é um caso interessante, e nos deixa com algumas opções. Nós <em>poderíamos</em> simplesmente jogar um erro quando a contagem de argumentos fornecidos está incorreta, mas podemos fazer algo que é ainda mais divertido. Quando faltam argumentos a ser fornecidos, poderíamos vincular apenas os primeiros argumentos formais da função e devolvê-la, deixando o restante não vinculado.</p>
 
-<p>This creates a function that has been <em>partially evaluated</em> and reflects our previous idea of a function being some kind of <em>partial computation</em>. If we start with a function that takes two arguments, and pass in a single argument, we can bind this first argument and return a new function with its first formal argument bound, and its second remaining empty.</p>
+<p>Isto cria uma função que é chamada <em>parcialmente avaliada</em> e reflete nossa ideia anterior de uma função ser um tipo de <em>computação parcial</em>. Se começamos com uma função que recebe dois argumentos e passamos apenas um argumento, podemos vincular este primeiro argumento e retornar uma nova função com o primeiro argumento formal vinculado, e o segundo permanecendo vazio.</p>
 
-<p>This metaphor creates a cute image of how functions work. We can imagine a function at the front of an expression, repeatedly consuming inputs directly to its right. After consuming the first input to its right, if it is full (requires no more inputs), it evaluates and replaces itself with some new value. If instead, it is still it still requires more, it replaces itself with another, more complete function, with one of its variables bound. This process repeats until the final value for the program is created.</p>
+<p>Esta metáfora cria uma imagem bonitinha de como as funções funcionam. Podemos imaginar uma função no começo de uma expressão, repetidamente consumindo entradas diretamente à sua direita. Depois de consumir a primeira entrada à sua direita, se ela for completa (não requer mais entradas), ela a avalia e substitui a si mesma com um novo valor. Caso contrário, se ainda requer mais argumentos, ela se substitui com uma outra função, mais completa, com algumas variáveis ligadas. Este processo se repete até que o valor final para o programa seja criado.</p>
 
-<p>So you can imagine functions like a little Pac-Man, not consuming all inputs at once, but iteratively eating inputs to the right, getting bigger and bigger until it is full and explodes to create something new. This isn't actually how we're going to implement it in code, but it is still fun to imagine.</p>
+<p>Então você pode imaginar funções como um pequeno Pac-Man, não consumindo todas as entradas de uma vez só, mas iterativamente comendo entradas à direita, ficando cada vez maior, até que fique cheio e exploda para criar algo novo. Isto não exatamente como vamos implementar no código, mas ainda é divertido de imaginar.</p>
 
 <pre><code data-language='c'>lval* lval_call(lenv* e, lval* f, lval* a) {
 
-  /* If Builtin then simply apply that */
+  /* Caso Builtin, entao aplique-a */
   if (f-&gt;builtin) { return f-&gt;builtin(e, a); }
 
-  /* Record Argument Counts */
+  /* Grava contagem de argumentos */
   int given = a-&gt;count;
   int total = f-&gt;formals-&gt;count;
 
-  /* While arguments still remain to be processed */
+  /* Enquanto ainda tem argumentos a processar */
   while (a-&gt;count) {
 
-    /* If we've ran out of formal arguments to bind */
+    /* Caso acabamos de vinucular todos argumentos formais */
     if (f-&gt;formals-&gt;count == 0) {
       lval_del(a); return lval_err(
         "Function passed too many arguments. "
         "Got %i, Expected %i.", given, total); 
     }
 
-    /* Pop the first symbol from the formals */
+    /* Extrai o primeiro simbolo dos formais */
     lval* sym = lval_pop(f-&gt;formals, 0);
 
-    /* Pop the next argument from the list */
+    /* Extrai o proximo argumento da lista */
     lval* val = lval_pop(a, 0);
 
-    /* Bind a copy into the function's environment */
+    /* Vincula uma copia no ambiente da funcao */
     lenv_put(f-&gt;env, sym, val);
 
-    /* Delete symbol and value */
+    /* Delta simbolo e valor */
     lval_del(sym); lval_del(val);
   }
 
-  /* Argument list is now bound so can be cleaned up */
+  /* Lista de argumentos estah agora vinculada e pode ser limpa */
   lval_del(a);
 
-  /* If all formals have been bound evaluate */
+  /* Se todos formais foram vinculados, entao avalia */
   if (f-&gt;formals-&gt;count == 0) {
 
-    /* Set environment parent to evaluation environment */
+    /* Seta ambiente pai para ambiente de avaliacao */
     f-&gt;env-&gt;par = e;
 
-    /* Evaluate and return */
+    /* Avalia e devolve */
     return builtin_eval(
       f-&gt;env, lval_add(lval_sexpr(), lval_copy(f-&gt;body)));
   } else {
-    /* Otherwise return partially evaluated function */
+    /* Caso contrario, retorna funcao parcialmente avaliada */
     return lval_copy(f);
   }
 
 }</code></pre>
 
-<p>The above function does exactly as we explained, with correct error handling added in too. First it iterates over the passed in arguments attempting to place each one in the environment. Then it checks if the environment is full, and if so evaluates, otherwise returns a copy of itself with some arguments filled.</p>
+<p>A função acima faz exatamente o que explicamos, adicionando também um tratamento de erros correto. Primeiro itera sobre os argumentos passados, tentanto colocar cada um no ambiente. A seguir ela verifica se o ambiente está cheio, e nesse caso avalia, caso não, devolve uma cópia de si mesma com alguns argumentos preenchidos.</p>
 
-<p>If we update our evaluation function <code>lval_eval_sexpr</code> to call <code>lval_call</code>, we can give our new system a spin.</p>
+<p>Se atualizamos nossa função de avaliação <code>lval_eval_sexpr</code> para chamar <code>lval_call</code>, podemos testar nosso novo sistema.</p>
 
 <pre><code data-language='c'>lval* f = lval_pop(v, 0);
 if (f->type != LVAL_FUN) {
@@ -405,7 +406,7 @@ if (f->type != LVAL_FUN) {
 lval* result = lval_call(e, f, v);
 </code></pre>
 
-<p>Try defining some functions and test out how partial evaluation works.</p>
+<p>Experimente definir algumas funções e testar como avaliações parciais funcionam.</p>
 
 <pre><code data-language='lispy'>lispy&gt; def {add-mul} (\ {x y} {+ x (* x y)})
 ()
@@ -420,61 +421,62 @@ lispy&gt; add-mul-ten 50
 lispy&gt;
 </code></pre>
 
-<h2>Variable Arguments</h2> <hr/>
+<h2>Argumentos Variáveis</h2> <hr/>
 
-<p>We've defined some of our builtin functions so they can take in a variable number of arguments. Functions like <code>+</code> and <code>join</code> can take any number of arguments, and operate on them logically. We should find a way to let user defined functions work on multiple arguments also.</p>
+<p>Definimos algumas de nossas funções builtins de forma que recebam um número variável de argumentos. Funções como <code>+</code> e <code>join</code> podem receber qualquer número de argumentos, e operam neles logicamente. Devemos achar uma maneira de permitir funções definidas pelo usuário funcionar com múltiplos argumentos também.</p>
 
-<p>Unfortunately there isn't an elegant way for us to allow for this, without adding in some special syntax. So we're going to hard-code some system into our language using a special symbol <code>&amp;</code>.</p>
+<p>Infelizmente não há uma maneira elegante de permitir isso, sem adicionarmos alguma sintaxe especial. Então vamos codificar algum sistema fixo na nossa linguagem usando um símbolo especial <code>&amp;</code>.</p>
 
-<p>We are going to let users define formal arguments that look like <code>{x &amp; xs}</code>, which means that a function will take in a single argument <code>x</code>, followed by zero or more other arguments, joined together into a list called <code>xs</code>. This is a bit like the ellipsis we used to declare variable arguments in C.</p>
+<p>Vamos permitir que usuários definam argumentos formais que se pareçam com <code>{x &amp; xs}</code>, o que significa que uma função recebrá um único argumento <code>x</code>, seguido de zero ou mais outros argumentos, unidos em uma lista chamada <code>xs</code>. Esta é um pouco parecida com a <em>ellipsis</em> que usamos para declara argumentos variáveis em C.</p>
 
-<p>When assigning our formal arguments we're going to look for a <code>&amp;</code> symbol and if it exists take the next formal argument and assign it any remaining supplied arguments we've been passed. It's important we convert this argument list to a Q-Expression. We need to also remember to check that <code>&amp;</code> is followed by a real symbol, and if it isn't we should throw an error.</p>
+<p>Quando atribuirmos nosso argumentos formais, vamos procurar por um símbolo <code>&amp;</code> e caso existir, tomaremos o próximo argumento formal e atribuiremo-lo quaisquer argumentos fornecidos restantes que foram passados. É importante converter esta lista de argumento em uma Q-Expression. Precisamos também lembrar de checar que <code>&amp;</code> seja seguido por um símbolo real, e se não for devemos devolver um erro.</p>
 
-<p>Just after the first symbol is popped from the formals in the <code>while</code> loop of <code>lval_call</code> we can add this special case.</p>
+<p>Logo depois do primeiro símbolo ser extraído dos argumentos formais no laço <code>while</code> de <code>lval_call</code>, podemos adicionar este caso especial.</p>
 
 <pre><code data-language='c'>/* Special Case to deal with '&amp;' */
 if (strcmp(sym-&gt;sym, "&amp;") == 0) {
 
-  /* Ensure '&amp;' is followed by another symbol */
+  /* Verifica que '&amp;' eh seguido de outro simbolo */
   if (f-&gt;formals-&gt;count != 1) {
     lval_del(a);
     return lval_err("Function format invalid. "
       "Symbol '&amp;' not followed by single symbol.");
   }
 
-  /* Next formal should be bound to remaining arguments */
+  /* Proximo formal deve ser vinculado aos argumentos restantes */
   lval* nsym = lval_pop(f-&gt;formals, 0);
   lenv_put(f-&gt;env, nsym, builtin_list(e, a));
   lval_del(sym); lval_del(nsym);
   break;
 }</code></pre>
 
-<p>Suppose when calling the function the user doesn't supply any variable arguments, but only the first named ones. In this case we need to set the symbol following <code>&amp;</code> to the empty list. Just after we delete the argument list, and before we check to see if all the formals have been evaluated, add in this special case.</p>
+<p>Suponha que ao chamar a função, o usuário não forneça quaisquer argumentos variáveis, mas apenas os primeiros argumentos nomeados. Neste caso, precisamos setar o símbolo seguindo <code>&amp;</code> para a lista vazia. Adicione este caso especial logo depois de deletarmos a lista de argumentos e antes de checar para ver se todos os formais foram avaliados.</p>
 
-<pre><code data-language='c'>/* If '&amp;' remains in formal list bind to empty list */
+<pre><code data-language='c'>
+/* Caso '&amp;' sobrou na lista formal, vincula para lista vazia */
 if (f-&gt;formals-&gt;count &gt; 0 &amp;&amp;
   strcmp(f-&gt;formals-&gt;cell[0]-&gt;sym, "&amp;") == 0) {
 
-  /* Check to ensure that &amp; is not passed invalidly. */
+  /* Certifica-se que &amp; nao foi passado de maneira invalida */
   if (f-&gt;formals-&gt;count != 2) {
     return lval_err("Function format invalid. "
       "Symbol '&amp;' not followed by single symbol.");
   }
 
-  /* Pop and delete '&amp;' symbol */
+  /* Extrai e deleta simbolo '&amp;' */
   lval_del(lval_pop(f-&gt;formals, 0));
 
-  /* Pop next symbol and create empty list */
+  /* Extrai proximo simbolo e cria lista vazia */
   lval* sym = lval_pop(f-&gt;formals, 0);
   lval* val = lval_qexpr();
 
-  /* Bind to environment and delete */
+  /* Vincula ao ambiente e deleta */
   lenv_put(f-&gt;env, sym, val);
   lval_del(sym); lval_del(val);
 }</code></pre>
 
 
-<h2>Interesting Functions</h2> <hr/>
+<h2>Funções Interessantes</h2> <hr/>
 
 <h3>Function Definition</h3>
 
