@@ -32,7 +32,7 @@
 
 <p>Vamos usar todas as ideias anteriores para adicionar funções definidas pelo usuário à nossa linguagem. Lisp já é bem adequada a este tipo de diversão, e usando estes conceitos não vai levar muito trabalho para implementar funções.</p>
 
-<p>O primeiro passo será escrever uma função bulitin que possa criar funções definidas pelo usuário. Aqui vai uma ideia sobre como ela pode ser especificada. O primeiro argumento poderia ser uma lista de símbolos, da mesma forma que a função <code>def</code>. Estes símbolos podemos chamar de <em>argumentos formais</em>, também conhecidos como <em>variáveis não vinculadas</em>. Elas agem como entradas para nossa <em>computação parcial</em>. O segundo argumento poderia ser uma outra lista. Quando rodamos a função, isto vai ser avaliado com nossa função builtin <code>eval</code>.</p>
+<p>O primeiro passo será escrever uma função builtin que possa criar funções definidas pelo usuário. Aqui vai uma ideia sobre como ela pode ser especificada. O primeiro argumento poderia ser uma lista de símbolos, da mesma forma que a função <code>def</code>. Estes símbolos podemos chamar de <em>argumentos formais</em>, também conhecidos como <em>variáveis não vinculadas</em>. Elas agem como entradas para nossa <em>computação parcial</em>. O segundo argumento poderia ser uma outra lista. Quando rodamos a função, isto vai ser avaliado com nossa função builtin <code>eval</code>.</p>
 
 <p>Esta função chamaremos apenas <code>\</code>, (uma homenagem ao cálculo Lambda já que o caractere <code>\</code> se parece um pouco com um lambda). Para criar uma função que recebe duas entradas e as soma, poderíamos então criar algo como isso.</p>
 
@@ -174,15 +174,15 @@ break;</code></pre>
 </div>
 
 
-<h2>Ambiente pai</h2> <hr/>
+<h2>Ambiente Pai</h2> <hr/>
 
 <p>Demos às funções seus próprios ambientes. Neste ambiente colocaremos os valores que seus argumentos formais são setados. Quando vamos avaliar o corpo da função, podemos fazê-lo neste ambiente e saber que aquelas variáveis terão os valores corretos.</p>
 
-<p>Mais idealmentes também queremos que estas funções sejam capaz de acessar variáveis que estão no ambiente global, como as nossas funções builtins.</p>
+<p>Mas idealmente também queremos que estas funções sejam capaz de acessar variáveis que estão no ambiente global, como as nossas funções builtins.</p>
 
 <p>Podemos resolver este problema mudando a definição do nosso ambiente para conter uma referência a algum ambiente <em>pai</em>. A seguir, quando queremos avaliar uma função, podemos setar este ambiente <em>pai</em> para nosso ambiente global, que tem todas nossas builtins definidas dentro dele.</p>
 
-<p>Quando adicionamos isto ao nosso struct <code>lenv</code>, conceitualmente será uma <em>referência</em> a um ambiente pai, não algum sub-ambiente ou algo do tipo. Por causa disso, não devemos <em>deletá-lo</em> quando nosso <code>lenv</code> é deletado, ou copiá-lo quando nosso <code>lenv</code> é copiado.</p>
+<p>Quando adicionamos isto ao nosso struct <code>lenv</code>, conceitualmente será uma <em>referência</em> a um ambiente pai, não algum subambiente ou algo do tipo. Por causa disso, não devemos <em>deletá-lo</em> quando nosso <code>lenv</code> é deletado, ou copiá-lo quando nosso <code>lenv</code> é copiado.</p>
 
 <p>A maneira que o <em>ambiente pai</em> funciona é simples. Se alguém chama <code>lenv_get</code> no ambiente e o símbolo não é encontrado, ele vai buscar no ambiente pai para ver se o valor nomeado existe lá, e repetir o processo até que ou a variável seja encontrada ou não há mais pais. Para significar que um ambiente não tem pai, setamos a referência para <code>NULL</code>.</p>
 
@@ -241,7 +241,7 @@ lenv* lenv_new(void) {
 
 <p>Ter ambientes pais também muda nosso conceito de <em>definir</em> uma variável.</p>
 
-<p>Há duas maneiras que podemos definir uma variável agora. Podemos ou definila no ambiente local, mais interno, ou podemos defini-lo no ambiente global, mais externo. Vamos adicionar funções para fazer ambos. Manteremos a função <code>lenv_put</code> do mesmo jeito. Ele pode ser usado para a definição no ambiente local. Mas adicionaremos uma nova função <code>lenv_def</code> para definição no ambiente global. Ela funciona simplesmente seguindo a cadeia de pais acima, e por fima usa <code>lenv_put</code> para defini-lo localmente.</p>
+<p>Há duas maneiras que podemos definir uma variável agora. Podemos ou defini-la no ambiente local, mais interno, ou podemos defini-lo no ambiente global, mais externo. Vamos adicionar funções para fazer ambos. Manteremos a função <code>lenv_put</code> do mesmo jeito. Ele pode ser usado para a definição no ambiente local. Mas adicionaremos uma nova função <code>lenv_def</code> para definição no ambiente global. Ela funciona simplesmente seguindo a cadeia de pais acima, e por fima usa <code>lenv_put</code> para defini-lo localmente.</p>
 
 <pre><code data-language='c'>void lenv_def(lenv* e, lval* k, lval* v) {
   /* Itera ate e nao ter pai */
@@ -250,7 +250,7 @@ lenv* lenv_new(void) {
   lenv_put(e, k, v);
 }</code></pre>
 
-<p>No momento, esta distinção pode parecer inútil, mas mais tarde vamos usá-la para escrever resultados parciais de cálculos em variáveis locais dentro de uma função. Podemos adicionar outra builtin para atribuição <em>local</em>. Chamaremos esta de <code>put</code> em C, mas daremo-la o símbolo <code>=</code> em Lisp. Podemos adaptar nossa função <code>builtin_def</code> e reusar o mesmo código comum, da mesma forma que fazemos com nossos operadores matemáticos.</p>
+<p>No momento, esta distinção pode parecer inútil, mas mais tarde vamos usá-la para escrever resultados parciais de cálculos em variáveis locais dentro de uma função. Podemos adicionar outra builtin para atribuição <em>local</em>. Chamaremos esta de <code>put</code> em C, mas a daremos o símbolo <code>=</code> em Lisp. Podemos adaptar nossa função <code>builtin_def</code> e reusar o mesmo código comum, da mesma forma que fazemos com nossos operadores matemáticos.</p>
 
 <p>Em seguida, precisamos registrar estes como builtins.</p>
 
@@ -283,7 +283,7 @@ lenv_add_builtin(e, "=",   builtin_put);</code></pre>
     "Got %i, Expected %i.", func, syms-&gt;count, a-&gt;count-1);
     
   for (int i = 0; i &lt; syms-&gt;count; i++) {
-    /* If 'def' define in globally. If 'put' define in locally */
+    /* Caso 'def', define globalmente. Caso 'put', define localmente */
     if (strcmp(func, "def") == 0) {
       lenv_def(e, syms-&gt;cell[i], a-&gt;cell[i+1]);
     }
@@ -303,7 +303,7 @@ lenv_add_builtin(e, "=",   builtin_put);</code></pre>
 
 <p>Precisamos escrever o código que roda quando uma expressão é avaliada e uma função <code>lval</code> é chamada.</p>
 
-<p>Quando o tipo desta função é um builtin, chamamo-la como antes, usando o apontador para função, mas precisamos fazer algo separado para nossas funções definidas pelo usuário. Precisamos vincular cada um dos argumentos passados para cada um dos ímbolos no campo <code>formals</code>. Feito isso, precisamos avaliar o campo <code>body</code>, usar o campo <code>env</code> como um ambiente, e o ambiente chamador como um pai.</p>
+<p>Quando o tipo desta função é um builtin, chamamo-la como antes, usando o apontador para função, mas precisamos fazer algo separado para nossas funções definidas pelo usuário. Precisamos vincular cada um dos argumentos passados para cada um dos símbolos no campo <code>formals</code>. Feito isso, precisamos avaliar o campo <code>body</code>, usar o campo <code>env</code> como um ambiente, e o ambiente chamador como um pai.</p>
 
 <p>Uma primeira tentativa, sem checagem de erros, pode se parecer com isto:</p>
 
@@ -312,7 +312,6 @@ lenv_add_builtin(e, "=",   builtin_put);</code></pre>
   /* Se for Builtin, apenas chame-a */
   if (f-&gt;builtin) { return f-&gt;builtin(e, a); }
 
-  /* Assign each argument to each formal in order */
   /* Atribui cada argumento para cada formal em ordem */
   for (int i = 0; i &lt; a-&gt;count; i++) {
       lenv_put(f-&gt;env, f-&gt;formals-&gt;cell[i], a-&gt;cell[i]);
@@ -366,7 +365,7 @@ lenv_add_builtin(e, "=",   builtin_put);</code></pre>
     /* Vincula uma copia no ambiente da funcao */
     lenv_put(f-&gt;env, sym, val);
 
-    /* Delta simbolo e valor */
+    /* Deleta simbolo e valor */
     lval_del(sym); lval_del(val);
   }
 
@@ -389,7 +388,7 @@ lenv_add_builtin(e, "=",   builtin_put);</code></pre>
 
 }</code></pre>
 
-<p>A função acima faz exatamente o que explicamos, adicionando também um tratamento de erros correto. Primeiro itera sobre os argumentos passados, tentanto colocar cada um no ambiente. A seguir ela verifica se o ambiente está cheio, e nesse caso avalia, caso não, devolve uma cópia de si mesma com alguns argumentos preenchidos.</p>
+<p>A função acima faz exatamente o que explicamos, adicionando também um tratamento de erros correto. Primeiro itera sobre os argumentos passados, tentando colocar cada um no ambiente. A seguir ela verifica se o ambiente está cheio, e nesse caso avalia, caso não, devolve uma cópia de si mesma com alguns argumentos preenchidos.</p>
 
 <p>Se atualizamos nossa função de avaliação <code>lval_eval_sexpr</code> para chamar <code>lval_call</code>, podemos testar nosso novo sistema.</p>
 
@@ -427,13 +426,14 @@ lispy&gt;
 
 <p>Infelizmente não há uma maneira elegante de permitir isso, sem adicionarmos alguma sintaxe especial. Então vamos codificar algum sistema fixo na nossa linguagem usando um símbolo especial <code>&amp;</code>.</p>
 
-<p>Vamos permitir que usuários definam argumentos formais que se pareçam com <code>{x &amp; xs}</code>, o que significa que uma função recebrá um único argumento <code>x</code>, seguido de zero ou mais outros argumentos, unidos em uma lista chamada <code>xs</code>. Esta é um pouco parecida com a <em>ellipsis</em> que usamos para declara argumentos variáveis em C.</p>
+<p>Vamos permitir que usuários definam argumentos formais que se pareçam com <code>{x &amp; xs}</code>, o que significa que uma função receberá um único argumento <code>x</code>, seguido de zero ou mais outros argumentos, unidos em uma lista chamada <code>xs</code>. Esta é um pouco parecida com a <em>ellipsis</em> que usamos para declara argumentos variáveis em C.</p>
 
-<p>Quando atribuirmos nosso argumentos formais, vamos procurar por um símbolo <code>&amp;</code> e caso existir, tomaremos o próximo argumento formal e atribuiremo-lo quaisquer argumentos fornecidos restantes que foram passados. É importante converter esta lista de argumento em uma Q-Expression. Precisamos também lembrar de checar que <code>&amp;</code> seja seguido por um símbolo real, e se não for devemos devolver um erro.</p>
+<p>Quando atribuirmos nosso argumentos formais, vamos procurar por um símbolo <code>&amp;</code> e caso existir, tomaremos o próximo argumento formal e o atribuiremos quaisquer argumentos fornecidos restantes que foram passados. É importante converter esta lista de argumento em uma Q-Expression. Precisamos também lembrar de checar que <code>&amp;</code> seja seguido por um símbolo real, e se não for devemos devolver um erro.</p>
 
 <p>Logo depois do primeiro símbolo ser extraído dos argumentos formais no laço <code>while</code> de <code>lval_call</code>, podemos adicionar este caso especial.</p>
 
-<pre><code data-language='c'>/* Special Case to deal with '&amp;' */
+<pre><code data-language='c'>
+/* Caso especial para tratar '&amp;' */
 if (strcmp(sym-&gt;sym, "&amp;") == 0) {
 
   /* Verifica que '&amp;' eh seguido de outro simbolo */
@@ -478,42 +478,42 @@ if (f-&gt;formals-&gt;count &gt; 0 &amp;&amp;
 
 <h2>Funções Interessantes</h2> <hr/>
 
-<h3>Function Definition</h3>
+<h3>Definição de função</h3>
 
-<p>Lambdas are clearly a simple and powerful way of defining functions. But the syntax is a little clumsy. There are a lot of brackets and symbols involved. Here is an interesting idea. We can try to write a function that defines a function itself, using some simpler syntax.</p>
+<p>Lambdas são claramente uma maneira simples e poderosa de definir funções. Mas a sintaxe é um pouco desajeitada. Há várias parênteses, chaves e símbolos envolvidos. Aqui vai uma ideia interessante. Podemos tentar escrever uma função que ela própria define uma função, usando uma sintaxe mais simples.</p>
 
-<p>Essentially what we want is a function that can perform two steps at once. First it should create a new function, and then it should define it to some name. Here is the trick. We let the user supply the name and the formal arguments altogether in one list, and then separate these out for them, and use them in the definition. Here is a function that does that. It takes as input some arguments and some body. It takes the head of the arguments to be the function name and the rest to be the formal arguments. It passes the body directly to a lambda.</p>
+<p>Essencialmente o que queremos é uma função que pode executar dois passos em uma vez só. Primeiro ela deve criar uma função, em seguida ela deve defini-la com um nome. Aqui está o truque. Podemos deixar o usuário fornecer o nome e os argumentos formais juntamente em uma lista, e então separar estes e usá-los na definição. Aqui está uma função que faz isso. Ela recebe como entrada alguns argumentos e um corpo. Ela recebe a cabeça dos argumentos como sendo o nome da função, e o resto para ser os argumentos formais. Ela passa o corpo diretamente a um lambda.</p>
 
 <pre><code data-language='lispy'>\ {args body} {def (head args) (\ (tail args) body)}</code></pre>
 
-<p>We can name this function something like <code>fun</code> by passing it to <code>def</code> as usual.</p>
+<p>Podemos nomear esta função em algo como <code>fun</code> passando-a para <code>def</code> como de costume.</p>
 
 <pre><code data-language='lispy'>def {fun} (\ {args body} {def (head args) (\ (tail args) body)})</code></pre>
 
-<p>This means that we can now define functions in a much simpler and nicer way. To define our previously mentioned <code>add-together</code> we can do the following. Functions that can define functions. That is certainly something we could never do in C. How cool is that!</p>
+<p>Isto significa que podemos agora definir funções de maneira muito mais simples e atraente. Para definir nossa função <code>add-together</code> mencionada anteriormente podemos fazer como segue. Funções podem definir funções. Isto é certamente algo que nunca poderíamos fazer em C. Como isso é legal!</p>
 
 <pre><code data-language='lispy'>fun {add-together x y} {+ x y}</code></pre>
 
 <div class='pull-right alert alert-warning' style="margin: 15px; text-align: center;">
   <img src="/static/img/curry.png" alt="curry" class="img-responsive" width="371px" height="236px"/>
-  <p><small>Currying &bull; Not as good as it sounds.</small></p>
+  <p><small>Currying &bull; Não tão bom quanto parece.</small></p>
 </div>
 
 <h3>Currying</h3>
 
-<p>At the moment functions like <code>+</code> take a variable number of arguments. In some situations that's great, but what if we had a list of arguments we wished to pass to it. In this situation it is rendered somewhat useless.</p>
+<p>Em algum momento, funções como <code>+</code> recebem um número variável de argumentos. Em algumas situações isto é ótimo, mas e se tivéssemos uma lista de argumentos que desejássemos passá-la? Nesta situação, ela se torna inútil.</p>
 
-<p>Again we can try to create a function to solve this problem. If we can create a list in the format we wish to use for our expression we can use <code>eval</code> to treat it as such. In the situation of <code>+</code> we could append this function to the front of the list and then perform the evaluation.</p>
+<p>Novamente podemos tentar criar uma função para resolver este problema. Se pudermos criar uma lista no formato que desejamos usar para nossa expressão, podemos usar <code>eval</code> para tratá-lo como tal. Na situação de <code>+</code> podemos acrescentar esta função na frente da lista e então executar a avaliação.</p>
 
-<p>We can define a function <code>unpack</code> that does this. It takes as input some function and some list and appends the function to the front of the list, before evaluating it.</p>
+<p>Podemos definir uma função <code>unpack</code> (do inglês, <em>desempacotar</em>) que faça isto. Ela recebe como entrada uma função e uma lista, acrescenta a função à frente da lista e a avalia.</p>
 
 <pre><code data-language='lispy'>fun {unpack f xs} {eval (join (list f) xs)}</code></pre>
 
-<p>In some situations we might be faced with the opposite dilemma. We may have a function that takes as input some list, but we wish to call it using variable arguments. In this case the solution is even simpler. We use the fact that our <code>&amp;</code> syntax for variable arguments packs up variable arguments into a list for us.</p>
+<p>Em algumas situações podemos encarar o dilema oposto. Temos uma função que recebe como entrada uma lista, mas que desejamos chamá-la usando argumentos variáveis. Neste caso a solução é ainda mais simples. Usamos o fato que nossa sintaxe <code>&amp;</code> para argumentos variáveis empacota argumentos variáveis em uma lista para nós.</p>
 
 <pre><code data-language='lispy'>fun {pack f &amp; xs} {f xs}</code></pre>
 
-<p>In some languages this is called <em>currying</em> and <em>uncurrying</em> respectively. This is named after <em>Haskell Curry</em> and unfortunately has nothing to do with our favourite spicy food.</p>
+<p>Em algumas linguagens isto é chamado <em>currying</em> e <em>uncurrying</em>, respectivamente. O nome é homenagem a <em>Haskell Curry</em> e infelizmente não tem nada a ver com nosso tempero apimentado favorito.</p>
 
 <pre><code data-language='lispy'>lispy&gt; def {uncurry} pack
 ()
@@ -525,7 +525,7 @@ lispy&gt; uncurry head 5 6 7
 {5}
 </code></pre>
 
-<p>Because of the way our <em>partial evaluation</em> works we don't need to think of <em>currying</em> with a specific set of arguments. We can think of functions themselves being in <em>curried</em> or <em>uncurried</em> form.</p>
+<p>Por causa da maneira que nossa <em>avaliação parcial</em> funciona, não precisamos pensar em <em>currying</em> com algum conjunto específico de argumentos. Podemos pensar em funções elas mesmas sendo em forma <em>curried</em> ou <em>uncurried</em> (não <em>curried</em>).</p>
 
 <pre><code data-language='lispy'>lispy&gt; def {add-uncurried} +
 ()
@@ -537,32 +537,32 @@ lispy&gt; add-uncurried 5 6 7
 18
 </code></pre>
 
-<p>Have a play around and see what other interesting and powerful functions you can try to come up with. In the next chapter we'll add conditionals which will really start to make our language more complete. But that doesn't mean you won't be able to come up with some other interesting ideas. Our Lisp is getting richer.</p>
+<p>Brinque um pouco e veja quais outras funções interessantes e poderosas você consegue inventar. No próximo capítulo vamos adicionar condicionais, o que vai realmente começar a fazer nossa linguagem mais completa. Mas isto não significa que você não poderá inventar outras ideias interessantes. Nosso Lisp está ficando mais rico.</p>
 
 
-<h2>Reference</h2> <hr/>
+<h2>Referência</h2> <hr/>
 
 <references />
 
-<h2>Bonus Marks</h2> <hr/>
+<h2>Metas Bônus</h2> <hr/>
 
 <div class="alert alert-warning">
   <ul class="list-group">
-    <li class="list-group-item">&rsaquo; Define a Lisp function that returns the first element from a list.</li>
-    <li class="list-group-item">&rsaquo; Define a Lisp function that returns the second element from a list.</li>
-    <li class="list-group-item">&rsaquo; Define a Lisp function that calls a function with two arguments in reverse order.</li>
-    <li class="list-group-item">&rsaquo; Define a Lisp function that calls a function with arguments, then passes the result to another function.</li>
-    <li class="list-group-item">&rsaquo; Change variable arguments so at least one extra argument must be supplied before it is evaluated.</li>
+    <li class="list-group-item">&rsaquo; Defina uma função Lisp que devolva o primeiro elemento duma lista.</li>
+    <li class="list-group-item">&rsaquo; Defina uma função Lisp que devolva o segundo elemento duma lista.</li>
+    <li class="list-group-item">&rsaquo; Defina uma função Lisp que chame uma função com dois argumentos na ordem inversa.</li>
+    <li class="list-group-item">&rsaquo; Defina uma função Lisp que chame uma função com argumentos, e depois passe o resultado para uma outra função.</li>
+    <li class="list-group-item">&rsaquo; Mude os argumentos variáveis para que pelo menos um argumento extra precise ser fornecido para que seja avaliado.</li>
   </ul>
 </div>
 
 
-<h2>Navigation</h2>
+<h2>Navegação</h2>
 
 <table class="table" style='table-layout: fixed;'>
   <tr>
-    <td class="text-left"><a href="chapter11_variables"><h4>&lsaquo; Variables</h4></a></td>
-    <td class="text-center"><a href="contents"><h4>&bull; Contents &bull;</h4></a></td>
-    <td class="text-right"><a href="chapter13_conditionals"><h4>Conditionals &rsaquo;</h4></a></td>
+    <td class="text-left"><a href="chapter11_variables"><h4>&lsaquo; Variáveis</h4></a></td>
+    <td class="text-center"><a href="contents"><h4>&bull; Conteúdo &bull;</h4></a></td>
+    <td class="text-right"><a href="chapter13_conditionals"><h4>Condicionais &rsaquo;</h4></a></td>
   </tr>
 </table>
