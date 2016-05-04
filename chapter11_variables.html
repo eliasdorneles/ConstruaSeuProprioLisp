@@ -5,23 +5,23 @@
 
 <div class='pull-right alert alert-warning' style="margin: 15px; text-align: center;">
   <img src="/static/img/turtle.png" alt="turtle" class="img-responsive" width="279px" height="267px"/>
-  <p><small>Tartarunga Ninja &bull; Não Imutável.</small></p>
+  <p><small>Tartaruga Ninja &bull; Não Imutável.</small></p>
 </div>
 
 <p>Nos capítulos anteriores fizemos progresso considerável na infraestrutura da nossa linguagem.</p>
 
-<p>Já podemos fazer algumas coisas legais que outras linguagens não fazem, como colocar código dentro de listas. Agora é a hora de começar a adicionar os <em>recursos</em> que tornarão nossa linguage prática. O primeiro deles vai ser <em>variáveis</em>.</p>
+<p>Já podemos fazer algumas coisas legais que outras linguagens não fazem, como colocar código dentro de listas. Agora é a hora de começar a adicionar os <em>recursos</em> que tornarão nossa linguagem prática. O primeiro deles vai ser <em>variáveis</em>.</p>
 
-<p>Elas são chamadas variávels, mas é um nome enganoso, porque nossas variáveis não irão variar. Nossas variáveis são <em>imutáveis</em>, isto é, elas não podem mudar. Tudo em nossa linguagem até agora agiu como se fosse <em>imutável</em>. Quando avaliamos uma expressão, imaginamos que a coisa anterior foi deletada e uma coisa nova foi devolvida. Na implementação, frequentemente é mais fácil reutilizarmos os dados da coisa anterior para construir a próxima coisa, mas conceitualmente é uma boa maneira de pensar a respeito de como nossa linguagem funciona.</p>
+<p>Elas são chamadas variáveis, mas é um nome enganoso, porque nossas variáveis não irão variar. Nossas variáveis são <em>imutáveis</em>, isto é, elas não podem mudar. Tudo em nossa linguagem até agora agiu como se fosse <em>imutável</em>. Quando avaliamos uma expressão, imaginamos que a coisa anterior foi deletada e uma coisa nova foi devolvida. Na implementação, frequentemente é mais fácil reutilizarmos os dados da coisa anterior para construir a próxima coisa, mas conceitualmente é uma boa maneira de pensar a respeito de como nossa linguagem funciona.</p>
 
 <p>Então, na verdade nossas variáveis são meramente uma maneira de <em>nomear valores</em>. Elas nos permitem atribuir um <em>nome</em> para um <em>valor</em>, e então nos deixa obter uma cópia daquele <em>valor</em> mais tarde quando precisarmos.</p>
 
 <p>Para permitir <em>nomear valores</em>, precisamos criar uma estrutura que armazene o nome e valor de tudo que for nomeado em nosso programa. Chamamos isto de <em>ambiente</em>. Quando começamos um novo prompt interativo, queremos criar um novo ambiente para funcionar com ele, em que cada novo trecho da entrada é avaliado. A seguir podemos armazenar e relembrar variáveis enquanto programamos.</p>
 
 <div class="alert alert-warning">
-  <p><strong>O que acontece se re-atribuirmos um nome a algo novo? Isto não é o mesmo que mutabilidade?</strong></p>
+  <p><strong>O que acontece se reatribuirmos um nome a algo novo? Isto não é o mesmo que mutabilidade?</strong></p>
 
-  <p>No nosso Lisp, quando re-atribuímos um nome vamos deletar a associação anterior e criar uma nova. Isto dá a ilusão que a coisa atribuída àquele nome mudou e é mutável, mas de fato deletamos a coisa velha e atribuímos uma coisa nova. Isto é diferente de C onde podemos realmente mudar o dado apontado por um apontador, our armazenado em uma struct, sem deletá-la e criar uma nova.</p>
+  <p>No nosso Lisp, quando reatribuímos um nome vamos deletar a associação anterior e criar uma nova. Isto dá a ilusão que a coisa atribuída àquele nome mudou e é mutável, mas de fato deletamos a coisa velha e atribuímos uma coisa nova. Isto é diferente de C onde podemos realmente mudar o dado apontado por um apontador ou armazenado em uma struct, sem deletá-lo e criar um novo.</p>
 </div>
 
 
@@ -52,9 +52,9 @@
 
 <h2>Apontador para função</h2> <hr/>
 
-<p>Tendo introduzido variávels, símbolos não mais representarão funções em nossa linguagem, mas um nome para buscarmos em nosso ambiente e obter um valor de volta.</p>
+<p>Tendo introduzido variáveis, símbolos não mais representarão funções em nossa linguagem, mas um nome para buscarmos em nosso ambiente e obter um valor de volta.</p>
 
-<p>Portanto, precisamos um novo valor para representar funções em nossa linguagem, que possamos devolver quando um dos nossos símbolos builtin seja encontrado. Para criar este novo tipo de <code>lval</code> vamos usar algo chamado um <em>apontador para função</em> (ou, ponteiro para função).</p>
+<p>Portanto, precisamos um novo valor para representar funções em nossa linguagem, que possamos devolver quando um dos nossos símbolos builtins seja encontrado. Para criar este novo tipo de <code>lval</code> vamos usar algo chamado um <em>apontador para função</em> (ou, ponteiro para função).</p>
 
 <p>Apontadores para funções são um grande recurso de C que permite armazenar e repassar apontadores para funções. Não faz sentido alterar o dado apontado por estes apontadores. Em vez disso, usamo-los para chamar a função para a qual apontam, como se fossem uma função normal.</p>
 
@@ -71,7 +71,7 @@
   
   <p>Primeiro o <code>typedef</code>. Ele pode ser colocado antes de qualquer declaração de variável normal. Ele resulta no nome da variável, sendo declarado como um novo tipo, correspondendo ao que seria o tipo inferido para aquela variável. Por isso, na declaração acima, o que parece um nome de função se torna o nome do novo tipo.</p>
   
-  <p>A seguir, todos aquelees <code>*</code>. Tipos apontadores em C foram concebidos para serem escritos com o asterisco <code>*</code> ao lado esquerdo do nome da variável, não ao lado direito do tipo <code>int *x;</code>. Isto é porque a sintaxe de tipos de C funciona com um esquema de inferência. Em vez de ler <em>"Crie um novo apontador <code>int</code> apontador x"</em>, é feita para ler <em>"Crie uma nova variável <code>x</code> onde de-referenciar <code>x</code> resulta em um <code>int</code>"</em>. Portanto, <code>x</code> é inferido como sendo um apontador para <code>int</code>.</p>
+  <p>A seguir, todos aqueles <code>*</code>. Tipos apontadores em C foram concebidos para serem escritos com o asterisco <code>*</code> ao lado esquerdo do nome da variável, não ao lado direito do tipo <code>int *x;</code>. Isto é porque a sintaxe de tipos de C funciona com um esquema de inferência. Em vez de ler <em>"Crie um novo apontador <code>int</code> apontador x"</em>, é feita para ler <em>"Crie uma nova variável <code>x</code> onde dereferenciar <code>x</code> resulta em um <code>int</code>"</em>. Portanto, <code>x</code> é inferido como sendo um apontador para <code>int</code>.</p>
   
   <p>Esta ideia é expandida em apontadores para função. Podemos ler a declaração acima como: <em>"Para obter um <code>lval*</code>, dereferenciamos <code>lbuiltin</code> e a chamamos com um <code>lenv*</code> e um <code>lval*</code>."</em> Portanto, <code>lbuiltin</code> precisa ser um apontador para função que recebe um <code>lenv*</code> e um <code>lval*</code> e devolve um <code>lval*</code>.</p>
 </div>
@@ -143,11 +143,11 @@ struct lval {
   
   switch (v-&gt;type) {
     
-    /* Copy Functions and Numbers Directly */
+    /* Copia funcoes e numeros diretamente */
     case LVAL_FUN: x-&gt;fun = v-&gt;fun; break;
     case LVAL_NUM: x-&gt;num = v-&gt;num; break;
     
-    /* Copy Strings using malloc and strcpy */
+    /* Copia strings usando malloc e strcpy */
     case LVAL_ERR:
       x-&gt;err = malloc(strlen(v-&gt;err) + 1);
       strcpy(x-&gt;err, v-&gt;err); break;
@@ -156,7 +156,7 @@ struct lval {
       x-&gt;sym = malloc(strlen(v-&gt;sym) + 1);
       strcpy(x-&gt;sym, v-&gt;sym); break;
 
-    /* Copy Lists by copying each sub-expression */
+    /* Copia listas copiando cada sub-expressao */
     case LVAL_SEXPR:
     case LVAL_QEXPR:
       x-&gt;count = v-&gt;count;
@@ -183,7 +183,7 @@ struct lval {
   lval** vals;
 };</code></pre>
 
-<p>Precisamos algumas funções para criar e deletar esta estrutura. Elas são bem simples. Criação inicializa os campos do struct, enquanto a deleção itera atráves dos items em ambas listas e deleta ou libera eles.</p>
+<p>Precisamos de algumas funções para criar e deletar esta estrutura. Elas são bem simples. A criação inicializa os campos do struct, enquanto a deleção itera pelos itens em ambas listas e deleta ou libera eles.</p>
 
 <pre><code data-language='c'>lenv* lenv_new(void) {
   lenv* e = malloc(sizeof(lenv));
@@ -213,26 +213,26 @@ struct lval {
 
 <pre><code data-language='c'>lval* lenv_get(lenv* e, lval* k) {
 
-  /* Iterate over all items in environment */
+  /* Itera por todos os items no ambiente */
   for (int i = 0; i &lt; e-&gt;count; i++) {
-    /* Check if the stored string matches the symbol string */
-    /* If it does, return a copy of the value */
+    /* Verifica que a string armazenada casa com a string do simbolo */
+    /* Se casar, retorna uma copia do valor do mesmo */
     if (strcmp(e-&gt;syms[i], k-&gt;sym) == 0) {
       return lval_copy(e-&gt;vals[i]);
     }
   }
-  /* If no symbol found return error */
+  /* Caso nenhum simbolo for encontrado, retorna erro */
   return lval_err("unbound symbol!");
 }</code></pre>
 
 <pre><code data-language='c'>void lenv_put(lenv* e, lval* k, lval* v) {
 
-  /* Iterate over all items in environment */
-  /* This is to see if variable already exists */
+  /* Itera por todos os items no ambiente */
+  /* Isto eh para ver se a variavel ja existe*/
   for (int i = 0; i &lt; e-&gt;count; i++) {
 
-    /* If variable is found delete item at that position */
-    /* And replace with variable supplied by user */
+    /* Se a variavel for encontrada, deleta o item naquela posicao */
+    /* E substitui com a variavel fornecida pelo usuario */
     if (strcmp(e-&gt;syms[i], k-&gt;sym) == 0) {
       lval_del(e-&gt;vals[i]);
       e-&gt;vals[i] = lval_copy(v);
@@ -240,12 +240,12 @@ struct lval {
     }
   }
 
-  /* If no existing entry found allocate space for new entry */
+  /* Se nenhum registro for encontrado, aloca espaco para um novo */
   e-&gt;count++;
   e-&gt;vals = realloc(e-&gt;vals, sizeof(lval*) * e-&gt;count);
   e-&gt;syms = realloc(e-&gt;syms, sizeof(char*) * e-&gt;count);
 
-  /* Copy contents of lval and symbol string into new location */
+  /* Copia o conteudo do lval e a string do simbolo para o novo local */
   e-&gt;vals[e-&gt;count-1] = lval_copy(v);
   e-&gt;syms[e-&gt;count-1] = malloc(strlen(k-&gt;sym)+1);
   strcpy(e-&gt;syms[e-&gt;count-1], k-&gt;sym);
@@ -266,7 +266,7 @@ struct lval {
   return v;
 }</code></pre>
 
-<p>Como adicionamods um tipo função, nossa avaliação de S-Expressions também precisa mudar. Em vez de checar por um tipo símbolo, queremos nos certificar que é um tipo função. Se esta condição for verdadeira, podemos chamar o campo <code>fun</code> do <code>lval</code> usando a mesma notação que as chamadas de funções normais.</p>
+<p>Como adicionamos um tipo função, nossa avaliação de S-Expressions também precisa mudar. Em vez de checar por um tipo símbolo, queremos nos certificar que é um tipo função. Se esta condição for verdadeira, podemos chamar o campo <code>fun</code> do <code>lval</code> usando a mesma notação que as chamadas de funções normais.</p>
 
 <pre><code data-language='c'>lval* lval_eval_sexpr(lenv* e, lval* v) {
 
@@ -281,14 +281,14 @@ struct lval {
   if (v-&gt;count == 0) { return v; }  
   if (v-&gt;count == 1) { return lval_take(v, 0); }
 
-  /* Ensure first element is a function after evaluation */
+  /* Certifica-se que primeiro elemento eh uma funcao depois de avaliar */
   lval* f = lval_pop(v, 0);
   if (f-&gt;type != LVAL_FUN) {
     lval_del(v); lval_del(f);
     return lval_err("first element is not a function");
   }
 
-  /* If so call function to get result */
+  /* Caso sim, chama a funcao para obter o resultado */
   lval* result = f-&gt;fun(e, v);
   lval_del(f);
   return result;
@@ -297,9 +297,9 @@ struct lval {
 
 <h2>Builtins</h2> <hr/>
 
-<p>Now that our evaluation relies on the new function type we need to make sure we can register all of our builtin functions with the environment before we start the interactive prompt. At the moment our builtin functions are not the correct type. We need to change their type signature such that they take in some environment, and where appropriate change them to pass this environment into other calls that require it. I won't post the code for this, so go ahead and change the type signatures of the buildin functions to take an <code>lenv*</code> as their first argument now. If you are confused you can look at the sample code for this chapter.</p>
+<p>Agora que nossa avaliação usa o novo tipo função, precisamos nos assegurar que podemos registrar todas nossas funções builtins com o ambiente antes de começar o prompt interativo. No momento, nossas funções builtins não são do tipo correto. Precisamos mudar sua assinatura de tipo para que elas recebam um ambiente, e mudá-las onde apropriado para repassar esse ambiente para outras chamadas que o necessitem. Não vou postar o código aqui para isso, então vá em frente e mude as assinaturas de tipo das funções builtins para receber um <code>lenv*</code> como seu primeiro argumento agora. Caso estiver confuso, você pode olhar o código de exemplo para este capítulo.</p>
 
-<p>As an example we can make use of our <code>builtin_op</code> function to define separate builtins for each of the maths functions our language supports.</p>
+<p>Como exemplo, podemos usar nossa função <code>builtin_op</code> para definir builtins separados para cada uma das funções matemáticas que nossa linguagem suporta.</p>
 
 <pre><code data-language='c'>lval* builtin_add(lenv* e, lval* a) {
   return builtin_op(e, a, "+");
@@ -318,11 +318,11 @@ lval* builtin_div(lenv* e, lval* a) {
 }
 </code></pre>
 
-<p>Once we've changed the builtins to the correct type we can create a function that registers all of our builtins into an environment.</p>
+<p>Tendo mudado as builtins para o tipo correto, podemos criar uma função que registra todas nossas builtins em um ambiente.</p>
 
-<p>For each builtin we want to create a function <code>lval</code> and symbol <code>lval</code> with the given name. We then register these with the environment using <code>lenv_put</code>. The environment always takes or returns copies of a values, so we need to remember to delete these two <code>lval</code> after registration as we won't need them any more.</p>
+<p>Para cada builtin, queremos criar uma função <code>lval</code> e um símbolo <code>lval</code> com o nome dado. A seguir, registramos estes com o ambiente usando <code>lenv_put</code>. O ambiente sempre recebe ou retorna cópias dos valores, então precisamos lembrar de deletar estes dois <code>lval</code>s depois de registrar, já que não vamos usá-los mais.</p>
 
-<p>If we split this task into two functions we can neatly register all of our builtins with some environment.</p>
+<p>Se quebrarmos esta tarefa em duas funções, podemos elegantemente registrar todos nossos builtins com algum ambiente.</p>
 
 <pre><code data-language='c'>void lenv_add_builtin(lenv* e, char* name, lbuiltin func) {
   lval* k = lval_sym(name);
@@ -332,21 +332,21 @@ lval* builtin_div(lenv* e, lval* a) {
 }
 
 void lenv_add_builtins(lenv* e) {  
-  /* List Functions */
+  /* Funcoes de listas */
   lenv_add_builtin(e, "list", builtin_list);
   lenv_add_builtin(e, "head", builtin_head);
   lenv_add_builtin(e, "tail", builtin_tail);
   lenv_add_builtin(e, "eval", builtin_eval);
   lenv_add_builtin(e, "join", builtin_join);
 
-  /* Mathematical Functions */
+  /* Funcoes matematicas */
   lenv_add_builtin(e, "+", builtin_add);
   lenv_add_builtin(e, "-", builtin_sub);
   lenv_add_builtin(e, "*", builtin_mul);
   lenv_add_builtin(e, "/", builtin_div);
 }</code></pre>
 
-<p>The final step is to call this function before we create the interactive prompt. We also need to remember to delete the environment once we are finished.</p>
+<p>O último passo é chamar esta função antes de criar o prompt interativo. Também precisamos lembrar de deletar o ambiente quando terminarmos.</p>
 
 <pre><code data-language='c'>lenv* e = lenv_new();
 lenv_add_builtins(e);
@@ -376,7 +376,7 @@ while (1) {
 lenv_del(e);
 </code></pre>
 
-<p>If everything is working correctly we should have a play around in the prompt and verify that functions are actually a new type of value now, not symbols.</p>
+<p>Se tudo estiver funcionando corretamente, podemos brincar um pouco no prompt e verificar se as funções são realmente um novo tipo de valor agora, e não símbolos.</p>
 
 <pre><code data-language='lispy'>lispy&gt; +
 &lt;function&gt;
@@ -391,35 +391,35 @@ Error: unbound symbol!
 lispy&gt;</code></pre>
 
 
-<h2>Define Function</h2> <hr/>
+<h2>Função Define</h2> <hr/>
 
-<p>We've managed to register our builtins as variables but we still don't have a way for users to define their own variables.</p>
+<p>Conseguimos registrar nossos builtins como variáveis, mas ainda não temos uma maneira de nossos usuários definir suas próprias variáveis.</p>
 
-<p>This is actually a bit awkward. We need to get the user to pass in a symbol to name, as well as the value to assign to it. But symbols can't appear on their own. Otherwise the evaluation function will attempt to retrieve a value for them from the environment.</p>
+<p>Isto é na verdade um pouco estranho. Precisamos fazer o usuário passar um símbolo para nomear, e também o valor para atribuir a ele. Mas símbolos não aparecem sozinhos. Caso contrário, a função de avaliação tentará recuperar um valor para eles do ambiente.</p>
 
-<p>The only way we can pass around symbols without them being evaluated is to put them between <code>{}</code> in a quoted expression. So we're going to use this technique for our define function. It will take as input a list of symbols, and a number of other values. It will then assign each of the values to each of the symbols.</p>
+<p>A única maneira de passarmos símbolos sem que eles sejam avaliados é colocá-los entre <code>{}</code> em uma Q-expression (expressão citada). Então vamos usar esta técnica para nossa função <em>define</em>. Ela receberá como entrada uma lista de símbolos e alguns outros valores, e atribuirá cada um destes valores a cada um dos símbolos.</p>
 
-<p>This function should act like any other builtin. It first checks for error conditions and then performs some command and returns a value. In this case it first checks that the input arguments are the correct types. It then iterates over each symbol and value and puts them into the environment. If there is an error we can return it, but on success we will return the empty expression <code>()</code>.</p>
+<p>Esta função deverá agir como qualquer outro builtin. Primeiro, verifica condições de erro, e em seguida executa algum comando e retorna um valor. Neste caso, ela primeiramente checa que os argumentos da entrada são dos tipos corretos. A seguir, itera sobre cada símbolo e valor e os coloca no ambiente. Se há algum erro, podemos devolvê-lo, mas em caso de sucesso, devolvemos a expressão vazia <code>()</code>.</p>
 
 <pre><code data-language='c'>lval* builtin_def(lenv* e, lval* a) {
   LASSERT(a, a-&gt;cell[0]-&gt;type == LVAL_QEXPR,
     "Function 'def' passed incorrect type!");
 
-  /* First argument is symbol list */
+  /* O primeiro argumento eh uma lista de simbolos */
   lval* syms = a-&gt;cell[0];
 
-  /* Ensure all elements of first list are symbols */
+  /* Verifica se todos elementos da primeira lista sao simbolos */
   for (int i = 0; i &lt; syms-&gt;count; i++) {
     LASSERT(a, syms-&gt;cell[i]-&gt;type == LVAL_SYM,
       "Function 'def' cannot define non-symbol");
   }
 
-  /* Check correct number of symbols and values */
+  /* Verifica quantidade correta de simbolos e valores */
   LASSERT(a, syms-&gt;count == a-&gt;count-1,
     "Function 'def' cannot define incorrect "
     "number of values to symbols");
 
-  /* Assign copies of values to symbols */
+  /* Atribui copias dos valores para simbolos */
   for (int i = 0; i &lt; syms-&gt;count; i++) {
     lenv_put(e, syms-&gt;cell[i], a-&gt;cell[i+1]);
   }
@@ -428,12 +428,12 @@ lispy&gt;</code></pre>
   return lval_sexpr();
 }</code></pre>
 
-<p>We need to register this new builtin using our builtin function <code>lenv_add_builtins</code>.</p>
+<p>Precisamos registrar este novo builtin usando nossa função builtin <code>lenv_add_builtin</code>.</p>
 
 <pre><code data-language='c'>/* Variable Functions */
 lenv_add_builtin(e, "def",  builtin_def);</code></pre>
 
-<p>Now we should be able to support user defined variables. Because our <code>def</code> function takes in a list of symbols we can do some cool things storing and manipulating symbols in lists before passing them to be defined. Have a play around in the prompt and ensure everything is working correctly. You should get behaviour as follows. Explore what other complex methods are possible for the definition and evaluation of variables. Once we get to defining functions we'll really see some of the useful things that can be done with this approach.</p>
+<p>Agora devemos conseguir suportar variáveis definidas pelo usuário. Como nossa função <code>def</code> recebe uma lista de símbolos, podemos fazer algumas coisas legais armazenando e manipulando símbolos em listas antes de passá-los para serem definidos. Brinque um pouco no prompt e verifique que tudo esteja funcionando corretamente. Você deve obter um comportamento como o mostrado a seguir. Explore quais outros métodos complexos são possíveis para a definição e avaliação de variáveis. Conseguindo definir funções, vamos ver de verdade algumas das coisas úteis que podem ser feitas com essa abordagem.</p>
 
 <pre><code data-language='lispy'>lispy&gt; def {x} 100
 ()
@@ -460,65 +460,65 @@ lispy&gt; list a b x y
 lispy&gt;</code></pre>
 
 
-<h2>Error Reporting</h2> <hr/>
+<h2>Comunicando erros</h2> <hr/>
 
-<p>So far our error reporting doesn't work so well. We can report when an error occurs, and give a vague notion of what the problem was, but we don't give the user much information about what exactly has gone wrong. For example if there is an unbound symbol we should be able to report exactly which symbol was unbound. This can help the user track down errors, typos, and other trivial problems.</p>
+<p>Até agora, nossa comunicação de erros não funciona muito bem. Podemos comunicar quando um erro ocorre, e dar uma vaga noção do que o problema foi, mas não damos ao usuário muita informação sobre o que exatamente deu errado. Por exemplo, se há um símbolo não vinculado nós deveríamos ser capaz de reportar exatamente qual símbolo está não vinculado. Isto pode ajudar o usuário a encontrar equívocos, erros de digitação e outros problemas triviais.</p>
 
 <div class='pull-left alert alert-warning' style="margin: 15px; text-align: center;">
   <img src="/static/img/eclipses.png" alt="eclipses" class="img-responsive" width="315px" height="246px"/>
-  <p><small>Eclipses &bull; Like ellipsis.</small></p>
+  <p><small>Eclipses &bull; Igual <em>ellipsis</em> (reticências, em inglês).</small></p>
 </div>
 
-<p>Wouldn't it be great if we could write a function that can report errors in a similar way to how <code>printf</code> works. It would be ideal if we could pass in strings, integers, and other data to make our error messages richer.</p>
+<p>Não seria legal se pudéssemos escrever uma função que pode reportar erros de maneira semelhante a como <code>printf</code> funciona? Seria ideal se pudéssemos passar strings, inteiros, e outros dados para tornar nossas mensagens de erros mais ricas.</p>
 
-<p>The <code>printf</code> function is a special function in C because it takes a variable number of arguments. We can create our own <em>variable argument</em> functions, which is what we're going to do to make our error reporting better.</p>
+<p>A função <code>printf</code> é uma função especial em C porque ela recebe um número variável de argumentos. Podemos criar nossas próprias funções com <em>argumentos variáveis</em>, que é o que vamos fazer para tornar melhor nossa comunicação de erros.</p>
 
-<p>We'll modify <code>lval_err</code> to act in the same way as <code>printf</code>, taking in a format string, and after that a variable number of arguments to match into this string.</p>
+<p>Vamos modificar <code>lval_err</code> para agir da mesma maneira como <code>printf</code>, recebendo uma string de formato, e depois alguns argumentos para casar com essa string.</p>
 
-<p>To declare that a function takes variables arguments in the type signature you use the special syntax of ellipsis <code>...</code>, which represent the rest of the arguments.</p>
+<p>Para declarar que uma função recebe argumentos variáveis na assinatura de tipo, você usa a sintaxe especial de <em>ellipsis</em> (ou, reticências) <code>...</code>, que representa o restante dos argumentos.</p>
 
 <pre><code data-language='c'>lval* lval_err(char* fmt, ...);</code></pre>
 
-<p>Then, inside the function there are standard library functions we can use to examine what the caller has passed in.</p>
+<p>A seguir, dentro da função existem funções da biblioteca padrão que podemos usar para examinar o que o código chamador passou.</p>
 
-<p>The first step is to create a <code>va_list</code> struct and initialise it with <code>va_start</code>, passing in the last named argument. For other purposes it is possible to examine each argument passed in using <code>va_arg</code>, but we are going to pass our whole variable argument list directly to the <code>vsnprintf</code> function. This function acts like <code>printf</code> but instead writes to a string and takes in a <code>va_list</code>. Once we are done with our variable arguments, we shoulder call <code>va_end</code> to cleanup any resources used.</p>
+<p>O primeiro passo é criar um struct <code>va_list</code> e inicializá-lo usando <code>va_start</code>, passando o último argumento nomeado. Para outros propósitos, é possível examinar cada argumento passado usando <code>va_arg</code>, mas nós vamos passar nossa lista inteira de argumentos variáveis diretamente para a função <code>vsnprintf</code>. Esta função funciona como <code>printf</code>, mas escreve em uma string e recebe um <code>va_list</code>. Tendo feito isso, devemos chamar <code>va_end</code> para liberar quaisquer recursos usados.</p>
 
-<p>The <code>vsnprintf</code> function outputs to a string, which we need to allocate some first. Because we don't know the size of this string until we've run the function we first allocate a buffer <code>512</code> characters big and then reallocate to a smaller buffer once we've output to it. If an error message is going to be longer than 512 characters it will just get cut off, but hopefully this won't happen.</p>
+<p>A função <code>vsnprintf</code> joga a saída em uma string, que precisamos alocar antes. Como não sabemos o tamanho desta string até rodarmos a função, primeiro vamos alocar um buffer de caracteres com tamanho <code>512</code> e então realocar em um buffer menor depois que jogarmos a saída para ele. Se uma mensagem de erro for maior que 512 caracteres vai acabar cortada, mas com sorte isso não vai acontecer.</p>
 
-<p>Putting it all together our new error function looks like this.</p>
+<p>Colocando tudo junto, nossa nova função de erros se parece com isso.</p>
 
 <pre><code data-language='c'>lval* lval_err(char* fmt, ...) {
   lval* v = malloc(sizeof(lval));
   v-&gt;type = LVAL_ERR;
 
-  /* Create a va list and initialize it */
+  /* Cria um va list e inicializa */
   va_list va;
   va_start(va, fmt);
 
-  /* Allocate 512 bytes of space */
+  /* Aloca 512 bytes de espaco */
   v-&gt;err = malloc(512);
 
-  /* printf the error string with a maximum of 511 characters */
+  /* imprime a string de erro com um maximo de 511 caracteres */
   vsnprintf(v-&gt;err, 511, fmt, va);
 
-  /* Reallocate to number of bytes actually used */
+  /* Realoca para o numero de bytes realmente usado */
   v-&gt;err = realloc(v-&gt;err, strlen(v-&gt;err)+1);
 
-  /* Cleanup our va list */
+  /* Limpa nossa va list */
   va_end(va);
 
   return v;
 }</code></pre>
 
-<p>Using this we can then start adding in some better error messages to our functions. As an example we can look at <code>lenv_get</code>. When a symbol can't be found, rather than reporting a generic error, we can actually report the name that was not found.</p>
+<p>Usando isso podemos começar a adicionar mensagens de erros melhores em nossas funções. Como exemplo, podemos olhar para <code>lenv_get</code>. Quando um símbolo não pode ser encontrado, em vez de comunicar um erro genérico, podemos realmente dizer o nome do que não foi encontrado.</p>
 
 <pre><code data-language='c'>return lval_err("Unbound Symbol '%s'", k-&gt;sym);</code></pre>
 
-<p>We can also adapt our <code>LASSERT</code> macro such that it can take variable arguments too. Because this is a macro and not a standard function the syntax is slightly different. On the left hand side of the definition we use the ellipses notation again, but on the right hand side we use a special variable <code>__VA_ARGS__</code> to paste in the contents of all the other arguments.</p>
+<p>Podemos também adaptar nossa macro <code>LASSERT</code> de maneira que possa receber argumentos variáveis também. Como ela é uma macro e não uma função padrão, a sintaxe é um pouco diferente. No lado esquerdo da definição nós usamos a notação de ellipsis novamente, mas no lado direito usamos uma variável especial <code>__VA_ARGS__</code> para colar o conteúdo de todos os outros argumentos.</p>
 
-<p>We need to prefix this special variable with two hash signs <code>##</code>. This ensures that it is pasted correctly when the macro is passed no extra arguments. In essence what this does is make sure to remove the leading comma <code>,</code> to appear as if no extra arguments were passed in.</p>
+<p>Precisamos prefixar esta variável especial com dois sinais hash (jogo-da-velha) <code>##</code>. Isto se certifica que ela é colada corretamente quando a macro não recebe nenhum argumento extra. Basicamente, o que isso faz é remover a vírgula do começo <code>,</code> para fazer de conta que nenhum argumento extra foi passado.</p>
 
-<p>Because we might use <code>args</code> in the construction of the error message we need to make sure we don't delete it until we've created the error value.</p>
+<p>Como talvez possamos usar <code>args</code> na construção da mensagem de erro, precisamos nos certificar que não o deletemos até que tenhamos criado o valor de erro.</p>
 
 <pre><code data-language='c'>#define LASSERT(args, cond, fmt, ...) \
   if (!(cond)) { \
@@ -527,14 +527,14 @@ lispy&gt;</code></pre>
     return err; \
   }</code></pre>
 
-<p>Now we can update some of our error messages to make them more informative. For example if the incorrect number of arguments were passed we can specify how many were required and how many were given.</p>
+<p>Agora podemos atualizar algumas das nossas mensagens de erro para torná-las mais informativas. Por exemplo, se foi passado um número incorreto de argumentos, podemos especificar quantos eram esperados e quantos foram dados.</p>
 
 <pre><code data-language='c'>LASSERT(a, a-&gt;count == 1,
   "Function 'head' passed too many arguments. "
   "Got %i, Expected %i.",
   a-&gt;count, 1);</code></pre>
 
-<p>We can also improve our error reporting for type errors. We should attempt to report what type was expected by a function and what type it actually got. Before we can do this it would be useful to have a function that took as input some type enumeration and returned a string representation of that type.</p>
+<p>Podemos também melhorar nossa comunicação para erros de tipo. Devemos tentar comunicar qual tipo era esperado por uma função e qual tipo realmente recebeu. Antes de fazer isso, seria útil ter uma função que recebesse como entrada uma enumeração de tipo e devolvesse uma representação string do tipo dado.</p>
 
 <pre><code data-language='c'>char* ltype_name(int t) {
   switch(t) {
@@ -554,7 +554,7 @@ lispy&gt;</code></pre>
   ltype_name(a-&gt;cell[0]-&gt;type), ltype_name(LVAL_QEXPR));
 </code></pre>
 
-<p>Go ahead and use <code>LASSERT</code> to report errors in greater depth throughout the code. This should make debugging many of the next stages much easier as we begin to write complicated code using our new language. See if you can use macros to save on typing and automatically generate code for common methods of error reporting.</p>
+<p>Vá em frente e use <code>LASSERT</code> para comunicar erros com mais profundidade no código. Isto vai tornar mais fácil a depuração de muitos dos próximos estágios, à medida que comecemos a escrever códigos complicados usando nossa nova linguagem. Veja se você consegue usar macros para poupar digitação e gerar código automaticamente para maneiras comuns de relatar erros.</p>
 
 <pre><code data-language='lispy'>lispy&gt; + 1 {5 6 7}
 Error: Function '+' passed incorrect type for argument 1. Got Q-Expression, Expected Number.
@@ -563,32 +563,32 @@ Error: Function 'head' passed incorrect number of arguments. Got 2, Expected 1.
 lispy&gt;</code></pre>
 
 
-<h2>Reference</h2> <hr/>
+<h2>Referência</h2> <hr/>
 
 <references />
 
-<h2>Bonus Marks</h2> <hr/>
+<h2>Metas Bônus</h2> <hr/>
 
 <div class="alert alert-warning">
   <ul class="list-group">
-    <li class="list-group-item">&rsaquo; Create a Macro to aid specifically with reporting type errors.</li>
-    <li class="list-group-item">&rsaquo; Create a Macro to aid specifically with reporting argument count errors.</li>
-    <li class="list-group-item">&rsaquo; Create a Macro to aid specifically with reporting empty list errors.</li>
-    <li class="list-group-item">&rsaquo; Change printing a builtin function so that it prints its name.</li>
-    <li class="list-group-item">&rsaquo; Write a function for printing out all the named values in an environment.</li>
-    <li class="list-group-item">&rsaquo; Redefine one of the builtin variables to something different.</li>
-    <li class="list-group-item">&rsaquo; Change redefinition of one of the builtin variables to something different an error.</li>
-    <li class="list-group-item">&rsaquo; Create an <code>exit</code> function for stopping the prompt and exiting.</li>
+    <li class="list-group-item">&rsaquo; Crie uma Macro para ajudar especificamente relatar erros de tipos.</li>
+    <li class="list-group-item">&rsaquo; Crie uma Macro para ajudar especificamente relatar erros de argumentos.</li>
+    <li class="list-group-item">&rsaquo; Crie uma Macro para ajudar especificamente relatar erros de lista vazia.</li>
+    <li class="list-group-item">&rsaquo; Mude a impressão duma função builtin para que imprime seu nome.</li>
+    <li class="list-group-item">&rsaquo; Escreva uma função para imprimir todos os valores nomeados em um ambiente.</li>
+    <li class="list-group-item">&rsaquo; Redefina uma das variáveis builtins para algo diferente.</li>
+    <li class="list-group-item">&rsaquo; Mude a redefinição de uma das variáveis builtins para algo diferente de um erro.</li>
+    <li class="list-group-item">&rsaquo; Crie uma função <code>exit</code> para parar o prompt e sair.</li>
   </ul>
 </div>
 
 
-<h2>Navigation</h2>
+<h2>Navegação</h2>
 
 <table class="table" style='table-layout: fixed;'>
   <tr>
-    <td class="text-left"><a href="chapter10_q_expressions"><h4>&lsaquo; Q-Expressions</h4></a></td>
-    <td class="text-center"><a href="contents"><h4>&bull; Contents &bull;</h4></a></td>
-    <td class="text-right"><a href="chapter12_functions"><h4>Functions &rsaquo;</h4></a></td>
+    <td class="text-left"><a href="chapter10_q_expressions"><h4>&lsaquo; Q-Expressions (expressões citadas)</h4></a></td>
+    <td class="text-center"><a href="contents"><h4>&bull; Conteúdo &bull;</h4></a></td>
+    <td class="text-right"><a href="chapter12_functions"><h4>Funções &rsaquo;</h4></a></td>
   </tr>
 </table>
