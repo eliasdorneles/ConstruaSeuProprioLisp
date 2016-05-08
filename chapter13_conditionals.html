@@ -1,28 +1,28 @@
-<h1>Conditionals <small>&bull; Chapter 13</small></h1>
+<h1>Condicionais <small>&bull; Capítulo 13</small></h1>
 
-<h2>Doing it yourself</h2> <hr/>
+<h2>Fazendo você mesmo</h2> <hr/>
 
-<p>We've come quite far now. Your knowledge of C should be good enough for you to stand on your own feet a little more. If you're feeling confident, this chapter is a perfect opportunity to stretch your wings out and attempt something on your own. It is a fairly short chapter and essentially consists of adding a couple of new builtin functions to deal with comparison and ordering.</p>
+<p>Já chegamos até aqui. Seu conhecimento de C deve ser bom o suficiente para você se manter nos próprios pés um pouco mais. Caso esteja se sentindo confiante, este capítulo é uma oportunidade perfeita para abrir as asas e tentar alguma coisa você mesmo. É um capítulo relativamente curto e consiste em essencialmente adicionar novas funções builtins para lidar com comparação e ordenação.</p>
 
 <div class='pull-right alert alert-warning' style="margin: 15px; text-align: center;">
   <img src="/static/img/pug.png" alt="pug" class="img-responsive" width="219px" height="329px"/>
-  <p><small>Pug &bull; <strong>if</strong> pug is asleep <strong>then</strong> pug is cute.</small></p>
+  <p><small>Pug &bull; <strong>se</strong> pug está dormindo <strong>então</strong> pug é fofinho.</small></p>
 </div>
 
-<p>If you're feeling positive, go ahead and try to implement comparison and ordering into your language now. Define some new builtin functions for <em>greater than</em>, <em>less than</em>, <em>equal to</em>, and all the other comparison operators we use in C. Try to define an <code>if</code> function that tests for some condition and then either evaluate some code, or some other code, depending on the result. Once you've finished come back and compare your work to mine. Observe the differences and decide which parts you prefer.</p>
+<p>Caso esteja se sentindo positivo, vá em frente e tente implementar comparação e ordenação na sua linguagem agora. Defina algumas novas funções builtins para <em>maior que</em>, <em>menor que</em>, <em>igual a</em>, e todos os outros operadores de comparação que usamos em C. Tente definir uma função <code>if</code> que teste uma condição e então avalie algum código ou um outro código, dependendo do resultado. Tendo terminado isso, volte aqui e compare seu trabalho com o meu. Observe as diferenças e decida quais partes você prefere.</p>
 
-<p>If you still feel uncertain don't worry. Follow along and I'll explain my approach.</p>
+<p>Se você ainda se sente inseguro, não se preocupe. Siga adiante e explicarei minha abordagem.</p>
 
 
-<h2>Ordering</h2> <hr/>
+<h2>Ordenação</h2> <hr/>
 
-<p>For simplicity's sake I'm going to re-use our number data type to represent the result of comparisons. I'll make a rule similar to C, to say that any number that isn't <code>0</code> evaluates to true in an <code>if</code> statement, while <code>0</code> always evaluates to false.</p>
+<p>Para fins de simplicidade, vou reusar nosso tipo de dados número para representar o resultado das comparações. Farei uma regra similar a C, para dizer que qualquer número que não seja <code>0</code> é avaliado como verdadeiro em um comando <code>if</code>, enquanto <code>0</code> sempre avalia como falso.</p>
 
-<p>Therefore our ordering functions are a little like a simplified version of our arithmetic functions. They'll only work on numbers, and we only want them to work on two arguments.</p>
+<p>Por isso, nossas funções de ordenação parecem uma versão simplificada de nossas funções aritméticas. Elas só funcionam em números, e queremos que só funcionem com dois argumentos.</p>
 
-<p>If these error conditions are met the maths is simple. We want to return a number <code>lval</code> either <code>0</code> or <code>1</code> depending on the equality comparison between the two input <code>lval</code>. We can use C's comparison operators to do this. Like our arithmetic functions we'll make use of a single function to do all of the comparisons.</p>
+<p>Caso essas condições sejam atendidas, a matemática é simples. Queremos devolver um <code>lval</code> número ou <code>0</code> ou <code>1</code> dependendo da comparação de igualdade entre os dois <code>lval</code> da entrada. Podemos usar os operadores de comparação de C para fazer isso. Por fim, devolvemos este resultado como um valor número.</p>
 
-<p>First we check the error conditions, then we compare the numbers in each of the arguments to get some result. Finally we return this result as a number value.</p>
+<p>Primeiro verificamos as condições de erro, a seguir comparamos os números em cada argumento para obter um resultado. Finalmente, devolvemos este resultado como um valor número.</p>
 
 <pre><code data-language='c'>lval* builtin_gt(lenv* e, lval* a) {
   return builtin_ord(e, a, "&gt;");
@@ -68,27 +68,27 @@
 </code></pre>
 
 
-<h2>Equality</h2> <hr/>
+<h2>Igualdade</h2> <hr/>
 
-<p>Equality is going to be different to ordering because we want it to work on more than number types. It will be useful to see if an input is equal to an empty list, or to see if two functions passed in are the same. Therefore we need to define a function which can test for equality between two different types of <code>lval</code>.</p>
+<p>Igualdade vai ser diferente de ordenação porque queremos que funcione em mais do que tipos números. Será útil ver se uma entrada é igual à uma lista vazia, ou ver se duas funções passadas são a mesma. Por isso, precisamos definir uma função que verifique igualdade entre diferentes tipos de <code>lval</code>.</p>
 
-<p>This function essentially checks that all the fields which make up the data for a particular <code>lval</code> type are equal. If all the fields are equal, the whole thing is considered equal. Otherwise if there are any differences the whole thing is considered unequal.</p>
+<p>Esta função essencialmente verifica que todos os campos que perfazem os dados para um determinado tipo <code>lval</code> são iguais. Caso todos os campos forem iguais, a coisa toda é considerada igual. Caso contrário, se houver qualquer diferença, a coisa toda é considerada diferente.</p>
 
 <pre><code data-language='c'>int lval_eq(lval* x, lval* y) {
 
-  /* Different Types are always unequal */
+  /* Tipos diferentes sao sempre diferentes */
   if (x-&gt;type != y-&gt;type) { return 0; }
 
-  /* Compare Based upon type */
+  /* Compara baseado no tipo */
   switch (x-&gt;type) {
-    /* Compare Number Value */
+    /* Compara valor numero */
     case LVAL_NUM: return (x-&gt;num == y-&gt;num);
 
-    /* Compare String Values */
+    /* Compara valor string */
     case LVAL_ERR: return (strcmp(x-&gt;err, y-&gt;err) == 0);
     case LVAL_SYM: return (strcmp(x-&gt;sym, y-&gt;sym) == 0);
 
-    /* If builtin compare, otherwise compare formals and body */
+    /* Compara se for builtin, senao compara argumentos formais e corpo */
     case LVAL_FUN:
       if (x-&gt;builtin || y-&gt;builtin) {
         return x-&gt;builtin == y-&gt;builtin;
@@ -97,22 +97,22 @@
           &amp;&amp; lval_eq(x-&gt;body, y-&gt;body);
       }
 
-    /* If list compare every individual element */
+    /* Caso lista, compara cada elemento individual */
     case LVAL_QEXPR:
     case LVAL_SEXPR:
       if (x-&gt;count != y-&gt;count) { return 0; }
       for (int i = 0; i &lt; x-&gt;count; i++) {
-        /* If any element not equal then whole list not equal */
+        /* Se qualquer elemento nao for igual, entao a lista inteira eh diferente */
         if (!lval_eq(x-&gt;cell[i], y-&gt;cell[i])) { return 0; }
       }
-      /* Otherwise lists must be equal */
+      /* Senao, as listas devem ser iguais */
       return 1;
     break;
   }
   return 0;
 }</code></pre>
 
-<p>Using this function the new builtin function for equality comparison is very simple to add. We simply ensure two arguments are input, and that they are equal. We store the result of the comparison into a new <code>lval</code> and return it.</p>
+<p>Usando esta função, a nova função builtin para comparação de igualdade é simples de adicionar. Simplesmente nos certificamos que hajam dois argumentos e que eles são iguais. Armazenamos o resultado da comparação em um novo <code>lval</code> e o devolvemos.</p>
 
 <pre><code data-language='c'>lval* builtin_cmp(lenv* e, lval* a, char* op) {
   LASSERT_NUM(op, a, 2);
@@ -136,11 +136,11 @@ lval* builtin_ne(lenv* e, lval* a) {
 }</code></pre>
 
 
-<h2>If Function</h2> <hr/>
+<h2>Função If</h2> <hr/>
 
-<p>To make our comparison operators useful we'll need an <code>if</code> function. This function is a little like the ternary operation in C. Upon some condition being true it evaluates to one thing, and if the condition is false, it evaluates to another.</p>
+<p>Para tornar nossos operadores de comparação úteis, precisamos uma função <code>if</code>. Esta função é um pouco parecida com o operador ternário em C. Dependendo de uma condição ser verdadeira, ela avalia uma coisa, e se a condição for falsa, ela avalia outra.</p>
 
-<p>We can again make use of Q-Expressions to encode a computation. First we get the user to pass in the result of a comparison, then we get the user to pass in two Q-Expressions representing the code to be evaluated upon a condition being either true or false.</p>
+<p>Podemos novamente fazer uso de Q-Expressions para codificar uma computação. Primeiro fazemos o usuário passar o resultado duma comparação, em seguida fazemos ele passar duas Q-Expressions representando o código a ser avaliado quando uma condição seja ou verdadeira ou falsa.</p>
 
 <pre><code data-language='c'>lval* builtin_if(lenv* e, lval* a) {
   LASSERT_NUM("if", a, 3);
@@ -148,27 +148,28 @@ lval* builtin_ne(lenv* e, lval* a) {
   LASSERT_TYPE("if", a, 1, LVAL_QEXPR);
   LASSERT_TYPE("if", a, 2, LVAL_QEXPR);
   
-  /* Mark Both Expressions as evaluable */
+  /* Marca ambas expressoes como avaliaveis */
   lval* x;
   a-&gt;cell[1]-&gt;type = LVAL_SEXPR;
   a-&gt;cell[2]-&gt;type = LVAL_SEXPR;
   
   if (a-&gt;cell[0]-&gt;num) {
-    /* If condition is true evaluate first expression */
+    /* Se condicao verdadeira, avalia primeira expressao */
     x = lval_eval(e, lval_pop(a, 1));
   } else {
-    /* Otherwise evaluate second expression */
+    /* Caso contrario, avalia segunda expressao */
     x = lval_eval(e, lval_pop(a, 2));
   }
   
-  /* Delete argument list and return */
+  /* Deleta lista de argumentos e devolve */
   lval_del(a);
   return x;
 }</code></pre>
 
-<p>All that remains is for us to register all of these new builtins and we are again ready to go.</p>
+<p>Tudo que nos resta é registrar todos estes novos builtins e estamos prontos novamente.</p>
 
-<pre><code data-language='c'>/* Comparison Functions */
+<pre><code data-language='c'>
+/* Funcoes de comparacao */
 lenv_add_builtin(e, "if", builtin_if);
 lenv_add_builtin(e, "==", builtin_eq);
 lenv_add_builtin(e, "!=", builtin_ne);
@@ -178,7 +179,7 @@ lenv_add_builtin(e, "&gt;=", builtin_ge);
 lenv_add_builtin(e, "&lt;=", builtin_le);
 </code></pre>
 
-<p>Have a quick mess around to check that everything is working correctly.</p>
+<p>Dê uma brincada para ver se tudo está funcionando corretamente.</p>
 
 <pre><code data-language='lispy'>lispy&gt; &gt; 10 5
 1
@@ -201,13 +202,13 @@ lispy&gt; if (== x y) {+ x y} {- x y}
 </code></pre>
 
 
-<h2>Recursive Functions</h2> <hr/>
+<h2>Funções Recursivas</h2> <hr/>
 
-<p>By introducing conditionals we've actually made our language a lot more powerful. This is because they effectively let us implement recursive functions.</p>
+<p>Introduzindo condicionais tornamos nossa linguagem muito mais poderosa. Isto é porque elas efetivamente nos permitem implementar funções recursivas.</p>
 
-<p>Recursive functions are those which call themselves. We've used these already in C to perform reading in and evaluation of expressions. The reason we require conditionals for these is because they let us test for the situation where we wish to terminate the recursion.</p>
+<p>Funções recursivas são aquelas que chama elas mesmas. Já estamos acostumadas à essas em C para executar leitura e avaliação de expressões. O motivo que precisamos de condicionais para isso é porque elas nos permitem verificar a situação para a qual desejamos terminar a recursão.</p>
 
-<p>For example we can use conditionals to implement a function <code>len</code> which tells us the number of items in a list. If we encounter the empty list we just return <code>0</code>. Otherwise we return the length of the <code>tail</code> of the input list, plus <code>1</code>. Think about why this works. It repeatedly uses the <code>len</code> function until it reaches the empty list. At this point it returns <code>0</code> and adds all the other partial results together.</p>
+<p>Por exemplo, podemos usar condicionais para implementar uma função <code>len</code> que nos diz o número de itens numa lista. Se encontramos a lista vazia, simplesmente devolvemos <code>0</code>. Caso contrário, retornamos o comprimento da cauda da lista da entrada usando <code>tail</code> mais <code>1</code>. Pense um pouco a respeito por que isso funciona. Isto usa á função <code>len</code> repetidamente até que atinja a lista vazia. Nesse ponto, ele devolve <code>0</code> e soma todos os outros resultados parciais juntos.</p>
 
 <pre><code data-language='lispy'>(fun {len l} {
   if (== l {})
@@ -215,9 +216,9 @@ lispy&gt; if (== x y) {+ x y} {- x y}
     {+ 1 (len (tail l))}
 })</code></pre>
 
-<p>Just as in C, there is a pleasant symmetry to this sort of recursive function. First we do something for the empty list (<em>the base case</em>). Then if we get something bigger, we take off a chunk such as the head of the list, and do something to it, before combining it with the rest of the thing to which the function has been already applied.</p>
+<p>Assim como em C, há uma simetria agradável para esse tipo de função recursiva. Primeiro fazemos uma coisa para a lista vazia (<em>o caso base</em>). Em seguida, se recebemos algo maior, retiramos algum pedaço (tipo, a cabeça da lista) e fazemos algo com ele, antes de combiná-lo com o resto da coisa com a qual a função já foi aplicada.</p>
 
-<p>Here is another function for reversing a list. As before it checks for the empty list, but this time it returns the empty list back. This makes sense. The reverse of the empty list is just the empty list. But if it gets something bigger than the empty list, it reverses the tail, and sticks this in front of the head.</p>
+<p>Aqui vai uma outra função para inverter uma lista. Como antes, ela testa para uma lista vazia, mas dessa vez ela devolve a própria lista vazia. Isto faz sentido. O inverso da lista vazia é simplesmente a lista vazia. Mas se receber algo maior que a lista vazia, ela inverte a cauda e joga o resultado em frente da cabeça.</p>
 
 <pre><code data-language='lispy'>(fun {reverse l} {
   if (== l {})
@@ -225,33 +226,33 @@ lispy&gt; if (== x y) {+ x y} {- x y}
     {join (reverse (tail l)) (head l)}
 })</code></pre>
 
-<p>We're going to use this technique to build many functions. This is because it is going to be the primary way to achieve looping in our language.</p>
+<p>Vamos usar esta técnica para construir muitas funções. Isto se deve porque será a maneira principal de atingir iteração em nossa linguagem.</p>
 
 
-<h2>Reference</h2> <hr/>
+<h2>Referência</h2> <hr/>
 
 <references />
 
-<h2>Bonus Marks</h2> <hr/>
+<h2>Metas Bônus</h2> <hr/>
 
 <div class="alert alert-warning">
   <ul class="list-group">
-    <li class="list-group-item">&rsaquo; Create builtin logical operators <em>or</em> <code>||</code>, <em>and</em> <code>&&</code> and <em>not</em> <code>!</code> and add them to the language.</li>
-    <li class="list-group-item">&rsaquo; Define a recursive Lisp function that returns the <code>nth</code> item of that list.</li>
-    <li class="list-group-item">&rsaquo; Define a recursive Lisp function that returns <code>1</code> if an element is a member of a list, otherwise <code>0</code>.</li>
-    <li class="list-group-item">&rsaquo; Define a Lisp function that returns the last element of a list.</li>
-    <li class="list-group-item">&rsaquo; Define in Lisp logical operator functions such as <code>or</code>, <code>and</code> and <code>not</code>.</li>
-    <li class="list-group-item">&rsaquo; Add a specific boolean type to the language with the builtin variables <code>true</code> and <code>false</code>.</li>
+    <li class="list-group-item">&rsaquo; Crie operadores builtins lógicos <em>or</em> <code>||</code>, <em>and</em> <code>&&</code> e <em>not</em> <code>!</code> e adicione-os à linguagem.</li>
+    <li class="list-group-item">&rsaquo; Defina uma função Lisp recursiva <code>nth</code> que devolva o enésimo item duma lista.</li>
+    <li class="list-group-item">&rsaquo; Defina uma função Lisp recursiva que devolva <code>1</code> se o elemento for membro duma lista, caso contrário devolva <code>0</code>.</li>
+    <li class="list-group-item">&rsaquo; Defina uma função Lisp que devolva o último elemento duma lista.</li>
+    <li class="list-group-item">&rsaquo; Defina, em Lisp, funções operadoras lógicas como <code>or</code>, <code>and</code> e <code>not</code>.</li>
+    <li class="list-group-item">&rsaquo; Adicione um tipo <em>boolean</em> para a linguagem com variáveis builtins <code>true</code> e <code>false</code>.</li>
   </ul>
 </div>
 
 
-<h2>Navigation</h2>
+<h2>Navegação</h2>
 
 <table class="table" style='table-layout: fixed;'>
   <tr>
-    <td class="text-left"><a href="chapter12_functions"><h4>&lsaquo; Functions</h4></a></td>
-    <td class="text-center"><a href="contents"><h4>&bull; Contents &bull;</h4></a></td>
+    <td class="text-left"><a href="chapter12_functions"><h4>&lsaquo; Funções</h4></a></td>
+    <td class="text-center"><a href="contents"><h4>&bull; Conteúdo &bull;</h4></a></td>
     <td class="text-right"><a href="chapter14_strings"><h4>Strings &rsaquo;</h4></a></td>
   </tr>
 </table>
