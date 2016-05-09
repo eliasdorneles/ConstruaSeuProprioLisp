@@ -1,35 +1,35 @@
-<h1>Strings <small>&bull; Chapter 14</small></h1>
+<h1>Strings <small>&bull; Capítulo 14</small></h1>
 
 
-<h2>Libraries</h2> <hr/>
+<h2>Bibliotecas</h2> <hr/>
 
 <div class='pull-right alert alert-warning' style="margin: 15px; text-align: center;">
   <img src="/static/img/string.png" alt="string" class="img-responsive" width="300px" height="219px"/>
-  <p><small>String &bull; How long is it.</small></p>
+  <p><small>String &bull; Quão comprida é esta?.</small></p>
 </div>
 
-<p>Our Lisp is finally functional. We should be able to write almost any functions we want. We can build some quite complex constructs using it, and even do some cool things that can't be done in lots of other heavyweight and popular languages;</p>
+<p>Nosso Lisp é finalmente funcional. Devemos ser capaz de escrever praticamente qualquer função que desejarmos. Podemos criar construções bem complexas usando ela, e mesmo fazer coisas legais que não são possíveis em muitas linguagens pesadas e populares;</p>
 
-<p>Every time we update our program and run it again it is annoying having to type in all of our functions. In this chapter we'll add the functionality to load code from a file and run it. This will allow us to start building up a standard library up. Along the way we'll also add support for code comments, strings, and printing.</p>
+<p>Cada vez que atualizamos nosso programa e o rodamos novamente, é chato ter que digitar todas nossas funções. Neste capítulo, vamos adicionar a funcionalidade de carregar código de um arquivo e rodá-lo. Isto vai nos permitir começar a construir uma biblioteca padrão. Ao longo do caminho, vamos também adicionar suporte para comentários no código, strings e impressão.</p>
 
 
-<h2>String Type</h2> <hr/>
+<h2>Tipo String</h2> <hr/>
 
-<p>For the user to load a file we'll have to let them supply a string consisting of the file name. Our language supports symbols, but still doesn't support strings, which can include spaces and other characters. We need to add this possible <code>lval</code> type to specify the file names we need.</p>
+<p>Para o usuário carregar um arquivo, teremos que deixá-lo fornecer uma string consistindo do nome do arquivo. Nossa linguagem suporta símbolos, mas ainda não suporta strings, que podem incluir espaços e outros caracteres. Precisamos adicionar este possível tipo <code>lval</code> para especificar os nomes de arquivos que precisamos.</p>
 
-<p>We start, as in other chapters, by adding an entry to our enum and adding an entry to our <code>lval</code> to represent the type's data.</p>
+<p>Começamos, como em outros capítulos, adicionando um item ao nosso enum e adicionando um item ao nosso <code>lval</code> para representar o tipo do dado.</p>
 
 <pre><code data-language='c'>enum { LVAL_ERR, LVAL_NUM,   LVAL_SYM, LVAL_STR, 
        LVAL_FUN, LVAL_SEXPR, LVAL_QEXPR };</code></pre>
 
-<pre><code data-language='c'>/* Basic */
+<pre><code data-language='c'>/* Basico */
 long num;
 char* err;
 char* sym;
 char* str;
 </code></pre>
 
-<p>Next we can add a function for constructing string <code>lval</code>, very similar to how we construct constructing symbols.</p>
+<p>A seguir, podemos adicionar uma função para construir <code>lval</code> strings, de maneira similar a como fizemos para construir símbolos.</p>
 
 <pre><code data-language='c'>lval* lval_str(char* s) {
   lval* v = malloc(sizeof(lval));
@@ -39,80 +39,80 @@ char* str;
   return v;
 }</code></pre>
 
-<p>We also need to add the relevant entries into our functions that deal with <code>lval</code>.</p>
+<p>Também precisamos adicionar os itens relevantes em nossas funções que lidam com <code>lval</code>.</p>
 
-<p>For <strong>Deletion</strong>...</p>
+<p>Para <strong>Deleção</strong>...</p>
 
 <pre><code data-language='c'>case LVAL_STR: free(v-&gt;str); break;</code></pre>
 
-<p>For <strong>Copying</strong>...</p>
+<p>Para <strong>Cópia</strong>...</p>
 
 <pre><code data-language='c'>case LVAL_STR: x-&gt;str = malloc(strlen(v-&gt;str) + 1);
   strcpy(x-&gt;str, v-&gt;str); break;</code></pre>
 
-<p>For <strong>Equality</strong>...</p>
+<p>Para <strong>Igualdade</strong>...</p>
 
 <pre><code data-language='c'>case LVAL_STR: return (strcmp(x-&gt;str, y-&gt;str) == 0);</code></pre>
 
-<p>For <strong>Type Name</strong>...</p>
+<p>Para <strong>Nome do Tipo</strong>...</p>
 
 <pre><code data-language='c'>case LVAL_STR: return "String";</code></pre>
 
-<p>For <strong>Printing</strong> we need to do a little more. The string we store internally is different to the string we want to print. We want to print a string as a user might input it, using escape characters such as <code>\n</code> to represent a new line.</p>
+<p>Para <strong>Impressão</strong>, precisamos fazer um pouco mais. A string que armazenamso internamente é diferente da string que queremos imprimir. Queremos imprimir uma string que um usuário possa digitar na entrada, usando caracteres de escapa como <code>\n</code> para representar uma quebra de linha.</p>
 
-<p>We therefore need to escape it before we print it. Luckily we can make use of a <code>mpc</code> function that will do this for us.</p>
+<p>Por isso precisamos escapá-la antes de imprimi-la. Por sorte, podemos usar uma função <code>mpc</code> que fará isso para nós.</p>
 
-<p>In the printing function we add the following...</p>
+<p>Na função de impressão, adicionamos o seguinte...</p>
 
 <pre><code data-language='c'>case LVAL_STR:   lval_print_str(v); break;</code></pre>
 
-<p>Where...</p>
+<p>Onde...</p>
 
 <pre><code data-language='c'>void lval_print_str(lval* v) {
-  /* Make a Copy of the string */
+  /* Faz uma copia da string */
   char* escaped = malloc(strlen(v-&gt;str)+1);
   strcpy(escaped, v-&gt;str);
-  /* Pass it through the escape function */
+  /* Passe-a pela funcao de escape */
   escaped = mpcf_escape(escaped);
-  /* Print it between " characters */
+  /* Imprima-a entre caracteres " */
   printf("\"%s\"", escaped);
-  /* free the copied string */
+  /* libera a string copiada */
   free(escaped);
 }</code></pre>
 
 
-<h2>Reading Strings</h2> <hr/>
+<h2>Lendo Strings</h2> <hr/>
 
-<p>Now we need to add support for parsing strings. As usual this requires first adding a new grammar rule called <code>string</code> and adding it to our parser.</p>
+<p>Agora precisamos adicionar suporte a interpretar strings. Como de costume, isto requer primeiro adicionar uma nova regra gramatical chamada <code>string</code> e adicioná-la ao nosso analisador sintático.</p>
 
-<p>The rule we are going to use that represents a string is going to be the same as for C style strings. This means a string is essentially a series of escape characters, or normal characters, between two quotation marks <code>""</code>. We can specify this as a regular expression inside our grammar string as follows.</p>
+<p>A regra que vamos usar que representa uma string vai ser a mesma para as strings em C. Isto quer dizer que uma string é essencialmente uma série de caracteres de escape, ou caracteres normais, entre duas aspas duplas <code>""</code>. Podemos especificar isto como uma expressão regular dentro da nossa string de gramática como segue.</p>
 
 <pre><code>string  : /\"(\\\\.|[^\"])*\"/ ;</code></pre>
 
-<p>This looks complicated but makes a lot more sense when explained in parts. It reads like this. A string is a <code>"</code> character, followed by zero or more of either a backslash <code>\\</code> followed by any other character <code>.</code>, or anything that <em>isn't</em> a <code>"</code> character <code>[^\\"]</code>. Finally it ends with another <code>"</code> character.</p>
+<p>Isto parece complicado mas faz bastante sentido quando explicado em partes. Lê-se dessa forma. Uma string é um caractere <code>"</code>, seguido de zero ou mais de, ou uma barra invertida <code>\\</code> seguida de qualquer outro caractere <code>.</code>, ou qualquer coisa que <em>não seja</em> um caractere <code>"</code> (<code>[^\\"]</code>). Finalmente, termina com outro caractere <code>"</code>.</p>
 
-<p>We also need to add a case to deal with this in the <code>lval_read</code> function.</p>
+<p>Também precisamos adicionar um caso para lidar com ist na função <code>lval_read</code>.</p>
 
 <pre><code data-language='c'>if (strstr(t-&gt;tag, "string")) { return lval_read_str(t); }</code></pre>
 
-<p>Because the input string is input in an escaped form we need to create a function <code>lval_read_str</code> which deals with this. This function is a little tricky because it has to do a few tasks. First it must strip the input string of the <code>"</code> characters on either side. Then it must unescape the string, converting series of characters such as <code>\n</code> to their actual encoded characters. Finally it has to create a new <code>lval</code> and clean up anything that has happened in-between.</p>
+<p>Como a string da entrada é introduzida em forma escapada, precisamos criar uma função <code>lval_read_str</code> que lida com isso. Esta função é um pouco complicada porque ela precisa fazer certas coisas: primeiro ela precisa remover os caracteres <code>"</code> de qualquer lado. A seguir, ela precisa desescapar a string, convertendo sequências de caracteres como <code>\n</code> para os caracteres realmente codificados. Finalmente, precisa criar um novo <code>lval</code> e limpar qualquer coisa que tenha acontecido no meio do caminho.</p>
 
 <pre><code data-language='c'>lval* lval_read_str(mpc_ast_t* t) {
-  /* Cut off the final quote character */
+  /* Corta a aspa do final */
   t-&gt;contents[strlen(t-&gt;contents)-1] = '\0';
-  /* Copy the string missing out the first quote character */
+  /* Copia a string, pulando a primeira aspa */
   char* unescaped = malloc(strlen(t-&gt;contents+1)+1);
   strcpy(unescaped, t-&gt;contents+1);
-  /* Pass through the unescape function */
+  /* Passa pela funcao unescape para desescapar */
   unescaped = mpcf_unescape(unescaped);
-  /* Construct a new lval using the string */
+  /* Constroi um novo lval usando a string */
   lval* str = lval_str(unescaped);
-  /* Free the string and return */
+  /* Libera a string e devolve */
   free(unescaped);
   return str;
 }</code></pre>
 
-<p>If this all works we should be able to play around with strings in the prompt. Next we'll add functions which can actually make use of them.</p>
+<p>Se isso tudo funcionar, devemos ser capaz de brincar um pouco com strings no prompt. A seguir, vamos adicionar funções que realmente façam uso delas.</p>
 
 <pre><code data-language='lispy'>lispy&gt; "hello"
 "hello"
@@ -127,21 +127,21 @@ lispy&gt; eval (head {"hello" "world"})
 lispy&gt;</code></pre>
 
 
-<h2>Comments</h2> <hr/>
+<h2>Comentários</h2> <hr/>
 
-<p>While we're building in new syntax to the language we may as well look at comments.</p>
+<p>Já que estamos adicionando nova sintaxe para a linguagem, podemos também dar uma olhada em comentários.</p>
 
-<p>Just like in C, we can use comments in inform other people (or ourselves) about what the code is meant to do or why it has been written. In C comments go between <code>/*</code> and <code>*/</code>. Lisp comments, on the other hand, start with <code>;</code> and run to the end of the line.</p>
+<p>Da mesma forma que em C, podemos usar comentários para informar outras pessoas (ou nós mesmos) sobre o que o código está tentando fazer ou por que ele foi escrito. Em C, comentários vão entre <code>/*</code> e <code>*/</code>. Comentários Lisp, por sua vez, começam com <code>;</code> e vão até o fim da linha.</p>
 
-<p>I attempted to research why Lisps use <code>;</code> for comments, but it appears that the origins of this have been lost in the mists of time. I imagine it as a small rebellion against the imperative languages such as C and Java which use semicolons so shamelessly and frequently to separate/terminate statements. Compared to Lisp all these languages are just comments.</p>
+<p>Tentei pesquisar por que Lisps usam <code>;</code> para comentários, mas parece que as origens disso foram perdidas nos nevoeiros do tempo. Eu imagino isso como uma pequena rebelião contra as linguagens imperativas como C e Java, que usam pontos e vírgulas tão descarada e frequentemente para separar/terminar comandos. Comparando a Lisp, todas essas lingagens são apenas comentários.</p>
 
-<p>So in lisp a comment is defined by a semicolon <code>;</code> followed by any number of characters that are not newline characters represented by either <code>\r</code> or <code>\n</code>. We can use another regex to define it.</p>
+<p>Então em Lisp, um comentário é definido com um ponto e vírgula <code>;</code> seguido de qualquer número de caracteres que não são caracteres quebra de linha representados ou por <code>\r</code> ou por <code>\n</code>. Podemos adicionar uma outra expressão regular para definir isso.</p>
 
 <pre><code>comment : /;[^\\r\\n]*/ ;</code></pre>
 
-<p>As with strings we need to create a new parser and use this to update our language in <code>mpca_lang</code>. We also need to remember to add the parser to <code>mpc_cleanup</code>, and update the first integer argument to reflect the new number of parsers passed in.</p>
+<p>Da mesma forma que com strings, precisamos criar um novo parser e usar isso para atualizar nossa linguagem em <code>mpca_lang</code>. Também precisamos lembrar de adicionar o parser em <code>mpc_cleanup</code>, e atualizar o primeiro argumento inteiro para refletir o novo número de parsers passados.</p>
 
-<p>Our final grammar now looks like this.</p>
+<p>Nossa gramática final agora se parece com isto.</p>
 
 <pre><code data-language='c'>mpca_lang(MPCA_LANG_DEFAULT,
   "                                              \
@@ -158,22 +158,22 @@ lispy&gt;</code></pre>
   Number, Symbol, String, Comment, Sexpr, Qexpr, Expr, Lispy);
 </code></pre>
 
-<p>And the cleanup function looks like this.</p>
+<p>E a função de limpeza agora se parece com isso.</p>
 
 <pre><code data-language='c'>mpc_cleanup(8, 
   Number, Symbol, String, Comment, 
   Sexpr,  Qexpr,  Expr,   Lispy);</code></pre>
 
-<p>Because comments are only for programmers reading the code, our internal function for reading them in just consists of ignoring them. We can add a clause to deal with them in a similar way to brackets and parenthesis in <code>lval_read</code>.</p>
+<p>Como comentários são somente para programadores lendo o código, nossa função interna para lê-los consiste em apenas ignorá-los. Podemos adicionar uma cláusula para lidar com eles de maneira similar a chaves e parênteses em <code>lval_read</code>.</p>
 
 <pre><code data-language='c'>if (strstr(t-&gt;children[i]-&gt;tag, "comment")) { continue; }</code></pre>
 
-<p>Comments won't be of much use on the interactive prompt, but they will be very helpful for adding into files of code to annotate them.</p>
+<p>Comentários não serão de muito uso no prompt interativo, mas serão bem úteis para anotar arquivos de código.</p>
 
 
-<h2>Load Function</h2>
+<h2>Função Load</h2>
 
-<p>We want to built a function that can load and evaluate a file when passed a string of its name. To implement this function we'll need to make use of our grammar as we'll need it to to read in the file contents, parse, and evaluate them. Our load function is going to rely on our <code>mpc_parser*</code> called <code>Lispy</code>.</p>
+<p>Queremos construir uma função que possa carregar (<em>load</em>) e avaliar um arquivo quando passada uma string com seu nome. Para implementar esta função vamos precisar fazer uso da nossa gramática, já que teremos que ler o conteúdo do arquivo, interpretar e avaliá-la. Nossa função <code>load</code> vai se fiar em nosso <code>mpc_parser*</code> chamado <code>Lispy</code>.</p>
 
 <p>Therefore, just like with functions, we need to forward declare our parser pointers, and place them at the top of the file.</p>
 
