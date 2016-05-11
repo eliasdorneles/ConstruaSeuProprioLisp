@@ -175,7 +175,7 @@ lispy&gt;</code></pre>
 
 <p>Queremos construir uma função que possa carregar (<em>load</em>) e avaliar um arquivo quando passada uma string com seu nome. Para implementar esta função vamos precisar fazer uso da nossa gramática, já que teremos que ler o conteúdo do arquivo, interpretar e avaliá-la. Nossa função <code>load</code> vai se fiar em nosso <code>mpc_parser*</code> chamado <code>Lispy</code>.</p>
 
-<p>Therefore, just like with functions, we need to forward declare our parser pointers, and place them at the top of the file.</p>
+<p>Por isso, da mesma forma que com funções, precisamos declarar adiantado nossos apontadores para parsers, e colocá-los no topo do arquivo.</p>
 
 <pre><code data-language='c'>mpc_parser_t* Number; 
 mpc_parser_t* Symbol; 
@@ -187,101 +187,102 @@ mpc_parser_t* Expr;
 mpc_parser_t* Lispy;
 </code></pre>
 
-<p>Our <code>load</code> function will be just like any other builtin. We need to start by checking that the input argument is a single string. Then we can use the <code>mpc_parse_contents</code> function to read in the contents of a file using a grammar. Just like <code>mpc_parse</code> this parses the contents of a file into some <code>mpc_result</code> object, which is our case is an <em>abstract syntax tree</em> again or an <em>error</em>.</p>
+<p>Nossa função <code>load</code> será como qualquer outra builtin. Precisamos começar verificando que o argumento é apenas uma string. Depois usamos a função <code>mpc_parse_contents</code> para ler o conteúdo do arquivo usando uma gramática. Da mesma forma que <code>mpc_parse</code>, esta função analisa o conteúdo de um arquivo e devolve um objeto <code>mpc_result</code>, que no nosso caso é uma <em>árvore de sintaxe abstrata</em> ou um <em>erro</em>.</p>
 
-<p>Slightly differently to our command prompt, on successfully parsing a file we shouldn't treat it like one expression. When typing into a file we let users list multiple expressions and evaluate all of them individually. To achieve this behaviour we need to loop over each expression in the contents of the file and evaluate it one by one. If there are any errors we should print them and continue.</p>
+<p>Levemente differente do nosso prompt de comandos, ao analisar a sintaxe de um arquivo não devemos tratá-lo como se fosse uma expressão. Dentro de um arquivo, deixamos usuários listar múltiplas expressões e avaliar todas elas individualmente. Para obter este comportamento, precisamos percorrer cada expressão no conteúdo do arquivo e avaliá-las uma por uma. Se houverem erros, devemos imprimi-los e continuar.</p>
 
-<p>If there is a parse error we're going to extract the message and put it into a error <code>lval</code> which we return. If there are no errors the return value for this builtin can just be the empty expression. The full code for this looks like this.</p>
+<p>Se houver um erro de sintaxe, vamos extrair a mensagem e colocá-la em um <code>lval</code> de erro que devolveremos. Se não há erros, o valor de retorno para esta builtin pode ser a expressão vazia. O código completo para isso se parece com o seguinte:</p>
 
 <pre><code data-language='c'>lval* builtin_load(lenv* e, lval* a) {
   LASSERT_NUM("load", a, 1);
   LASSERT_TYPE("load", a, 0, LVAL_STR);
   
-  /* Parse File given by string name */
+  /* Analisa conteudo do arquivo fornecido */
   mpc_result_t r;
   if (mpc_parse_contents(a-&gt;cell[0]-&gt;str, Lispy, &r)) {
     
-    /* Read contents */
+    /* Le conteudo */
     lval* expr = lval_read(r.output);
     mpc_ast_delete(r.output);
 
-    /* Evaluate each Expression */
+    /* Avalia cada expressao */
     while (expr-&gt;count) {
       lval* x = lval_eval(e, lval_pop(expr, 0));
-      /* If Evaluation leads to error print it */
+      /* Caso avaliacao gerar erro, imprime-o */
       if (x-&gt;type == LVAL_ERR) { lval_println(x); }
       lval_del(x);
     }
     
-    /* Delete expressions and arguments */
+    /* Deleta expressoes e argumentos */
     lval_del(expr);    
     lval_del(a);
     
-    /* Return empty list */
+    /* Devolve lista vazia */
     return lval_sexpr();
     
   } else {
-    /* Get Parse Error as String */
+    /* Pega erro de sintaxe em uma string */
     char* err_msg = mpc_err_string(r.error);
     mpc_err_delete(r.error);
     
-    /* Create new error message using it */
+    /* Cria nova mensagem de erro com ela */
     lval* err = lval_err("Could not load Library %s", err_msg);
     free(err_msg);
     lval_del(a);
     
-    /* Cleanup and return error */
+    /* Devolve erro */
     return err;
   }
 }</code></pre>
 
 
-<h2>Command Line Arguments</h2> <hr/>
+<h2>Argumentos da Linha de Comando</h2> <hr/>
 
-<p>With the ability to load files, we can take the chance to add in some functionality typical of other programming languages. When file names are given as arguments to the command line we can try to run these files. For example to run a python file one might write <code>python filename.py</code>.</p>
+<p>Com a capacidade de carregar arquivos, podemos tentar a sorte adicionando uma funcionalidade típica em outras linguagens de programação. Quando nomes de arquivos são fornecidos diretamente como argumentos, podemos tentar rodar estes arquivos. Por exemplo, para rodar um arquivo python alguém poderia escrever <code>python nome_do_arquivo.py</code>.</p>
 
-<p>These command line arguments are accessible using the <code>argc</code> and <code>argv</code> variables that are given to <code>main</code>. The <code>argc</code> variable gives the number of arguments, and <code>argv</code> specifies each string. The <code>argc</code> is always set to at least one, where the first argument is always the complete command invoked.</p>
+<p>Estes argumentos da linha de comando são acessíveis usando as variáveis <code>argc</code> e <code>argv</code> que são fornecidos à função <code>main</code>. A variável <code>argc</code> dá o número de argumentos, e <code>argv</code> especifica cada string. A <code>argc</code> é sempre setada para no mínimo um, onde o primeiro argumento é sempre o comando inteiro invocado.</p>
 
-<p>That means if <code>argc</code> is set to <code>1</code> we can invoke the interpreter, otherwise we can run each of the arguments through the <code>builtin_load</code> function.</p>
+<p>Isto significa que se <code>argc</code> é setada para <code>1</code>, podemos invocar o interpretador, senão podemos passar cada outro argumento por nossa função <code>builtin_load</code>.</p>
 
-<pre><code data-language='c'>/* Supplied with list of files */
+<pre><code data-language='c'>
+/* Fornecida lista de arquivos */
 if (argc &gt;= 2) {
 
-  /* loop over each supplied filename (starting from 1) */
+  /* percorre cada nome de arquivo (comecando de 1) */
   for (int i = 1; i &lt; argc; i++) {
 
-    /* Argument list with a single argument, the filename */
+    /* Lista de argumentos com um unico elemento, o nome do arquivo */
     lval* args = lval_add(lval_sexpr(), lval_str(argv[i]));
 
-    /* Pass to builtin load and get the result */
+    /* Passa para a builtin load e pega o resultado */
     lval* x = builtin_load(e, args);
 
-    /* If the result is an error be sure to print it */
+    /* Caso resultado for erro, imprima-o */
     if (x-&gt;type == LVAL_ERR) { lval_println(x); }
     lval_del(x);
   }
 }
 </code></pre>
 
-<p>It's now possible to write some basic program and try to invoke it using this method.</p>
+<p>Agora é possível escrever algum programa básico e tentar invocá-lo usando este método.</p>
 
 <pre><code>lispy example.lspy</code></pre>
 
 
-<h2>Print Function</h2> <hr/>
+<h2>Função Print</h2> <hr/>
 
-<p>If we are running programs from the command line we might want them to output some data, rather than just define functions and other values. We can add a <code>print</code> function to our Lisp which makes use of our existing <code>lval_print</code> function.</p>
+<p>Se vamos rodar programas da linha de comando, vamos querer fazê-los jogar algo na saída, em vez de apenas definir funções e outros valores. Podemos adicionar uma função <code>print</code> ao nosso Lisp que faz uso da nossa função existente <code>lval_print</code>.</p>
 
-<p>This function prints each argument separated by a space and then prints a newline character to finish. It returns the empty expression.</p>
+<p>Esta função imprime cada argumento separado por um espaço e a seguire imprime um caractere quebra de linha para terminar, devolvendo uma expressão vazia.</p>
 
 <pre><code data-language='c'>lval* builtin_print(lenv* e, lval* a) {
 
-  /* Print each argument followed by a space */
+  /* Imprime cada argumento, seguido de um espaco */
   for (int i = 0; i &lt; a-&gt;count; i++) {
     lval_print(a-&gt;cell[i]); putchar(' ');
   }
 
-  /* Print a newline and delete arguments */
+  /* Imprime uma quebra de linha e deleta argumentos */
   putchar('\n');
   lval_del(a);
 
@@ -289,23 +290,23 @@ if (argc &gt;= 2) {
 }</code></pre>
 
 
-<h2>Error Function</h2> <hr/>
+<h2>Função Error</h2> <hr/>
 
-<p>We can also make use of strings to add in an error reporting function. This can take as input a user supplied string and provide it as an error message for <code>lval_err</code>.</p>
+<p>Podemos também fazer uso das strings para adicionar uma função para reportar erros. Ela pode receber como entrada uma string fornecida pelo usuário e fornecê-la como uma mensagem de erro para <code>lval_err</code>.</p>
 
 <pre><code data-language='c'>lval* builtin_error(lenv* e, lval* a) {
   LASSERT_NUM("error", a, 1);
   LASSERT_TYPE("error", a, 0, LVAL_STR);
 
-  /* Construct Error from first argument */
+  /* Constroi Error a partir do primeiro argumento */
   lval* err = lval_err(a-&gt;cell[0]-&gt;str);
 
-  /* Delete arguments and return */
+  /* Deleta argumentos e retorna */
   lval_del(a);
   return err;
 }</code></pre>
 
-<p>The final step is to register these as builtins. Now finally we can start building up libraries and writing them to files.</p>
+<p>O último passo é registrar estas funções como builtins. Agora finalmente podemos começar a construir bibliotecas e escrevê-las em arquivos.</p>
 
 <pre><code data-language='c'>/* String Functions */
 lenv_add_builtin(e, "load",  builtin_load); 
@@ -325,40 +326,40 @@ lispy&gt;
 </code></pre>
 
 
-<h2>Finishing Up</h2> <hr/>
+<h2>Finalizando</h2> <hr/>
 
-<p>This is the last chapter in which we are going to explicitly work on our C implementation of Lisp. The result of this chapter will be the final state of your language implementation.</p>
+<p>Este será o último capítulo em que vamos explicitamente trabalhar na implementação C de Lisp. O resultado deste capítulo será o estado final da implementação da sua linguagem.</p>
 
-<p>The final line count should clock in somewhere close to 1000 lines of code. Writing this amount of code is not trivial. If you've made it this far you've written a real program and started on a proper project. The skills you've learnt here should be transferable, and give you the confidence to seek out your own goals and targets. You now have a complex and beautiful program which you can interact and play with. This is something you should be proud of. Go show it off to your friends and family!</p>
+<p>A contagem final do número de linhas deve estar em algo perto das 1000 linhas de código. Escrever esta quantidade de código não é trivial. Se você chegou até aqui, escreveu um programa de verdade e começou um projeto decente. As habilidades que você aprendeu aqui devem ser transferíveis, e dar-lhe a confiança de buscar seus próprios objetivos e metas. Você agora tem um programa complexo e belo que você pode interagir e brincar. Isto é algo do que se orgulhar. Vá em frente e mostre para seus amigos e a família!</p>
 
-<p>In the next chapter we start using our Lisp to build up a standard library of common functions. After that I describe some possible improvements and directions in which the language should be taken. Although we've finished with my involvement this is really this is only the beginning. Thanks for following along, and good luck with whatever C you write in the future!</p>
+<p>No próximo capítulo vamos começar a usar nosso Lisp para construir uma biblioteca padrão de funções comuns. Depois disso, descrevo alguns possíveis melhoramentos e direções em que a linguagem pode ser levada. Embora terminado o meu envolvimento, isto é realmente apenas o começo. Obrigado por seguir até aqui, e boa sorte com qualquer C que você escreva no futuro!</p>
 
 
-<h2>Reference</h2> <hr/>
+<h2>Referência</h2> <hr/>
 
 <references />
 
-<h2>Bonus Marks</h2> <hr/>
+<h2>Metas Bônus</h2> <hr/>
 
 <div class="alert alert-warning">
   <ul class="list-group">
-    <li class="list-group-item">&rsaquo; Adapt the builtin function <code>join</code> to work on strings.</li>
-    <li class="list-group-item">&rsaquo; Adapt the builtin function <code>head</code> to work on strings.</li>
-    <li class="list-group-item">&rsaquo; Adapt the builtin function <code>tail</code> to work on strings.</li>
-    <li class="list-group-item">&rsaquo; Create a builtin function <code>read</code> that reads in and converts a string to a Q-expression.</li>
-    <li class="list-group-item">&rsaquo; Create a builtin function <code>show</code> that can print the contents of strings as it is (unescaped).</li>
-    <li class="list-group-item">&rsaquo; Create a special value <code>ok</code> to return instead of empty expressions <code>()</code>.</li>
-    <li class="list-group-item">&rsaquo; Add functions to wrap all of C's file handling functions such as <code>fopen</code> and <code>fgets</code>.</li>
+    <li class="list-group-item">&rsaquo; Adapte a função builtin <code>join</code> para funcionar com strings.</li>
+    <li class="list-group-item">&rsaquo; Adapte a função builtin <code>head</code> para funcionar com strings.</li>
+    <li class="list-group-item">&rsaquo; Adapte a função builtin <code>tail</code> para funcionar com strings.</li>
+    <li class="list-group-item">&rsaquo; Crie uma função builtin <code>read</code> que leia e converta uma string em uma Q-expression.</li>
+    <li class="list-group-item">&rsaquo; Crie uma função builtin <code>show</code> que imprima o conteúdo das strings como elas são (não-escapadas).</li>
+    <li class="list-group-item">&rsaquo; Crie um valor especial <code>ok</code> para retornar no lugar de expressões vazias <code>()</code>.</li>
+    <li class="list-group-item">&rsaquo; Adicione funções para envolver todas as funções C de manipulação de arquivos como <code>fopen</code> e <code>fgets</code>.</li>
   </ul>
 </div>
 
 
-<h2>Navigation</h2>
+<h2>Navegação</h2>
 
 <table class="table" style='table-layout: fixed;'>
   <tr>
-    <td class="text-left"><a href="chapter13_conditionals"><h4>&lsaquo; Conditionals</h4></a></td>
-    <td class="text-center"><a href="contents"><h4>&bull; Contents &bull;</h4></a></td>
-    <td class="text-right"><a href="chapter15_standard_library"><h4>Standard Library &rsaquo;</h4></a></td>
+    <td class="text-left"><a href="chapter13_conditionals"><h4>&lsaquo; Condicionais</h4></a></td>
+    <td class="text-center"><a href="contents"><h4>&bull; Conteúdo &bull;</h4></a></td>
+    <td class="text-right"><a href="chapter15_standard_library"><h4>Biblioteca Padrão &rsaquo;</h4></a></td>
   </tr>
 </table>
