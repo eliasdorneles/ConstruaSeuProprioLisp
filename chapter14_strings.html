@@ -58,7 +58,7 @@ char* str;
 
 <pre><code data-language='c'>case LVAL_STR: return "String";</code></pre>
 
-<p>Para <strong>Impressão</strong>, precisamos fazer um pouco mais. A string que armazenamso internamente é diferente da string que queremos imprimir. Queremos imprimir uma string que um usuário possa digitar na entrada, usando caracteres de escapa como <code>\n</code> para representar uma quebra de linha.</p>
+<p>Para <strong>Impressão</strong>, precisamos fazer um pouco mais. A string que armazenamos internamente é diferente da string que queremos imprimir. Queremos imprimir uma string que um usuário possa digitar na entrada, usando caracteres de escapa como <code>\n</code> para representar uma quebra de linha.</p>
 
 <p>Por isso precisamos escapá-la antes de imprimi-la. Por sorte, podemos usar uma função <code>mpc</code> que fará isso para nós.</p>
 
@@ -91,11 +91,11 @@ char* str;
 
 <p>Isto parece complicado mas faz bastante sentido quando explicado em partes. Lê-se dessa forma. Uma string é um caractere <code>"</code>, seguido de zero ou mais de, ou uma barra invertida <code>\\</code> seguida de qualquer outro caractere <code>.</code>, ou qualquer coisa que <em>não seja</em> um caractere <code>"</code> (<code>[^\\"]</code>). Finalmente, termina com outro caractere <code>"</code>.</p>
 
-<p>Também precisamos adicionar um caso para lidar com ist na função <code>lval_read</code>.</p>
+<p>Também precisamos adicionar um caso para lidar com isto na função <code>lval_read</code>.</p>
 
 <pre><code data-language='c'>if (strstr(t-&gt;tag, "string")) { return lval_read_str(t); }</code></pre>
 
-<p>Como a string da entrada é introduzida em forma escapada, precisamos criar uma função <code>lval_read_str</code> que lida com isso. Esta função é um pouco complicada porque ela precisa fazer certas coisas: primeiro ela precisa remover os caracteres <code>"</code> de qualquer lado. A seguir, ela precisa desescapar a string, convertendo sequências de caracteres como <code>\n</code> para os caracteres realmente codificados. Finalmente, precisa criar um novo <code>lval</code> e limpar qualquer coisa que tenha acontecido no meio do caminho.</p>
+<p>Como a string da entrada é introduzida em forma escapada, precisamos criar uma função <code>lval_read_str</code> que lida com isso. Esta função é um pouco complicada porque ela precisa fazer certas coisas: primeiro ela precisa remover os caracteres <code>"</code> de qualquer lado. A seguir, ela precisa "desescapar" a string, convertendo sequências de caracteres como <code>\n</code> para os caracteres realmente codificados. Finalmente, precisa criar um novo <code>lval</code> e limpar qualquer coisa que tenha acontecido no meio do caminho.</p>
 
 <pre><code data-language='c'>lval* lval_read_str(mpc_ast_t* t) {
   /* Corta a aspa do final */
@@ -133,7 +133,7 @@ lispy&gt;</code></pre>
 
 <p>Da mesma forma que em C, podemos usar comentários para informar outras pessoas (ou nós mesmos) sobre o que o código está tentando fazer ou por que ele foi escrito. Em C, comentários vão entre <code>/*</code> e <code>*/</code>. Comentários Lisp, por sua vez, começam com <code>;</code> e vão até o fim da linha.</p>
 
-<p>Tentei pesquisar por que Lisps usam <code>;</code> para comentários, mas parece que as origens disso foram perdidas nos nevoeiros do tempo. Eu imagino isso como uma pequena rebelião contra as linguagens imperativas como C e Java, que usam pontos e vírgulas tão descarada e frequentemente para separar/terminar comandos. Comparando a Lisp, todas essas lingagens são apenas comentários.</p>
+<p>Tentei pesquisar por que Lisps usam <code>;</code> para comentários, mas parece que as origens disso foram perdidas nos nevoeiros do tempo. Eu imagino isso como uma pequena rebelião contra as linguagens imperativas como C e Java, que usam pontos e vírgulas tão descarada e frequentemente para separar/terminar comandos. Comparando a Lisp, todas essas linguagens são apenas comentários.</p>
 
 <p>Então em Lisp, um comentário é definido com um ponto e vírgula <code>;</code> seguido de qualquer número de caracteres que não são caracteres quebra de linha representados ou por <code>\r</code> ou por <code>\n</code>. Podemos adicionar uma outra expressão regular para definir isso.</p>
 
@@ -189,7 +189,7 @@ mpc_parser_t* Lispy;
 
 <p>Nossa função <code>load</code> será como qualquer outra builtin. Precisamos começar verificando que o argumento é apenas uma string. Depois usamos a função <code>mpc_parse_contents</code> para ler o conteúdo do arquivo usando uma gramática. Da mesma forma que <code>mpc_parse</code>, esta função analisa o conteúdo de um arquivo e devolve um objeto <code>mpc_result</code>, que no nosso caso é uma <em>árvore de sintaxe abstrata</em> ou um <em>erro</em>.</p>
 
-<p>Levemente differente do nosso prompt de comandos, ao analisar a sintaxe de um arquivo não devemos tratá-lo como se fosse uma expressão. Dentro de um arquivo, deixamos usuários listar múltiplas expressões e avaliar todas elas individualmente. Para obter este comportamento, precisamos percorrer cada expressão no conteúdo do arquivo e avaliá-las uma por uma. Se houverem erros, devemos imprimi-los e continuar.</p>
+<p>Levemente diferente do nosso prompt de comandos, ao analisar a sintaxe de um arquivo não devemos tratá-lo como se fosse uma expressão. Dentro de um arquivo, deixamos usuários listar múltiplas expressões e avaliar todas elas individualmente. Para obter este comportamento, precisamos percorrer cada expressão no conteúdo do arquivo e avaliá-las uma por uma. Se houverem erros, devemos imprimi-los e continuar.</p>
 
 <p>Se houver um erro de sintaxe, vamos extrair a mensagem e colocá-la em um <code>lval</code> de erro que devolveremos. Se não há erros, o valor de retorno para esta builtin pode ser a expressão vazia. O código completo para isso se parece com o seguinte:</p>
 
@@ -273,7 +273,7 @@ if (argc &gt;= 2) {
 
 <p>Se vamos rodar programas da linha de comando, vamos querer fazê-los jogar algo na saída, em vez de apenas definir funções e outros valores. Podemos adicionar uma função <code>print</code> ao nosso Lisp que faz uso da nossa função existente <code>lval_print</code>.</p>
 
-<p>Esta função imprime cada argumento separado por um espaço e a seguire imprime um caractere quebra de linha para terminar, devolvendo uma expressão vazia.</p>
+<p>Esta função imprime cada argumento separado por um espaço e a seguir imprime um caractere quebra de linha para terminar, devolvendo uma expressão vazia.</p>
 
 <pre><code data-language='c'>lval* builtin_print(lenv* e, lval* a) {
 
