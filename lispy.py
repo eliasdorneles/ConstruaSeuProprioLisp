@@ -51,8 +51,8 @@ titles = [
     'Fun&ccedil;&otilde;es &bull; Cap&iacute;tulo 12',
     'Condicionais &bull; Cap&iacute;tulo 13',
     'Strings &bull; Cap&iacute;tulo 14',
-    'Biblioteca padr&atilde;o &bull; Cap&iacute;tulo 15',
-    'Projetos b&ocirc;nus &bull; Cap&iacute;tulo 16'
+    'Biblioteca Padr&atilde;o &bull; Cap&iacute;tulo 15',
+    'Projetos Extras &bull; Cap&iacute;tulo 16'
 ]
 
 sources = [

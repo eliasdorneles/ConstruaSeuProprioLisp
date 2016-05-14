@@ -1,132 +1,132 @@
-<h1>Bonus Projects <small>&bull; Chapter 16</small></h1>
+<h1>Projetos Extras <small>&bull; Capítulo 16</small></h1>
 
 
-<h2>Only the Beginning</h2> <hr/>
+<h2>Apenas o Começo</h2> <hr/>
 
-<p>Although we've done a lot with our Lisp, it is still some way off from a fully complete, production-strength programming language. If you tried to use it for any sufficiently large project there are a number of issues you would eventually run into and improvements you'd have to make. Solving these problems would be what would bring it more into the scope of a fully fledged programming language.</p>
+<p>Embora fizemos bastante com nosso Lisp, ainda está longe de ser uma linguagem de programação inteiramente completa, pronta para produção. Se você tentar usá-la para qualquer projeto suficientemente grande, haverá uma certa quantidade de problemas que você vai topar e melhorias que terá que fazer. Resolver esses problemas seria o que a traria mais para o escopo de uma linguagem madura.</p>
 
-<p>Here are some of these issues you would likely encounter, potential solutions to these problems, and some other fun ideas for other improvements. Some may take a few hundred lines of code, others a few thousand. The choice of what to tackle is up to you. If you've become fond of your language you may enjoy doing some of these projects.</p>
-
-
-<h2>Native Types</h2> <hr/>
-
-<p>Currently our language only wraps the native C <code>long</code> and <code>char*</code> types. This is pretty limiting if you want to do any kind of useful computation. Our operations on these data types are also pretty limited. Ideally our language should wrap all of the native C types and allow for methods of manipulating them. One of the most important additions would be the ability to manipulate decimal numbers. For this you could wrap the <code>double</code> type and relevant operations. With more than one number type we need to make sure the arithmetic operators such as <code>+</code> and <code>-</code> work on them all, and them in combination.</p>
-
-<p>Adding support for native types should be interesting for people wishing to do computation with decimal and floating-point numbers in their language.</p>
+<p>Aqui estão algumas das questões que você provavelmente iria encontrar, possíveis soluções para estes problemas e algumas outras ideias divertidas para melhorias. Algumas podem precisar de algumas centenas de linhas de código, outras alguns milhares. A escolha do que atacar é sua. Se você se afeiçoar à sua linguagem, talvez curta fazer alguns desses projetos.</p>
 
 
-<h2>User Defined Types</h2> <hr/>
+<h2>Tipos Nativos</h2> <hr/>
 
-<p>As well as adding support for native types it would be good to give users the ability to add their own new types, just like how we use structs in C. The syntax or method you use to do this would be up to you. This is a really essential part making our language usable for any reasonably sized project.</p>
+<p>Atualmente nossa linguagem apenas envolve os tipos nativos C <code>long</code> e <code>char*</code>. Isto é bem limitante caso queira fazer qualquer tipo de computação útil. Nossas operações nestes tipos de dados são também bem limitadas. Idealmente nossa linguagem deveria envolver todos os tipos nativos C e permitir maneiras de manipulá-los. Uma das adições mais importantes seria a capacidade de manipular números decimais. Para isto você poderia envolver o tipo <code>double</code> e operações relevantes. Com mais de um tipo numérico precisamos nos certificar que os operadores aritméticos como <code>+</code> e <code>-</code> funcionam em todos eles, e em combinação.</p>
 
-<p>This task may be interesting to anyone who has a specific idea of how they would like to develop the language, and what they want a final design to look like.</p>
+<p>Adicionar suporte a tipos nativos deve ser interessante para pessoas desejando fazer computação com números decimais e de ponto flutuante em suas linguagens.</p>
+
+
+<h2>Tipos Definidos pelo Usuário</h2> <hr/>
+
+<p>Assim como adicionar suporte para tipos nativos, seria bom dar aos usuários a capacidade de adicionar seus próprios tipos, assim como usamos structs em C. A sintaxe ou maneira de usar isto é sua escolha. Esta é uma parte essencial de tornar nossa linguagem usável para qualquer projeto de tamanho razoável.</p>
+
+<p>Esta tarefa pode ser interessante para qualquer pessoa com alguma ideia específica de como eles gostariam de desenvolver a linguagem, e como gostariam que o projeto final se pareça.</p>
 
 
 <div class='pull-right alert alert-warning' style="margin: 15px; text-align: center;">
   <img src="/static/img/list.png" alt="list" class="img-responsive" width="228px" height="410px"/>
-  <p><small>Important List &bull; Play! BE HAPPY and go home.</small></p>
+  <p><small>Lista importante &bull; Brinque! SEJA FELIZ e vá para casa.</small></p>
 </div>
 
-<h2>List Literal</h2> <hr/>
+<h2>Literal para Listas</h2> <hr/>
 
-<p>Some lisps use square brackets <code>[]</code> to give a literal notation for lists of evaluated values lists. This syntactic sugar for writing something like <code>list 100 (+ 10 20) 300</code>. Instead it lets you write <code>[100 (+ 10 20) 300]</code>. In some situations this is clearly nicer, but it does use up the <code>[]</code> characters which could possibly be used for more interesting purposes.</p>
+<p>Alguns Lisps usam colchetes <code>[]</code> para dar uma notação literal para listas de valores avaliados. Isto é açúcar sintático para escrever coisas como <code>list 100 (+ 10 20) 300</code>. Em vez disso, ele te deixa escrever <code>[100 (+ 10 20) 300]</code>. Em algumas situações isto é claramente melhor, mas isso vai ocupar os caracteres <code>[]</code> que possivelmente poderia ser usados para propósitos mais interessantes.</p>
 
-<p>This should be a simple addition for people looking to try out adding extra syntax.</p>
+<p>Esta deve ser uma adição simples para pessoas querendo experimentar adicionar sintaxe extra.</p>
 
 
-<h2>Operating System Interaction</h2> <hr/>
+<h2>Interação com Sistema Operacional</h2> <hr/>
 
-<p>One essential part of bootstrapping a language is to give it proper abilities for opening, reading, and writing files. This means wrapping all the C functions such as <code>fread</code>, <code>fwrite</code>, <code>fgetc</code>, etc in Lisp equivalents. This is a fairly straight forward task, but does require writing quite a large number of wrapper functions. This is why we've not done it for our language so far.</p>
+<p>Uma parte essencial de erguer uma linguagem é dá-la capacidades apropriadas para abrir, ler e escrever arquivos. Isto significa envolver todas as funções C como <code>fread</code>, <code>fwrite</code>, <code>fgetc</code>, etc em equivalentes Lisp. Esta é uma tarefa relativamente tranquilo, mas requer escrever um grande número de funções envolvendo C (wrappers). É por isso que não fizemos em nossa linguagem.</p>
 
-<p>On a similar note it would be great to give our language access to whatever operating systems calls are appropriate. We should give it the ability to change directory, list files in a directory and that sort of thing. This is an easy task but again requires a lot of wrapping of C functions. It is essential for any real practical use of this language as a scripting language.</p>
+<p>Em nota similar, seria ótimo dar acesso à nossa linguagem a quaisquer chamadas ao sistema operacional que sejam apropriadas. Deveríamos dá-la capacidade de mudar o diretório, listar arquivos em um diretório e este tipo de coisa. Esta é uma tarefa fácil, mas novamente requer envolver bastantes funções C. É essencial para qualquer uso prático dessa linguagem como uma linguagem de scripts.</p>
 
-<p>People who wish to make use of their language for doing simple scripting tasks and string manipulation may be interested in implementing this project.</p>
+<p>Pessoas desejando fazer uso da sua linguagem para fazer simples tarefas de scripts e manipulação de strings podem estar interessadas em implementar este projeto.</p>
 
 
 <h2>Macros</h2> <hr/>
 
-<p>Many other Lisps allow you to write things like <code>(def x 100)</code> to define the value <code>100</code> to <code>x</code>. In our lisp this wouldn't work because it would attempt to evaluate the <code>x</code> to whatever value was stored as <code>x</code> in the environment. In other Lisps these functions are called <em>macros</em>, and when encountered they stop the evaluation of their arguments, and manipulate them un-evaluated. They let you write things that look like normal function calls, but actually do complex and interesting things.</p>
+<p>Muitos outros Lisps permitem você escrever coisas como <code>(def x 100)</code> para definir o valor <code>100</code> para <code>x</code>. Em nosso Lisp isto não funcionaria porque iria tentar avaliar o <code>x</code> para o valor que foi armazenado em <code>x</code> no ambiente. Em outros Lisps estas funções são chamadas <em>macros</em>, e quando encontradas elas param a avaliação dos seus argumentos e os manipulam não-avaliados. Elas permitem escrever coisas que parecem chamadas normais a funções, mas na verdade fazem coisas complexas e interessantes.</p>
 
-<p>These are fun thing to have in a language. They make it so you can add a little bit of <em>magic</em> to some of the workings. In many cases this can make syntax nicer or allow a user to not repeat themselves.</p>
+<p>Estas são coisas divertidas de ter em uma linguagem. Elas fazem com que você possa colocar um pouco de <em>mágica</em> no funcionamento. Em muitos casos isso pode deixar a sintaxe melhor ou permitir o usuário não ter que se repetir.</p>
 
-<p>I like how our language handles things like <code>def</code> and <code>if</code> without resorting to macros, but if you dislike how it works currently, and want it to be more similar to conventional Lisps, this might be something you are interested in implementing.</p>
-
-
-<h2>Variable Hashtable</h2> <hr/>
-
-<p>At the moment when we lookup variable names in our language we just do a linear search over all of the variables in the environment. This gets more and more inefficient the more variables we have defined.</p>
-
-<p>A more efficient way to do this is to implement a <em>Hash Table</em>. This technique converts the variable name to an integer and uses this to index into an array of a known size to find the value associated with this symbol. This is a really important data structure in programming and will crop up everywhere because of its fantastic performance under heavy loads.</p>
-
-<p>Anyone who is interested in learning more about data structures and algorithms would be smart to take a shot at implementing this data structure or one of its variations.</p> 
+<p>Eu gosto como nossa linguagem lida com coisas como <code>def</code> e <code>if</code> sem recorrer a macros, mas se você não gosta como ela funciona atualmente, e quer que seja mais parecida com Lisps convencionais, isto pode ser algo que você esteja interessado em implementar.</p>
 
 
-<h2>Pool Allocation</h2> <hr/>
+<h2>Tabela Hash de variáveis</h2> <hr/>
 
-<p>Our Lisp is very simple, it is not fast. Its performance is relative to some scripting languages such as Python and Ruby. Most of the performance overhead in our program comes from the fact that doing almost anything requires us to construct and destruct <code>lval</code>. We therefore call <code>malloc</code> very often. This is a slow function as it requires the operating system to do some management for us. When doing calculations there is lots of copying, allocation and deallocation of <code>lval</code> types.</p>
+<p>No momento, quando procuramos nomes de variáveis em nossa linguagem, simplesmente fazemos uma busca linear por todas as variáveis no ambiente. Isto se torna cada vez mais ineficiente quanto mais variáveis temos definidas.</p>
 
-<p>If we wish to reduce this overhead we need to lower the number of calls to <code>malloc</code>. One method of doing this is to call <code>malloc</code> once at the beginning of the program, allocating a large pool of memory. We should then replace all our <code>malloc</code> calls with calls to some function that slices and dices up this memory for use in the program. This means that we are emulating some of the behaviour of the operating system, but in a faster local way. This idea is called <em>memory pool allocation</em> and is a common technique used in game development, and other performance sensitive applications.</p>
+<p>Uma maneira mais eficiente de fazer isso é implementar uma <em>Tabela Hash</em>. Esta técnica converte o nome da variável em um inteiro e usa isto para indexar em um array de tamanho conhecido para encontrar o valor associado a este símbolo. Esta é uma estrutura de dados muito importante em programação e vai aparecer em todo lugar por causa da sua performance fantástica sob cargas pesadas.</p>
 
-<p>This can be tricky to implement correctly, but conceptually does not need to be complex. If you want a quick method for getting large gains in performance, looking into this might interest you.</p>
+<p>Qualquer um interessado em aprender mais sobre estruturas de dados e algoritmos será espero de tentar implementar esta estrutura de dados ou uma de suas variações.</p>
 
 
-<h2>Garbage Collection</h2> <hr/>
+<h2>Alocação com Pool</h2> <hr/>
 
-<p>Almost all other implementations of Lisps assign variables differently to ours. They do not store a copy of a value in the environment, but actually a pointer, or reference, to it directly. Because pointers are used, rather than copies, just like in C, there is much less overhead required when using large data structures.</p>
+<p>Nosso Lisp é muito simples, não é rápido. Sua performance é relativa à algumas linguagens de scripting como Python e Ruby. A maior parte do overhead de performance em nosso programa vem do fato que fazer praticamente qualquer coisa requer que construamos e destruamos <code>lval</code>. Por isso, nós chamamos <code>malloc</code> muito frequentemente. Esta é uma função lenta porque requer que o sistema operacional faça um pouco de gerenciamento para nós. Ao fazer cálculos há bastante cópias, alocações e desalocações de tipos <code>lval</code>.</p>
+
+<p>Caso desejarmos reduzir este overhead, precisamos reduzir o número de chamadas a <code>malloc</code>. Uma maneira de fazer isso é chamar <code>malloc</code> uma vez no começo do programa, alocando um grande "tanque" (pool) de memória. Devemos então substituir todas nossas chamadas a <code>malloc</code> por chamadas a alguma função que corte e distribua esta memória para uso no programa. Isto significa que estamos emulando um pouco do comportamento do sistema operacional, mas numa maneira local mais rápida. Esta ideia é chamada <em>memory pool allocation</em> (alocação de tanque de memória) e é uma técnica comum em desenvolvimento de jogos e outras aplicações sensíveis ao desempenho.</p>
+
+<p>Isto pode ser complicado de implementar corretamente, mas conceitualmente não precisa ser complexo. Caso queira um método rápido de obter grandes ganhos em performance, dar uma olhada nisso pode lhe interessar.</p>
+
+
+<h2>Coleta de Lixo</h2> <hr/>
+
+<p>Quase todas outras implementações de Lisps atribuem variáveis diferentemente do nosso. Elas não armazenam uma cópia do valor no ambiente, mas na verdade um apontador (ou referência) para ele diretamente. Como estão usando apontadores em vez de cópias, da mesma forma que em C, há muito menos overhead ao usar grandes estruturas de dados.</p>
 
 <div class='pull-left alert alert-warning' style="margin: 15px; text-align: center;">
   <img src="/static/img/garbage.png" alt="garbage" class="img-responsive" width="249px" height="289px"/>
-  <p><small>Garbage Collection &bull; Pick up that can.</small></p>
+  <p><small>Coleta de Lixo &bull; Junte aquela lata.</small></p>
 </div>
 
-<p>If we store pointers to values, rather than copies, we need to ensure that the data pointed to is not delete before some other value tries to make use of it. We want to deleted it when there are no longer any references to it. One method to do this, called <em>Mark and Sweep</em>, is to monitor those values that are in the environment, as well as every value that has been allocated. When a variable is put into the environment it, and everything it references, is <em>marked</em>. Then, when we wish to free memory, we can then iterate over every allocation, and delete any that are not marked.</p>
+<p>Se armazenamos apontadores a valores, no lugar de cópias, precisamos nos certificar que o dado apontado não é excluído antes que algum outro valor tente usá-lo. Queremos excluí-lo quando não há mais nenhuma referência a ele. Um método para fazer isto, chamado <em>Mark and Sweep</em> (marca e varre) é monitorar estes valores que estão no ambiente, assim como todo valor que foi alocado. Quando uma variável é colocada no ambiente, ela e tudo o que ela referencia é <em>marcada</em>. A seguir, quando desejamos liberar memória, podemos iterar sobre toda alocação e deletar qualquer uma que não esteja marcada.</p>
 
-<p>This is called <em>Garbage Collection</em> and is an integral part to many programming languages. As with pool allocation, implementing a <em>Garbage Collector</em> does not need to be complicated, but it does need to be done carefully, in particularly if you wish to make it efficient. Implementing this would be essential to making this language practical for working with large amounts of data. A particularly good tutorial on implementing a garbage collector in C can be found <a href="http://journal.stuffwithstuff.com/2013/12/08/babys-first-garbage-collector/">here</a>.</p>
+<p>Isto é chamado <em>coleta de lixo</em> (em inglês, <em>garbage collection</em>) e é uma parte integral de muitas linguagens de programação. Assim como em alocação com pools, implementar um <em>coletor de lixo</em> não precisa ser complicado, mas precisa ser feito cuidadosamente, em particular se você deseja fazê-lo eficiente. Implementar isto seria essencial para fazer esta linguagem prática para trabalhar com grande quantidades de dados. Um tutorial particularmente bom em implementar um coletor de lixo em C pode ser encontrado <a href="http://journal.stuffwithstuff.com/2013/12/08/babys-first-garbage-collector/">aqui (em inglês)</a>.</p>
 
-<p>This should interest anyone who is concerned with the language's performance and wishes to change the semantics of how variables are stored and modified in the language.</p>
-
-
-<h2>Tail Call Optimisation</h2> <hr/>
-
-<p>Our programming language uses <em>recursion</em> to do its looping. This is conceptually a really clever way to do it, but practically it is quite poor. Recursive functions call themselves to collect all of the partial results of a computation, and only then combine all the results together. This is a wasteful way of doing computation when partial results can be accumulated as some total over a loop. This is particularly problematic for loops that are intended to run for many, or infinite, iterations.</p>
-
-<p>Some recursive functions can be automatically converted to corresponding <code>while</code> loops, which accumulate totals step by step, rather than altogether. This automatic conversion is called <em>tail call optimisation</em> and is an essential optimisation for programs that do a lot of looping using recursion.</p>
-
-<p>People who are interested in compiler optimisations and the correspondences between different forms of computation might find this project interesting.</p>
+<p>Isto deve interessar qualquer um interessado no desempenho da linguagem e desejando mudar a semântica de como variáveis são armazenadas e modificadas na linguagem.</p>
 
 
-<h2>Lexical Scoping</h2> <hr/>
+<h2>Otimização de Chamada em Cauda (Tail Call Optimisation)</h2> <hr/>
 
-<p>When our language tries to lookup a variable that has been undefined it throws an error. It would be better if it could tell us which variables are undefined before evaluating the program. This would let us avoid typos and other annoying bugs. Finding these issues before the program is run is called <em>lexical scoping</em>, and uses the rules for variable definition to try and infer which variables are defined and which aren't at each point in the program, without doing any evaluation.</p>
+<p>Nossa linguagem de programação usa <em>recursão</em> para fazer seu laço. Isto é conceitualmente uma maneira inteligente de fazê-lo, mas na prática é bem pobre. Funções recursivas chamam a si próprias para coletar todos os resultados parciais de uma computação, e só então combinam todos os resultados juntos. Este é um jeito bem desperdiçador de fazer computação quando resultados parciais podem ser acumulados como algum total sobre um laço. Isto é particularmente problemático para laços que serão rodados por muitas, ou infinitas, iterações.</p>
 
-<p>This could be a difficult task to get exactly right, but should be interesting to anyone who wants to make their programming language safer to use, and less bug-prone.</p>
+<p>Algumas funções recursivas podem ser automaticamente convertidas para laços <code>while</code> correspondentes, que acumulam totais passo a passo, em vez de tudo de uma vez. Esta conversão automática é chamada <em>otimização de chamada em cauda</em> (ou <code>tail call optimization</code>) e é uma otimização essencial para programas que fazem bastante iteração com recursão.</p>
+
+<p>Pessoas interessadas em otimizações de compiladores e as correspondências entre diferentes formas de computação podem achar este projeto interessante.</p>
+
+
+<h2>Escopo Léxico</h2> <hr/>
+
+<p>Quando nossa linguagem tenta buscar uma variável que já foi definida, ela joga um erro. Seria melhor se ela pudesse dizer quais variáveis não estão definidas antes de avaliar o programa. Isto poderia nos permitir evitar erros de digitação e outros bugs. Encontrar esses problemas antes do programa rodar é chamado <em>escopo léxico</em>, e usa as regras para definições de variáveis para tentar inferir quais variáveis estão definidas e quais não estão em cada ponto do programa, sem fazer qualquer avaliação.</p>
+
+<p>Esta pode ser uma tarefa difícil de fazer corretamente, mas deve ser interessante para qualquer um que queira fazer sua linguagem de programação mais segura e menos propensa a erros.</p>
 
 
 <div class='pull-right alert alert-warning' style="margin: 15px; text-align: center;">
   <img src="/static/img/static.png" alt="static" class="img-responsive" width="265px" height="439px"/>
-  <p><small>Static Electricity &bull; A hair-raising alternative.</small></p>
+  <p><small>Eletricidade Estática &bull; Uma alternativa de arrepiar os cabelos.</small></p>
 </div>
 
-<h2>Static Typing</h2> <hr/>
+<h2>Tipagem Estática</h2> <hr/>
 
-<p>Every value in our program has an associated type with it. This we know before any evaluation has taken place. Our builtin functions also only take certain types as input. We should be able to use this information to infer the types of new user defined functions and values. We can also use this information to check that functions are being called with the correct types before we run the program. This will reduce any errors stemming from calling functions with incorrect types before evaluation. This checking is called <em>static typing</em>.</p>
+<p>Cada valor no nosso programa tem um tipo associado a ele. Sabemos isto antes de qualquer avaliação ter acontecido. Nossas funções builtin também apenas recebem certos tipos como entrada. Deveríamos ser capazes de usar esta informação para inferir os tipos de novas funções e valores definidos pelo usuário. Também podemos usar esta informação para checar se as funções estão sendo chamadas com os tipos corretos antes de rodarmos o programa. Isto reduzirá quaisquer erros decorrentes de chamar funções com tipos incorretos antes da avaliação. Esta verificação é chamada de <em>tipagem estática</em>.</p>
 
-<p>Type systems are a really interesting and fundamental part of computer science. They are currently the best method we know of detecting errors before running a program. Anyone interesting in programming language safety and type systems should find this project really interesting.</p>
-
-
-<h2>Conclusion</h2> <hr/>
-
-<p>Many thanks for reading this book. I hope you've found something of interest in its pages. If you did enjoy it please tell your friends about it. If you are going to continue developing your language then best of luck and I hope you learn many more things about C, programming languages, and computer science.</p>
-
-<p>Most of all I hope you've had fun building your own Lisp. Until next time!</p>
+<p>Sistemas de tipos são uma parte interessante e fundamental da ciência da computação. Eles são atualmente a melhor maneira que conhecemos de detectar erros antes de rodar um programa. Qualquer um interessado em segurança de uma linguagem de programação deve achar este projeto  realmente interessante.</p>
 
 
-<h2>Navigation</h2>
+<h2>Conclusão</h2> <hr/>
+
+<p>Muito obrigado por ler este livro. Espero que você encontrou algo interessante nas suas páginas. Se você curtiu, por favor conte a seus amigos a respeito. Se você vai continuar a desenvolver sua linguagem, então muito boa sorte e espero que você aprenda muitas coisas mais sobre C, linguagens de programação e ciência da computação.</p>
+
+<p>Acima de tudo, espero que você tenha se divertido construindo seu próprio Lisp. Até a próxima!</p>
+
+
+<h2>Navegação</h2>
 
 <table class="table" style='table-layout: fixed;'>
   <tr>
-    <td class="text-left"><a href="chapter15_standard_library"><h4>&lsaquo; Standard Library</h4></a></td>
-    <td class="text-center"><a href="contents"><h4>&bull; Contents &bull;</h4></a></td>
-    <td class="text-right"><a href="credits"><h4>Credits &rsaquo;</h4></a></td>
+    <td class="text-left"><a href="chapter15_standard_library"><h4>&lsaquo; Biblioteca Padrão</h4></a></td>
+    <td class="text-center"><a href="contents"><h4>&bull; Conteúdo &bull;</h4></a></td>
+    <td class="text-right"><a href="credits"><h4>Créditos &rsaquo;</h4></a></td>
   </tr>
 </table>
