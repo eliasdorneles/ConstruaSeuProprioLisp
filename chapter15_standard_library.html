@@ -1,75 +1,75 @@
-<h1>Standard Library <small>&bull; Chapter 15</small></h1>
+<h1>Biblioteca Padrão <small>&bull; Capítulo 15</small></h1>
 
-<h2>Minimalism</h2> <hr/>
+<h2>Minimalismo</h2> <hr/>
 
 <div class='pull-right alert alert-warning' style="margin: 15px; text-align: center;">
   <img src="/static/img/library.png" alt="library" class="img-responsive" width="299px" height="444px"/>
-  <p><small>Library &bull; Built with just leather, paper, wood, and ink.</small></p>
+  <p><small>Biblioteca &bull; Construída com apenas couro, papel, madeira e tinta.</small></p>
 </div>
 
-<p>The Lisp we've built has been purposefully minimal. We've only added the fewest number of core structures and builtins. If we chose these carefully, as we did, then it should allow us to add in everything else required to the language.</p>
+<p>O Lisp que construímos é propositalmente mínimo. Adicionamos um número pequeno de estruturas e builtins. Quando escolhemos essas coisas com cuidado, como fizemos, deve nos permitir adicionar tudo o mais necessário à linguagem.</p>
 
-<p>The motivation behind minimalism is two-fold. The first advantage is that it makes the core language simple to debug and easy to learn. This is a great benefit to developers and users. Like <a href="http://en.wikipedia.org/wiki/Occam%27s_razor">Occam's Razor</a> it is almost always better to trim away any waste if it results in a equally expressive language. The second reason is that having a small language is also aesthetically nicer. It is clever, interesting and fun to see how small we can make the core of a language, and still get something useful out of the other side. As hackers, which we should be by now, this is something we enjoy.</p>
-
-
-<h2>Atoms</h2> <hr/>
-
-<p>When dealing with conditionals we added no new boolean type to our language. Because of this we didn't add <code>true</code> or <code>false</code> either. Instead we just used numbers. Readability is still important though, so we can define some constants to represent these values.</p>
-
-<p>On a similar note, many lisps use the word <code>nil</code> to represent the empty list <code>{}</code>. We can add this in too. These constants are sometimes called <em>atoms</em> because they are fundamental and constant.</p>
-
-<p>The user is not forced to use these named constants, and can use numbers and empty lists instead as they like. This choice empowers users, something we believe in.</p>
+<p>A motivação para o minimalismo é dupla. A primeira vantagem é que torna o núcleo da linguagem simples de depurar e fácil de aprender. Isso é um grande benefício para desenvolvedores e usuários. Como a <a href="https://pt.wikipedia.org/wiki/Navalha_de_Occam">Navalha de Occam</a>, é quase sempre melhor remover qualquer desperdício se resultar numa linguagem igualmente expressiva. A segunda razão é que ter uma linguagem pequena é esteticamente mais legal. É inteligente, interessante e divertido ver quão pequeno conseguimos fazer o núcleo da linguagem, e ainda ter algo útil do outro lado. Como <em>hackers</em>, que devemos ser por ora, isto é algo que curtimos.</p>
 
 
-<pre><code data-language='lispy'>; Atoms
+<h2>Átomos</h2> <hr/>
+
+<p>Ao lidar com condicionais, não adicionamos nenhum tipo booleano à nossa linguagem. Por causa disso, também não adicionamos <code>true</code> ou <code>false</code>. Ao invés disso, simplesmente usamos números. Legibilidade é todavia ainda importante, então podemos definir algumas constantes para representar estes valores.</p>
+
+<p>Numa observação parecida, muitos lisps usam a palavra <code>nil</code> para representar a lista vazia <code>{}</code>. Podemos adicionar isso também. Estas constantes são às vezes chamadas de <em>átomos</em> porque elas são fundamentais e constantes.</p>
+
+<p>O usuário não é forçado a usar estas constantes nomeadas, e podem usar números e listas vazias no lugar, como quiserem. Esta escolha empodera usuários, algo em que nós acreditamos.</p>
+
+
+<pre><code data-language='lispy'>; Atomos
 (def {nil} {})
 (def {true} 1)
 (def {false} 0)</code></pre>
 
 
-<h2>Building Blocks</h2> <hr/>
+<h2>Blocos de Construção</h2> <hr/>
 
-<p>We've already come up with a number of cool functions I've been using in the examples. One of these is our <code>fun</code> function that allows us to declare functions in a neater way. We should definitely include this in our standard library.</p>
+<p>Já inventamos uma boa quantidade de funções legais que usamos nos exemplos. Uma destas é nossa função <code>fun</code> que nos permite declarar funções de maneira mais clara. Devemos definitivamente incluí-la em nossa biblioteca padrão.</p>
 
-<pre><code data-language='lispy'>; Function Definitions
+<pre><code data-language='lispy'>; Definicoes de funcoes
 (def {fun} (\ {f b} {
   def (head f) (\ (tail f) b)
 }))</code></pre>
 
-<p>We also had our <code>unpack</code> and <code>pack</code> functions. These too are going to be essential for users. We should include these along with their <code>curry</code> and <code>uncurry</code> aliases.</p>
+<p>Também tivemos nossas funções <code>unpack</code> e <code>pack</code>. Estas também serão essenciais para usuários. Devemos incluí-las, juntamente com seus pseudônimos <code>curry</code> e <code>uncurry</code>.</p>
 
 
-<pre><code data-language='lispy'>; Unpack List for Function
+<pre><code data-language='lispy'>; Desempacota lista para funcao
 (fun {unpack f l} {
   eval (join (list f) l)
 })
 
-; Pack List for Function
+; Empacota lista para funcao
 (fun {pack f &amp; xs} {f xs})
 
 ; Curried and Uncurried calling
 (def {curry} unpack)
 (def {uncurry} pack)</code></pre>
 
-<p>Say we want to do several things in order. One way we can do this is to put each thing to do as an argument to some function. We know that arguments are evaluated in order from left to right, which is essentially sequencing events. For functions such as <code>print</code> and <code>load</code> we don't care much about what it evaluates to, but do care about the order in which it happens.</p>
+<p>Digamos que queiramos fazer várias coisas em ordem. Uma maneira de fazer isto é colocar cada coisa a fazer como argumento à uma função. Sabemos que argumentos são avaliados em ordem da esquerda para direita, o que é essencialmente sequenciar eventos. Para funções como <code>print</code> e <code>load</code> não nos importamos muito com o que elas avaliam, mas nos importamos com a ordem em que isso acontece.</p>
 
-<p>Therefore we can create a <code>do</code> function which evaluates a number of expressions in order and returns the last one. This relies on the <code>last</code> function, which returns the final element of a list. We'll define this later.</p>
+<p>Por isso, podemos criar uma função <code>do</code> que avalia algumas expressões em ordem e retorna a última. Ela se fia na função <code>last</code> que retorna o último elemento da lista. Vamos defini-la depois.</p>
 
-<pre><code data-language='lispy'>; Perform Several things in Sequence
+<pre><code data-language='lispy'>; Executa varias coisas em sequencia
 (fun {do &amp; l} {
   if (== l nil)
     {nil}
     {last l}
 })</code></pre>
 
-<p>Sometimes we want to save results to local variables using the <code>=</code> operator. When we're inside a function this will implicitly only save results locally, but sometimes we want to open up an even more local scope. For this we can create a function <code>let</code> which creates an empty function for code to take place in, and evaluates it.</p>
+<p>Às vezes queremos guardar os resultados em variáveis locais usando o operador <code>=</code>. Quanto estamos dentro de uma função, isto vai implicitamente salvar resultados apenas localmente, mas às vezes queremos abrir um escopo ainda mais local. Para isto, podemos criar uma unção <code>let</code> que cria uma função vazia para código acontecer dentro, e avaliá-lo.</p>
 
-<pre><code data-language='lispy'>; Open new scope
+<pre><code data-language='lispy'>; Abre novo escopo
 (fun {let b} {
   ((\ {_} b) ())
 })</code></pre>
 
-<p>We can use this in conjunction with <code>do</code> to ensure that variables do not leak out of their scope.</p>
+<p>Podemos usar isto em conjunto com <code>do</code> para nos certificar que variáveis não vazam para fora de seu escopo.</p>
 
 <pre><code data-language='lispy'>lispy&gt; let {do (= {x} 100) (x)}
 100
@@ -78,27 +78,27 @@ Error: Unbound Symbol 'x'
 lispy&gt;</code></pre>
 
 
-<h2>Logical Operators</h2> <hr/>
+<h2>Operadores Lógicos</h2> <hr/>
 
-<p>We didn't define any local operators such as <code>and</code> and <code>or</code> in our language. This might be a good thing to add in later. For now we can use arithmetic operators to emulate them. Think about how these functions work when encountering <code>0</code> or <code>1</code> for their various inputs.</p>
+<p>Não definimos nenhum operadores locais como <code>and</code> e <code>ou</code> em nossa linguagem. Esta pode ser uma boa coisa para adicionar depois. Por enquanto, podemos usar operadores aritméticos para emulá-los. Pense em como essas funções vão funcionar quando encontrar <code>0</code> ou <code>1</code> para suas diferentes entradas.</p>
 
-<pre><code data-language='lispy'>; Logical Functions
+<pre><code data-language='lispy'>; Funcoes Logicas
 (fun {not x}   {- 1 x})
 (fun {or x y}  {+ x y})
 (fun {and x y} {* x y})</code></pre>
 
 
-<h2>Miscellaneous Functions</h2> <hr/>
+<h2>Funções Variadas</h2> <hr/>
 
-<p>Here are a couple of miscellaneous functions that don't really fit in anywhere. See if you can guess their intended functionality.</p>
+<p>Aqui estão algumas outras funções variadas que não se encaixam mesmo em qualquer lugar. Veja se você consegue adivinhar sua funcionalidade pretendida.</p>
 
 <pre><code data-language='lispy'>(fun {flip f a b} {f b a})
 (fun {ghost &amp; xs} {eval xs})
 (fun {comp f g x} {f (g x)})</code></pre>
 
-<p>The <code>flip</code> function takes a function <code>f</code> and two arguments <code>a</code> and <code>b</code>. It then applies <code>f</code> to <code>a</code> and <code>b</code> in the reversed order. This might be useful when we want a function to be <em>partially evaluated</em>. If we want to partially evaluate a function by only passing it in it's second argument we can use <code>flip</code> to give us a new function that takes the first two arguments in reversed order.</p>
+<p>A função <code>flip</code> recebe uma função <code>f</code> e dois argumentos <code>a</code> e <code>b</code>. Ela então aplica <code>f</code> à <code>a</code> e <code>b</code> na ordem invertida. Isto pode ser útil quando queremos que uma função seja <em>parcialmente avaliada</em>. Se queremos avaliar parcialmente uma função apenas passando-a em seu segundo argumento, podemos usar <code>flip</code> para nos dar uma nova função que receba os primeiros dois argumentos em ordem invertida.</p>
 
-<p>This means if you want to apply the second argument of a function you can just apply the first argument to the <code>flip</code> of this function.</p>
+<p>Isto significa que caso queira aplicar o segundo argumento de uma função, você pode simplesmente aplicar o primeiro argumento ao <code>flip</code> desta função.</p>
 
 <pre><code data-language='lispy'>lispy&gt; (flip def) 1 {x}
 ()
@@ -113,15 +113,15 @@ lispy&gt; y
 lispy>
 </code></pre>
 
-<p>I couldn't think of a use for the <code>ghost</code> function, but it seemed interesting. It simply takes in any number of arguments and evaluates them as if they were the expression itself. So it just sits at the front of an expression like a ghost, not interacting with or changing the behaviour of the program at all. If you can think of a use for it I'd love to hear.</p>
+<p>Não consegui pensar em nenhum uso para a função <code>ghost</code>, mas pareceu interessante. Ela simplesmente recebe um número qualquer de argumentos e os avalia como se fossem a própria expressão. Então ela fica na frente de uma expressão como um fantasma, não interagindo com ou mudando o comportamento do programa em nada. Se você puder pensar em algum uso para ela, eu adoraria ouvir.</p>
 
 <pre><code data-language='lispy'>lispy&gt; ghost + 2 2
 4
 </code></pre>
 
-<p>The <code>comp</code> function is used to compose two functions. It takes as input <code>f</code>, <code>g</code>, and an argument to <code>g</code>. It then applies this argument to <code>g</code> and applies the result again to <code>f</code>. This can be used to compose two functions together into a new function that applies both of them in series. Like before, we can use this in combination with partial evaluation to build up complex functions from simpler ones.</p>
+<p>A função <code>comp</code> é usara para <em>compor</em> duas funções. Ela recebe como entrada <code>f</code>, <code>g</code> e um argumento para <code>g</code>. Ela então aplica este argumento à <code>g</code> e aplica o resultado novamente à <code>f</code>. Isto pode ser usado para compor funções em uma nova função que aplica ambas em série. Como antes, podemos usar isto em combinação com avaliação parcial para construir funções complexas a partir de outras mais simples.</p>
 
-<p>For example we can compose two functions. One negates a number and another unpacks a list of numbers for multiplying together with <code>*</code>.</p>
+<p>Por exemplo, podemos compor duas funções. Uma nega um número e outra desempacota uma lista de números para os multiplicar com <code>*</code>.</p>
 
 <pre><code data-language='lispy'>lispy&gt; (unpack *) {2 2}
 4
@@ -137,48 +137,48 @@ lispy&gt;
 </code></pre>
 
 
-<h2>List Functions</h2> <hr/>
+<h2>Funções de Lista</h2> <hr/>
 
-<p>The <code>head</code> function is used to get the first element of a list, but what it returns is still wrapped in the list. If we want to actually get the element out of this list we need to extract it somehow.</p>
+<p>A função <code>head</code> é usada para obter o primeiro elemento duma lista, mas o que ela retorna ainda está envolto na lista. Caso queiramos pegar o elemento fora desta lista, precisamos extraí-lo de alguma maneira.</p>
 
-<p>Single element lists evaluate to just that element, so we can use the <code>eval</code> function to do this extraction. We can also define a couple of helper functions for aid extracting the first, second and third elements of a list. We'll use these function more later.</p>
+<p>Listas com apenas um elemento avaliam para apenas aquele elemento, então podemos usar a função <code>eval</code> para fazer esta extração. Podemos também definir algumas funções utilitárias para ajudar a extrair o primeiro, segundo ou terceiro elemento de uma lista. Vamos usar mais estas funções mais tarde.</p>
 
 <pre><code data-language='lispy'>; First, Second, or Third Item in List
 (fun {fst l} { eval (head l) })
 (fun {snd l} { eval (head (tail l)) })
 (fun {trd l} { eval (head (tail (tail l))) })</code></pre>
 
-<p>We looked briefly at some recursive list functions a few chapters ago. Naturally there are many more we can define using this technique.</p>
+<p>Olhamos brevemente em algumas funções recursivas de listas alguns capítulos atrás. Naturalmente existem muitas mais que podemos definir usando esta técnica.</p>
 
-<p>To find the length of a list we can recursive over it adding <code>1</code> to the length of the tail. To find the <code>nth</code> element of a list we can perform the <code>tail</code> operation and count down until we reach <code>0</code>. To get the last element of a list we can just access the element at the length minus one.</p>
+<p>Para encontrar o tamanho de uma lista podemos recorrer sobre ela adicionado 1 ao comprimento da cauda. Para encontrar o enésimo elemento de uma lista podemos executar a operação <code>tail</code> e contar para baixo até atingirmos <code>0</code>. Para obter o último elemento de uma lista podemos simplesmente acessar o elemento do comprimento menos um.</p>
 
-<pre><code data-language='lispy'>; List Length
+<pre><code data-language='lispy'>; Comprimento da lista
 (fun {len l} {
   if (== l nil)
     {0}
     {+ 1 (len (tail l))}
 })</code></pre>
 
-<pre><code data-language='lispy'>; Nth item in List
+<pre><code data-language='lispy'>; Nth - enesimo elemento
 (fun {nth n l} {
   if (== n 0)
     {fst l}
     {nth (- n 1) (tail l)}
 })</code></pre>
 
-<pre><code data-language='lispy'>; Last item in List
+<pre><code data-language='lispy'>; Ultimo elemento
 (fun {last l} {nth (- (len l) 1) l})</code></pre>
 
-<p>There are lots of other useful functions that follow this same pattern. We can define functions for taking and dropping the first so many elements of a list, or functions for checking if a value is an element of a list.</p>
+<p>Há muitas outras funções úteis que seguem este mesmo padrão. Podemos definir funções para tomar ou descartar os primeiros tantos elementos de uma lista, ou funções para checar se um valor é membro de uma lista.</p>
 
-<pre><code data-language='lispy'>; Take N items
+<pre><code data-language='lispy'>; Tomar N itens
 (fun {take n l} {
   if (== n 0)
     {nil}
     {join (head l) (take (- n 1) (tail l))}
 })</code></pre>
 
-<pre><code data-language='lispy'>; Drop N items
+<pre><code data-language='lispy'>; Descartar N itens
 (fun {drop n l} {
   if (== n 0)
     {l}
@@ -196,7 +196,7 @@ lispy&gt;
 })
 </code></pre>
 
-<p>These functions all follow similar patterns. It would be great if there was some way to extract this pattern so we don't have to type it out every time. For example we may want a way we can perform some function on every element of a list. This is a function we can define called  <code>map</code>. It takes as input some function, and some list. For each item in the list it applies <code>f</code> to that item and appends it back onto the front of the list. It then applies <code>map</code> to the tail of the list.</p>
+<p>Todas estas funções seguem padrões similares. Seria ótimo se houvesse uma maneira de extrair este padrão para que não tenhamos que digitá-lo toda vez. Por exemplo, podemos querer uma maneira de executar uma função em cada elemento duma lista. Esta função podemos definir chamando de <code>map</code>. Ela recebe como entrada uma função e uma lista. Para cada item na lista ela aplica a função para aquele item e o acrescenta na frente da lista. A seguir ela aplica <code>map</code> à cauda da lista.</p>
 
 <pre><code data-language='lispy'>; Apply Function to List
 (fun {map f l} {
@@ -205,7 +205,7 @@ lispy&gt;
     {join (list (f (fst l))) (map f (tail l))}
 })</code></pre>
 
-<p>With this we can do some neat things that look a bit like looping. In some ways this concept is more powerful than looping. Instead of thinking about performing some function to each element of the list in turn, we can think about acting on all the elements at once. We <em>map the list</em> rather than <em>changing each element</em>.</p>
+<p>Com isto podemos fazer algumas coisas legais que se parecem com laços. Em algumas maneiras, este conceito é mais poderoso que laços. Em vez de pensar sobre executar alguma função em cada elemento da lista, podemos pensar sobre agir em todos elementos de uma vez só. Nós <em>mapeamos a lista</em> em vez de <em>mudar cada elemento</em>.</p>
 
 <pre><code data-language='lispy'>lispy&gt; map - {5 6 7 8 2 22 44}
 {-5 -6 -7 -8 -2 -22 -44}
@@ -220,42 +220,42 @@ lispy&gt; map print {"hello" "world"}
 {() ()}
 lispy&gt;</code></pre>
 
-<p>An adaptation of this idea is a <code>filter</code> function which, takes in some functional condition, and only includes items of a list which match that condition.</p>
+<p>Uma adaptação desta ideia é uma função <code>filter</code> que recebe uma função condicional e somente inclui itens de uma lista que correspondam àquela condição.</p>
 
-<pre><code data-language='lispy'>; Apply Filter to List
+<pre><code data-language='lispy'>; Aplica Filtro a uma Lista
 (fun {filter f l} {
   if (== l nil)
     {nil}
     {join (if (f (fst l)) {head l} {nil}) (filter f (tail l))}
 })</code></pre>
 
-<p>This is what it looks like in practice.</p>
+<p>Assim que fica na prática:</p>
 
 <pre><code data-language='lispy'>lispy&gt; filter (\ {x} {&gt; x 2}) {5 2 11 -7 8 1}
 {5 11 8}</code></pre>
 
-<p>Some loops don't exactly act on a list, but accumulate some total or condense the list into a single value. These are loops such as sums and products. These can be expressed quite similarly to the <code>len</code> function we've already defined.</p>
+<p>Alguns laços não agem exatamente em uma lista, mas acumular algum total ou condensam a lista em um valor único. Estes são laços como somatórios e produtórios, e podem ser expressos de maneira parecida à função <code>len</code> que já definimos.</p>
 
-<p>These are called <em>folds</em> and they work like this. Supplied with a function <code>f</code>, a <em>base value</em> <code>z</code> and a list <code>l</code> they merge each element in the list with the total, starting with the base value.</p>
+<p>São chamados <em>folds</em> (<em>dobras</em>) e funcionam assim: supridos com uma função <code>f</code>, um <em>valor base</em> <code>z</code> e uma lista <code>l</code>, eles fundem cada elemento na lista com o total, começando com o valor base.</p>
 
-<pre><code data-language='lispy'>; Fold Left
+<pre><code data-language='lispy'>; Fold Left (Dobra a Esquerda)
 (fun {foldl f z l} {
   if (== l nil)
     {z}
     {foldl f (f z (fst l)) (tail l)}
 })</code></pre>
 
-<p>Using folds we can define the <code>sum</code> and <code>product</code> functions in a very elegant way.</p>
+<p>Usando folds podemos definir as funções <code>sum</code> e <code>product</code> de maneira bem elegante.</p>
 
 <pre><code data-language='lispy'>(fun {sum l} {foldl + 0 l})
 (fun {product l} {foldl * 1 l})</code></pre>
 
 
-<h2>Conditional Functions</h2> <hr/>
+<h2>Funções Condicionais</h2> <hr/>
 
-<p>By defining our <code>fun</code> function we've already shown how powerful our language is in its ability to define functions that look like new syntax. Another example of this is found in emulating the C <code>switch</code> and <code>case</code> statements. In C these are built into the language, but for our language we can define them as part of a library.</p>
+<p>Ao definir nossa função <code>fun</code> já mostramos quão poderosa nossa linguagem é na sua capacidade de definir funções que se parecem com sintaxe. Um outro exemplo disso é encontrado em emular os comandos C <code>switch</code> e <code>case</code>. Em C, eles são construídos na linguagem, mas para nossa linguagem podemos defini-los como parte da biblioteca.</p>
 
-<p>We can define a function <code>select</code> that takes in zero or more two-element lists as input. For each two element list in the arguments it first evaluates the first element of the pair. If this is true then it evaluates and returns the second item, otherwise it performs the same thing again on the rest of the list. </p>
+<p>Podemos definir uma função <code>select</code> que recebe zero ou mais listas de dois elementos como entrada. Para cada lista de dois elementos nos argumentos, ela primeiro avalia o primeiro argumento do par. Caso for verdadeiro, então ele avalia e retorna o segundo item, caso contrário ele executa a mesma coisa novamente no resto da lista.</p>
 
 <pre><code data-language='lispy'>(fun {select &amp; cs} {
   if (== cs nil)
@@ -263,12 +263,12 @@ lispy&gt;</code></pre>
     {if (fst (fst cs)) {snd (fst cs)} {unpack select (tail cs)}}
 })</code></pre>
 
-<p>We can also define a function <code>otherwise</code> to always evaluate to <code>true</code>. This works a little bit like the <code>default</code> keyword in C.</p>
+<p>Podemos definir uma função <code>otherwise</code> (significando, caso contrário) que sempre avalie como <code>true</code>. Isto funciona um como a palavra-chave <code>default</code> em C.</p>
 
-<pre><code data-language='lispy'>; Default Case
+<pre><code data-language='lispy'>; Caso default
 (def {otherwise} true)
 
-; Print Day of Month suffix
+; Imprime sufixo do dia do mes
 (fun {month-day-suffix i} {
   select
     {(== i 0)  "st"}
@@ -277,7 +277,7 @@ lispy&gt;</code></pre>
     {otherwise "th"}
 })</code></pre>
 
-<p>This is actually more powerful than the C <code>switch</code> statement. In C rather than passing in conditions the input value is compared only for equality with a number of constant candidates. We can also define this function in our Lisp, where we compare a value to a number of candidates. In this function we take some value <code>x</code> followed by zero or more two-element lists again. If the first element in the two-element list is equal to <code>x</code>, the second element is evaluated, otherwise the process continues down the list.</p>
+<p>Isto é na verdade mais poderoso que o comando <code>switch</code> em C. Em C, no lugar de passar condições, o valor da entrada é comparado apenas para igualdade com um número de candidatos constantes. Nós também podemos definir esta função em nosso Lisp, onde comparamos um valor a um número de candidatos. Nesta função, recebemos um valor <code>x</code> seguido de zero ou mais listas de dois elementos novamente. Se o primeiro elemento na lista de dois elementos for igual a <code>x</code>, o segundo elemento é avaliado, senão o processo continua lista abaixo.</p>
 
 <pre><code data-language='lispy'>(fun {case x &amp; cs} {
   if (== cs nil)
@@ -286,7 +286,7 @@ lispy&gt;</code></pre>
       unpack case (join (list x) (tail cs))}}
 })</code></pre>
 
-<p>The syntax for this function becomes really nice and simple. Try to see if you can think up any other control structures or useful functions that you'd like to implement using these sorts of methods.</p>
+<p>A sintaxe para esta função se torna bem legal e simples. Tente ver se você consegue pensar em outras estruturas de controle ou funções úteis que você gostaria de implementar usando estes tipos de métodos.</p>
 
 <pre><code data-language='lispy'>(fun {day-name x} {
   case x
@@ -302,7 +302,7 @@ lispy&gt;</code></pre>
 
 <h2>Fibonacci</h2> <hr/>
 
-<p>No standard library would be complete without an obligatory definition of the Fibonacci function. Using all of the above things we've defined  we can write a cute little <code>fib</code> function that is really quite readable, and clear semantically.</p>
+<p>Nenhuma biblioteca padrão seria completa sem uma definição obrigatória da função Fibonacci. Usando todas as coisas que definimos acima, podemos escrever uma função <code>fib</code> fofinha que é realmente bem legível e semanticamente clara.</p>
 
 <pre><code data-language='lispy'>; Fibonacci
 (fun {fib n} {
@@ -312,33 +312,33 @@ lispy&gt;</code></pre>
     { otherwise (+ (fib (- n 1)) (fib (- n 2))) }
 })</code></pre>
 
-<p>This is the end of the standard library I've written. Building up a standard library is a fun part of language design, because you get to be creative and opinionated on what goes in and stays out. Try to come up with something you are happy with. Exploring what is possible to define and do can be very interesting.</p>
+<p>Este é o fim da biblioteca padrão que escrevi. Construir uma biblioteca padrão é uma parte divertida do projeto de uma linguagem, porque você pode ser criativo e determinado no que entra e no que fica fora. Tente inventar alguma coisa que você curta. Explore o que é possível definir e faça o que for interessante.</p>
 
 
-<h2>Reference</h2> <hr/>
+<h2>Referência</h2> <hr/>
 
 <references />
 
-<h2>Bonus Marks</h2> <hr/>
+<h2>Metas Bônus</h2> <hr/>
 
 <div class="alert alert-warning">
   <ul class="list-group">
-    <li class="list-group-item">&rsaquo; Rewrite the <code>len</code> function using <code>foldl</code>.</li>
-    <li class="list-group-item">&rsaquo; Rewrite the <code>elem</code> function using <code>foldl</code>.</li>
-    <li class="list-group-item">&rsaquo; Incorporate your standard library directly into the language. Make it load at start-up.</li>
-    <li class="list-group-item">&rsaquo; Write some documentation for your standard library, explaining what each of the functions do.</li>
-    <li class="list-group-item">&rsaquo; Write some example programs using your standard library, for users to learn from.</li>
-    <li class="list-group-item">&rsaquo; Write some test cases for each of the functions in your standard library.</li>
+    <li class="list-group-item">&rsaquo; Reescreva a função <code>len</code> usando <code>foldl</code>.</li>
+    <li class="list-group-item">&rsaquo; Reescreva a função <code>elem</code> usando <code>foldl</code>.</li>
+    <li class="list-group-item">&rsaquo; Incorpore sua biblioteca padrão diretamente dentro da linguagem. Faça carregar ao iniciar.</li>
+    <li class="list-group-item">&rsaquo; Escreva alguma documentação para sua biblioteca padrão, explicando o que cada uma das funções fazem.</li>
+    <li class="list-group-item">&rsaquo; Escreva alguns programas exemplos usando sua biblioteca padrão, para usuários aprenderem com eles.</li>
+    <li class="list-group-item">&rsaquo; Escreva alguns casos de teste para cada uma das funções na sua biblioteca padrão.</li>
   </ul>
 </div>
 
 
-<h2>Navigation</h2>
+<h2>Navegação</h2>
 
 <table class="table" style='table-layout: fixed;'>
   <tr>
     <td class="text-left"><a href="chapter14_strings"><h4>&lsaquo; Strings</h4></a></td>
-    <td class="text-center"><a href="contents"><h4>&bull; Contents &bull;</h4></a></td>
-    <td class="text-right"><a href="chapter16_bonus_projects"><h4>Bonus Projects &rsaquo;</h4></a></td>
+    <td class="text-center"><a href="contents"><h4>&bull; Conteúdo &bull;</h4></a></td>
+    <td class="text-right"><a href="chapter16_bonus_projects"><h4>Projetos Extras &rsaquo;</h4></a></td>
   </tr>
 </table>
