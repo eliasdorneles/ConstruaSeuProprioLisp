@@ -1,72 +1,72 @@
 
-<h1>Frequently Asked Questions</h1>
+<h1>Perguntas Frequentes</h1>
 
 <div class='pull-right alert alert-warning' style="margin: 15px; text-align: center;">
   <img src="/static/img/me.png" alt="me" class="img-responsive" width="224px" height="264px"/>
-  <p><small>Me &bull; Drinking a beer.</small></p>
+  <p><small>Eu &bull; Bebendo uma cerveja.</small></p>
 </div>
 
 
-<h2>Who are you?</h2> <hr/>
+<h2>Quem é você?</h2> <hr/>
 
-<p>Hello, my name is Daniel Holden. I'm from the UK, and currently studying for a PhD at Edinburgh University. My research is in data driven tools for character animation.</p>
+<p>Olá, meu nome é Daniel Holden. Sou do Reino Unido, e atualmente estudo para um PhD na Edinburgh University. Minha pesquisa é na área de ferramentas dirigidas por dados para animação de personagens.</p>
 
-<p>You may know me from one of my other projects such as <a href="http://libcello.org">Cello</a> or <a href="https://github.com/orangeduck/Corange">Corange</a>. As well as hacking on C, I enjoy writing short stories, digital art, and game development.</p>
+<p>Você pode me conhecer por algum de meus projetos como <a href="http://libcello.org">Cello</a> ou <a href="https://github.com/orangeduck/Corange">Corange</a>. Além de hackear em C, curto escrever novelas, arte digital e desenvolver jogos.</p>
 
-<p>You can take a look at my <a href="http://theorangeduck.com/">personal website</a>. Or you can <a href="https://twitter.com/anorangeduck">follow me on twitter</a>.</p>
-
-
-<h2>Why don't you teach arrays in this book?</h2> <hr/>
-
-<p>With an already steep learning curve arrays seemed like a convenient omission to make. Teaching arrays in C is a very easy way to confuse a beginner about pointers, which are a far more important concept to learn. In C, the ways in which arrays and pointers are the same, and yet different, are subtle and numerous. Excluding fixed sized arrays, which have different behaviour altogether, pointers represent a superset of the behaviour of arrays, and so in the context of this book, teaching arrays would have been no more than teaching syntactic sugar.</p>
-
-<p>Those interested in arrays are encouraged to find out more. The book <a href="http://c.learncodethehardway.org/">Learn C the Hard Way</a> takes the opposite approach to me, and teaches arrays first, with pointers being described as a variation. For those interested in arrays this might prove useful.</p>
+<p>Você pode dar uma olhada no meu <a href="http://theorangeduck.com/">site pessoal</a>. Ou você pode <a href="https://twitter.com/anorangeduck">me seguir no twitter</a>.</p>
 
 
-<h2>Why do you use left-handed pointer syntax?</h2> <hr/>
+<h2>Por que você não ensina arrays neste livro?</h2> <hr/>
 
-<p>In this book I write the syntax for pointers in a left-handed way <code>int* x;</code>, rather than the standard right-handed convention <code>int *x;</code>.</p>
+<p>Com uma curva de aprendizado já íngreme, arrays pareceram uma omissão conveniente a fazer. Ensinar arrays em C é uma maneira fácil de confundir um iniciante sobre apontadores, que são um conceito muito mais importante a se aprender. Em C, as maneiras em que apontadores e arrays são iguais, mas diferentes, são sutis e numerosas. Excluindo arrays de tamanho fixo, que têm comportamento inteiramente diferente, apontadores representam um super set do comportamento de arrays, e então no contexto deste livro, ensinar arrays teria sido não mais que ensinar açúcar sintático.</p>
 
-<p>Ultimately this distinction is one of personal preference, but the vast majority of C code, as well as the C standards, are written using the right-handed style. This is clearly the default, and most correct way to write pointers, and so my choice might seem odd.</p>
-
-<p>I picked the left-handed version because I believe it is easier to teach to beginners. Having the asterisk on the left hand side emphasises <em>the type</em>. It is clearer to read, and makes it obvious that the asterisk is not a weird operator or modification to the variable. With the omission of arrays, and multi-variable declarations, this notation is also almost entirely consistent within this book, and when not, it is noted. K&R themselves have <a href="http://blog.golang.org/gos-declaration-syntax">admitted</a> the <a href="http://cm.bell-labs.com/cm/cs/who/dmr/chist.html">confusion</a> of the right-handed syntax, made worse by historical baggage and rogue compiler implementations of the early years. For a learning resource I believe picking the left-handed version was the best approach.</p> 
-
-<p>Once comfortable with the method behind C's declaration syntax, I encourage programmers to migrate toward the right-handed version.</p> 
+<p>Aquelas interessados em arrays são encorajados a descobrir mais. O livro <a href="http://c.learncodethehardway.org/">Learn C the Hard Way</a> usa uma abordagem contrária da minha, e ensina arrays primeiro, com apontadores sendo descritos como uma variação. Para aqueles interessados em arrays, isto pode ser útil.</p>
 
 
-<h2>Why isn't the language parser written by hand?</h2> <hr/>
+<h2>Por que você usa sintaxe para apontador no lado esquerdo</h2> <hr/>
 
-<p>Lots of people tell me that using a library for the parsing is a big turn off for them, because writing a parser by hand is a really fun part of building a language. And for a Lisp it is so simple. There are a few reasons why I did not take this approach.</p>
+<p>Neste livro escrevo a sintaxe para apontadores no lado esquerdo <code>int* x;</code>, em vez da convenção no lado direito <code>int *x;</code>.</p>
 
-<p>First of all, when I was learning about programming languages, I found the theory of formal languages fascinating. I really enjoyed getting into the mind set of thinking about languages more abstractly. I think this is a fun thing to teach, as it opens up a lot of new thoughts and avenues of exploration. In my mind, the actual implementation details are less important.</p>
+<p>Fundamentalmente, esta distinção é de preferência pessoal, mas a vasta maioria de código em C, assim como os padrões C, são escritos usando o estilo do lado direito. Isto é claramente o padrão, e a maneira mais correta de escrever apontadores, então minha escolha pode parecer estranha.</p>
 
-<p>This approach also gives new programmers a chance to learn how to use a library. It gets them comfortable early on with weird interfaces, and other peoples' code. I think <em>Parser Combinator</em> libraries are a really good advert for effective functional composition. So I couldn't help putting in a shameless plug to some of my other work!</p>
+<p>Escolhi a versão no lado esquerdo porque acredito que é mais fácil de ensinar a iniciantes. Ter o asterisco no lado esquieiro enfatiza <em>o tipo</em>. É mais claro de ler, e torna óbvio que o asterisco não é um operador ou modificação à variável. Com a omissão de arrays e declarações de múltiplas variáveis, esta notação é quase completamente consistente dentro deste livro, e quando não, é feita a distinção. Os próprios K&R <a href="http://blog.golang.org/gos-declaration-syntax">admitiram</a> a <a href="http://cm.bell-labs.com/cm/cs/who/dmr/chist.html">confusão</a> da sintaxe no lado direito, tornada pior pela bagagem histórica e implementações trapaceiras de compiladores dos primeiros anos. Para um recurso de aprendizado, acredito que escolher a versão do lado esquerdo foi a melhor abordagem.</p>
 
-<p>If you're curious as to how <em>Parser Combinator</em> libraries work you should check out my article <a href="http://theorangeduck.com/page/you-could-have-invented-parser-combinators">"You could have invented Parser Combinators"</a>.</p>
-
-
-<h2>Why are there no Macros in this Lisp?</h2> <hr/>
-
-<p>By far the biggest gripe conventional Lisp programmers have with the Lisp in this book is the lack of Macros. Instead of Macros a new concept of Q-Expressions is used to delay evaluation. To conventional Lisp programmers Q-Expressions are confusing because their semantics differ subtly from the quote Macro.</p>
-
-<p>I use Q-Expressions instead of Macros for a couple of reasons.</p>
-
-<p>First of all I believe them to be easier for beginners than Macros. When evaluation is delayed it is always explicit, shown by the syntax, and not implicit in the function name. It also means that S-Expressions can never be returned by the prompt or seen in the wild. They are always evaluated.</p>
-
-<p>Secondly it is more consistent. It no longer requires the concept of Macros, but instead transforms quoted expressions to become the dominant, more powerful concept that does everything needed by either. With Q-Expressions there are only <em>Functions</em> and <em>Expressions</em>, and the language is even more homo-iconic than before.</p>
-
-<p>Finally, Q-Expressions are distinctively more powerful than Macros. Using Q-Expressions it is possible to pass an argument to a function that evaluates to a Q-Expression, making input arguments capable of being dynamic. In conventional Lisps passing an expression to a Macro will always pause the evaluation, and so the arguments cannot be dynamic, only symbolic.</p>
+<p>Uma vez confortável com o método por trás da sintaxe de declaração em C, encorajo programadores a migrar para a versão no lado direito.</p>
 
 
-<h2>Where are the answers to the exercises?</h2> <hr/>
+<h2>Por que o parser da linguagem não é escrito à mão?</h2> <hr/>
 
-<p>There are none. In the real world no one is going to pass you an answer booklet, or check your work for you. Ensuring your code does as <em>you</em> intended is an essential skill to learn. Some readers ask for the answers because they are concerned that they might not have done <em>the right thing</em>. But testing <em>the right thing</em> in this case is just testing understanding of the question; a pretty pointless exercise. Additionally there is not always a wrong or right way to approach the <em>Bonus Marks</em>. They are intended as suggestions to help people check their understanding, or to explore other ideas and thoughts.</p>
+<p>Muitas pessoas me dizem que usar uma biblioteca para a análise sintática é um grande desapontamento para elas, porque escrever um parser manualmente é uma parte divertida de construir uma linguagem. E para um Lisp é tão simples. Existem algumas razões por que não usei essa abordagem.</p>
 
-<p>If you want to do a <em>Bonus Mark</em> question but are unsure what it means, feel free to send me an e-mail and I will try to clarify it! Otherwise don't fret over the answer. Giving it a try is the important part, not getting it right!</p>
+<p>Primeiramente, quando eu estava aprendendo sobre linguagens de programação, achei a teoria das linguagens formais fascinante. Realmente gostei de entrar na mentalidade de pensar sobre linguagens de maneira mais abstrata. Acho que esse é um jeito divertido de ensinar, já que abre muitos novos pensamentos e avenidas de exploração. Na minha mente, os detalhes de implementação são menos importantes.</p>
+
+<p>Esta abordagem também dá a novos programadores a chance de aprender como usar uma biblioteca. Deixa-os confortáveis desde o começo com interfaces estranhas e código de outras pessoas. Acho que bibliotecas combinadores de parsers são uma excelente propaganda para composição funcional efetiva. Então não pude deixar de colocar uma ligação desinibida para um pouco do meu próprio trabalho!</p>
+
+<p>Se você está curioso sobre como bibliotecas <em>Parser Combinator</em> funcionam, confira meu artigo <a href="http://theorangeduck.com/page/you-could-have-invented-parser-combinators">"You could have invented Parser Combinators"</a>.</p>
+
+
+<h2>Por que não há macros neste Lisp?</h2> <hr/>
+
+<p>De longe, a maior reclamação que programadores Lisp convencionais têm com o Lisp neste livro é a falta de Macros. No lugar de Macros, um novo conceito de Q-Expressions é usado para avaliação atrasada. Para programadores Lisp convencionais, Q-Expressions são confusas porque sua semântica diferencia sutilmente da macro quote.</p>
+
+<p>Uso Q-Expressions no lugar de Macros por alguns motivos.</p>
+
+<p>Em primeiro lugar, acredito que elas sejam mais fáceis para iniciantes do que macros. Quando a avaliação é atrasada, é sempre explícito, mostrado pela sintaxe, e nunca implicitamente no nome da função. Também significa que S-Expressions nunca podem ser devolvidas pelo prompt ou vistas por aí. Elas são sempre avaliadas.</p>
+
+<p>Segundo, é mais consistente. Não mais requer o conceito de macros, mas em seu lugar transforma expressões citadas no conceito dominante, mais poderoso, que faz tudo que é necessário por qualquer uma. Com Q-Expressions há apenas <em>Funções</em> e <em>Expressões</em>, e a linguagem é ainda mais homoicônica que antes.</p>
+
+<p>Finalmente, Q-Expressions são distintamente mais poderosas que Macros. Usando Q-Expressions é possível passar um argumento a uma função que avalia uma Q-Expression, tornando os argumentos da entrada possíveis de serem dinâmicos. Em Lisps convencionais, passar uma expressão para uma macro sempre pausa a avaliação, e então os argumentos não podem ser dinâmicos, apenas simbólicos.</p>
+
+
+<h2>Onde estão as respostas aos exercícios?</h2> <hr/>
+
+<p>Não há nenhuma. No mundo real, ninguém vai lhe passar um panfleto com as respostas, ou checar o seu trabalho por você. Certificar-se que seu código faz o que <em>você</em> pretendia é uma habilidade essencial a se aprender. Alguns leitores pediram pelas respostas porque estavam preocupadas que poderiam não ter feito <em>a coisa certa</em>. Mas verificar <em>a coisa certa</em> neste caso é apenas testar o entendimento da pergunta; um exercício inútil. Adicionalmente, não há sempre uma maneira certa ou errada de abordar as <em>Metas Bônus</em>. Elas são destinadas como sugestões para ajudar pessoas a verificar seu entendimento, ou explorar outras ideias e pensamentos.</p>
+
+<p>Se você quer fazer uma <em>Meta Bônus</em> e não tem certeza do que significa, fique à vontade para me mandar um e-mail e tentarei clarificá-la! Caso contrário, não se inquiete com a resposta. Tentar é a parte importante, não fazer certo!</p>
 
 
 <table class="table">
   <tr>
-    <td class="text-center"><a href="contents"><h4>&bull; Contents &bull;</h4></a></td>
+    <td class="text-center"><a href="contents"><h4>&bull; Conteúdo &bull;</h4></a></td>
   </tr>
 </table>
